@@ -1,0 +1,114 @@
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .eyebrow {
+        color: var(--mat-sys-primary);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    h1 {
+        margin: 0.35rem 0;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+    }
+
+    p {
+        margin: 0;
+        opacity: 0.72;
+    }
+}
+
+.admin-filters {
+    display: grid;
+    grid-template-columns: minmax(260px, 420px) auto;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.summary {
+    margin: 0 0 1rem;
+    font-weight: 600;
+    opacity: 0.75;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 22px;
+    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 18%, transparent);
+    background: var(--mat-sys-surface);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+.admin-table {
+    width: 100%;
+    min-width: 920px;
+
+    th {
+        font-weight: 700;
+        color: var(--mat-sys-primary);
+        background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+    }
+
+    td,
+    th {
+        padding: 0.85rem 1rem;
+    }
+
+    td strong {
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    td small {
+        display: block;
+        max-width: 360px;
+        opacity: 0.68;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.thumb {
+    width: 64px;
+    height: 46px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 18%, transparent);
+    background: var(--mat-sys-surface-container);
+}
+
+.state {
+    min-height: 260px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    opacity: 0.8;
+
+    mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+.error {
+    color: var(--mat-sys-error);
+}
+
+@media (max-width: 760px) {
+    .admin-header {
+        flex-direction: column;
+    }
+
+    .admin-filters {
+        grid-template-columns: 1fr;
+    }
+}

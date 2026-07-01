@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+  engineType    = "binary"
+}
+
+datasource db {
+  provider = "mysql"
+}
+//Modelos
+enum Role {
+  USER
+  ADMIN
+}
+enum EstadoOrden {
+  PENDIENTE
+  PAGADA
+  ENVIADA
+  CANCELADA
+}
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(150)
+  nombre    String?  @db.VarChar(120)
+  password  String   @db.VarChar(255)
+  role      Role     @default(USER)
+  ordenes   Orden[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("usuario")
+}
+
+model Categoria {
+  id          Int          @id @default(autoincrement())
+  nombre      String       @unique @db.VarChar(100)
+  descripcion String?      @db.VarChar(255)
+  videojuegos Videojuego[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+
+  @@map("categoria")
+}
+
+model Videojuego {
+  id          Int                    @id @default(autoincrement())
+  nombre      String                 @db.VarChar(150)
+  descripcion String                 @db.VarChar(500)
+  publicar    Boolean                @default(true)
+  precio      Decimal                @db.Decimal(10, 2)
+  stock       Int                    @default(0)
+  imagen      String                 @default("image-not-found.jpg") @db.VarChar(255)
+
+  categoriaId Int                    
+  categoria   Categoria              @relation(fields: [categoriaId], references: [id])
+
+  ordenes     OrdenVideojuego[]
+  plataformas PlataformaVideojuego[]
+  etiquetas   Etiqueta[]
+
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+
+  @@map("videojuego")
+  
+}
+model Etiqueta {
+  id          Int          @id @default(autoincrement())
+  nombre      String       @unique @db.VarChar(80)
+  videojuegos Videojuego[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("etiqueta")
+}
+
+model Plataforma {
+  id          Int                    @id @default(autoincrement())
+  nombre      String                 @unique @db.VarChar(100)
+  videojuegos PlataformaVideojuego[]
+
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+
+  @@map("plataforma")
+}
+
+model PlataformaVideojuego {
+  plataformaId    Int
+  videojuegoId    Int
+  annoLanzamiento Int
+
+  plataforma      Plataforma @relation(fields: [plataformaId], references: [id], onDelete: Cascade)
+  videojuego      Videojuego @relation(fields: [videojuegoId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@id([plataformaId, videojuegoId])
+  @@map("plataforma_videojuego")
+}
+
+model Orden {
+  id          Int               @id @default(autoincrement())
+  fechaOrden  DateTime          @default(now())
+  estado      EstadoOrden       @default(PENDIENTE)
+  total       Decimal           @default(0.00) @db.Decimal(10, 2)
+
+  usuarioId   Int              
+  usuario     Usuario           @relation(fields: [usuarioId], references: [id])
+
+  videojuegos OrdenVideojuego[]
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@map("orden")
+}
+
+model OrdenVideojuego {
+ ordenId      Int
+  videojuegoId Int
+  cantidad     Int
+  precioFixed  Decimal    @db.Decimal(10, 2)
+
+  orden        Orden      @relation(fields: [ordenId], references: [id], onDelete: Cascade)
+  videojuego   Videojuego @relation(fields: [videojuegoId], references: [id])
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id([ordenId, videojuegoId])
+  @@map("orden_videojuego")
+}

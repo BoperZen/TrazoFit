@@ -1,0 +1,81 @@
+<a mat-button routerLink="/videojuegos">
+    <mat-icon>arrow_back</mat-icon>
+    Volver al catálogo
+</a>
+
+@if(loading()){
+<div class="state">
+    <mat-spinner diameter="42" />
+    <p>Cargando detalle...</p>
+</div>
+}@else if(error()){
+<div class="state error">
+    <mat-icon>error</mat-icon>
+    <p> </p>
+</div>
+}@else if(videojuego(); as game){
+<section class="detail-layout">
+    <mat-card class="image-card">
+        <img [src]="getImageUrl(game.imagen)" [alt]="game.nombre" />
+    </mat-card>
+
+    <section class="info">
+        <span class="category">
+            {{game.categoria?.nombre || 'Sin categoría'}}
+        </span>
+
+        <h1>{{ game.nombre }}</h1>
+
+        <p class="description">
+            {{game.descripcion}}
+        </p>
+
+        <div class="price-row">
+            <strong>₡{{game.precio}}</strong>
+
+            @if(game.stock >0){
+            <span class="stock available">Disponible: </span>
+            }@else{
+            <span class="stock unavailable">Sin stock</span>
+            }
+        </div>
+
+        <section class="block">
+            <h2>Plataformas</h2>
+
+        @if(game.plataformas?.length){
+            <div class="platforms">
+                @for (item of game.plataformas; track item.plataformaId) {
+                <div class="platform">
+                    <mat-icon>devices</mat-icon>
+                    <span>{{item.plataforma?.nombre}}</span>
+                    <small>{{item.annoLanzamiento}}</small>
+                </div>
+                }
+            </div>
+        }@else{
+            <p class="muted">No hay plataformas registradas.</p>
+        }
+        </section>
+
+        <section class="block">
+            <h2>Etiquetas</h2>
+
+        @if(game.etiquetas?.length){
+            <mat-chip-set>
+                @for (tag of game.etiquetas; track tag.id) {
+                <mat-chip>{{tag.nombre}}</mat-chip>
+                }
+            </mat-chip-set>
+        }@else{
+            <p class="muted">No hay etiquetas registradas.</p>
+            }
+        </section>
+
+        <button mat-flat-button color="primary">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Agregar al carrito
+        </button>
+    </section>
+</section>
+}
