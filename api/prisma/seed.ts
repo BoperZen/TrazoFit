@@ -1,17 +1,18 @@
-import { Role, EstadoOrden } from "../generated/prisma";
+import { Role, Modalidad, ModalidadCita, EstadoCita } from "../generated/prisma";
 import { prisma } from "../src/config/prisma";
 
 async function main() {
     console.log("Iniciando seed...");
-    
+
     // 1. Limpieza de datos
     const models = [
-        prisma.ordenVideojuego,
-        prisma.orden,
-        prisma.plataformaVideojuego,
-        prisma.videojuego,
-        prisma.etiqueta,
-        prisma.plataforma,
+        prisma.resena,
+        prisma.cita,
+        prisma.especialidadServicio,
+        prisma.especialidadProfesional,
+        prisma.servicio,
+        prisma.profesional,
+        prisma.especialidad,
         prisma.categoria,
         prisma.usuario,
     ];
@@ -23,208 +24,415 @@ async function main() {
     // 2. Creación de datos maestros
     await prisma.categoria.createMany({
         data: [
-            { nombre: "Acción", descripcion: "Videojuegos con combate y ritmo rápido." },
-            { nombre: "RPG", descripcion: "Juegos de rol con progresión." },
-            { nombre: "Deportes", descripcion: "Basados en disciplinas deportivas." },
-            { nombre: "Estrategia", descripcion: "Planificación y táctica." },
-            { nombre: "Aventura", descripcion: "Exploración e historia." },
-            { nombre: "Simulación", descripcion: "Experiencias simuladas" },
+            { nombre: "Fuerza", descripcion: "Entrenamiento con pesas y resistencia." },
+            { nombre: "Cardio", descripcion: "Ejercicios cardiovasculares y resistencia aeróbica." },
+            { nombre: "Nutrición", descripcion: "Planes alimenticios y asesoría nutricional." },
+            { nombre: "Rehabilitación", descripcion: "Recuperación de lesiones y fisioterapia." },
+            { nombre: "Bienestar", descripcion: "Yoga, meditación y salud mental." },
         ],
     });
 
-    await prisma.plataforma.createMany({
+    await prisma.especialidad.createMany({
         data: [
-            { nombre: "PC" },
-            { nombre: "PlayStation 5" },
-            { nombre: "PlayStation 4" },
-            { nombre: "Xbox Series X|S" },
-            { nombre: "Xbox One" },
-            { nombre: "Nintendo Switch" },
-            { nombre: "Steam Deck" },
-        ],
-    });
-
-    await prisma.etiqueta.createMany({
-        data: [
-            { nombre: "Multijugador" },
-            { nombre: "Un jugador" },
-            { nombre: "Mundo abierto" },
-            { nombre: "Alta dificultad" },
-            { nombre: "Competitivo" },
-            { nombre: "Historia profunda" },
-            { nombre: "Cooperativo" },
-            { nombre: "Indie" },
+            { nombre: "Hipertrofia", descripcion: "Aumento de masa muscular." },
+            { nombre: "Crossfit", descripcion: "Entrenamiento funcional de alta intensidad." },
+            { nombre: "Pérdida de peso", descripcion: "Programas de reducción de grasa corporal." },
+            { nombre: "Dieta cetogénica", descripcion: "Alimentación baja en carbohidratos." },
+            { nombre: "Yoga", descripcion: "Disciplina de flexibilidad y meditación." },
+            { nombre: "Pilates", descripcion: "Fortalecimiento del core y postura." },
+            { nombre: "Running", descripcion: "Entrenamiento para corredores." },
+            { nombre: "Movilidad", descripcion: "Mejora del rango de movimiento articular." },
         ],
     });
 
     await prisma.usuario.createMany({
         data: [
-            { email: "admin@videojuegos.com", nombre: "Admin", password: "hash_password", role: Role.ADMIN },
-            { email: "ana@correo.com", nombre: "Ana Rodríguez", password: "hash_password", role: Role.USER },
-            { email: "carlos@correo.com", nombre: "Carlos Mora", password: "hash_password", role: Role.USER },
+            { nombre: "Admin", apellidos: "TrazoFit", email: "admin@trazofit.com", password: "hash_password", role: Role.ADMIN },
+            { nombre: "Carlos", apellidos: "Méndez", email: "carlos@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
+            { nombre: "Sofía", apellidos: "Vargas", email: "sofia@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
+            { nombre: "Diego", apellidos: "Rojas", email: "diego@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
+            { nombre: "Laura", apellidos: "Jiménez", email: "laura@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
+            { nombre: "Andrés", apellidos: "Solís", email: "andres@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
+            { nombre: "María", apellidos: "Castro", email: "maria@trazofit.com", password: "hash_password", role: Role.CLIENTE },
+            { nombre: "Pedro", apellidos: "Mora", email: "pedro@trazofit.com", password: "hash_password", role: Role.CLIENTE },
+            { nombre: "Valeria", apellidos: "Núñez", email: "valeria@trazofit.com", password: "hash_password", role: Role.CLIENTE },
         ],
     });
 
-    // 3. Recuperar datos para mapeo indexado por propiedades únicas
-    const [cats, etiqs, plats, users] = await Promise.all([
+    // 3. Recuperar datos para mapeo
+    const [cats, specs, users] = await Promise.all([
         prisma.categoria.findMany(),
-        prisma.etiqueta.findMany(),
-        prisma.plataforma.findMany(),
+        prisma.especialidad.findMany(),
         prisma.usuario.findMany(),
     ]);
 
     const catMap = Object.fromEntries(cats.map((c) => [c.nombre, c.id]));
-    const etiqMap = Object.fromEntries(etiqs.map((e) => [e.nombre, e.id]));
-    const platMap = Object.fromEntries(plats.map((p) => [p.nombre, p.id]));
+    const specMap = Object.fromEntries(specs.map((s) => [s.nombre, s.id]));
     const userMap = Object.fromEntries(users.map((u) => [u.email, u.id]));
 
-    // 4. Creación de Videojuegos con Relaciones
-    const eldenRing = await prisma.videojuego.create({
+    // 4. Creación de Profesionales
+    const profCarlos = await prisma.profesional.create({
         data: {
-            nombre: "Elden Ring",
-            descripcion: "RPG de acción en mundo abierto con exploración, combates exigentes y progresión profunda.",
-            precio: 39900,
-            stock: 15,
-            imagen: "elden-ring.webp",
-            categoriaId: catMap["RPG"],
-            etiquetas: {
-                connect: [{ id: etiqMap["Un jugador"] }, { id: etiqMap["Mundo abierto"] }, { id: etiqMap["Alta dificultad"] }]
-            },
-            plataformas: {
-                create: [
-                    { annoLanzamiento: 2022, plataforma: { connect: { id: platMap["PC"] } } },
-                    { annoLanzamiento: 2022, plataforma: { connect: { id: platMap["PlayStation 5"] } } }
-                ]
-            }
-        },
-    });
-    const zelda = await prisma.videojuego.create({
-        data: {
-            nombre: "Zelda: Tears of the Kingdom",
-            descripcion: "Aventura de exploración, construcción y resolución de desafíos en un mundo abierto",
-            precio: 42900,
-            stock: 8,
-            imagen: "zelda.webp",
-            categoriaId: catMap["Aventura"],
-            etiquetas: {
-                connect: [{ id: etiqMap["Un jugador"] }, { id: etiqMap["Mundo abierto"] }, { id: etiqMap["Historia profunda"] }]
-            },
-            plataformas: {
-                create: [
-                    { annoLanzamiento: 2023, plataforma: { connect: { id: platMap["Nintendo Switch"] } } }
-                ]
-            }
-        },
-    });
-    const eaFc = await prisma.videojuego.create({
-        data: {
-            nombre: "EA Sports FC 26",
-            descripcion: "Simulador deportivo de fútbol con modos competitivos, clubes y juego en línea.",
-            precio: 45900,
-            stock: 20,
-            categoriaId: catMap["Deportes"],
-            etiquetas: {
-                connect: [{ id: etiqMap["Multijugador"] }, { id: etiqMap["Competitivo"] }]
-            },
-            plataformas: {
-                create: [
-                    { annoLanzamiento: 2025, plataforma: { connect: { id: platMap["PlayStation 5"] } } },
-                    { annoLanzamiento: 2025, plataforma: { connect: { id: platMap["Xbox Series X|S"] } } }
-                ]
-            }
-        },
-    });
-    const halo = await prisma.videojuego.create({
-        data: {
-            nombre: "Halo Infinite",
-            descripcion: "Juego de acción y disparos con campaña, multijugador competitivo y combates futuristas.",
-            precio: 29900,
-            stock: 5,
-            categoriaId: catMap["Acción"],
-            etiquetas: {
-                connect: [{ id: etiqMap["Multijugador"] }, { id: etiqMap["Competitivo"] }, { id: etiqMap["Cooperativo"] }]
-            },
-            plataformas: {
-                create: [
-                    { annoLanzamiento: 2025, plataforma: { connect: { id: platMap["Xbox Series X|S"] } } },
-                    { annoLanzamiento: 2021, plataforma: { connect: { id: platMap["PC"] } } }
-                ]
-            }
-        },
-    });
-    const civilization = await prisma.videojuego.create({
-        data: {
-            nombre: "Civilization VII",
-            descripcion: "Juego de estrategia por turnos centrado en civilizaciones, tecnología, diplomacia y expansión.",
-            precio: 49900,
-            stock: 12,
-            categoriaId: catMap["Estrategia"],
-            etiquetas: {
-                connect: [{ id: etiqMap["Un jugador"] }, { id: etiqMap["Competitivo"] }]
-            },
-            plataformas: {
-                create: [
-                    { annoLanzamiento: 2025, plataforma: { connect: { id: platMap["PC"] } } }
-                ]
-            }
+            usuarioId: userMap["carlos@trazofit.com"],
+            titulo: "Entrenador Personal Certificado",
+            descripcion: "Especialista en hipertrofia y crossfit con 8 años de experiencia.",
+            experiencia: 8,
+            modalidad: Modalidad.PRESENCIAL,
+            provincia: "San José",
+            canton: "San José",
+            distrito: "Carmen",
+            tarifaBase: 15000,
+            disponible: true,
+            imagen: "carlos.jpg",
         },
     });
 
-    // 5. Creación de Órdenes    
-    // Orden 1
-    await prisma.orden.create({
+    const profSofia = await prisma.profesional.create({
         data: {
-            usuarioId: userMap["ana@correo.com"],
-            estado: EstadoOrden.PAGADA,
-            total: 82800,
-            videojuegos: {
+            usuarioId: userMap["sofia@trazofit.com"],
+            titulo: "Nutricionista Deportiva",
+            descripcion: "Especialista en nutrición para rendimiento deportivo y pérdida de peso.",
+            experiencia: 5,
+            modalidad: Modalidad.VIRTUAL,
+            provincia: "Heredia",
+            canton: "Heredia",
+            distrito: "Mercedes",
+            tarifaBase: 20000,
+            disponible: true,
+            imagen: "sofia.jpg",
+        },
+    });
+
+    const profDiego = await prisma.profesional.create({
+        data: {
+            usuarioId: userMap["diego@trazofit.com"],
+            titulo: "Instructor de Yoga y Meditación",
+            descripcion: "Facilitador de bienestar integral con enfoque en movilidad y mindfulness.",
+            experiencia: 6,
+            modalidad: Modalidad.MIXTA,
+            provincia: "Alajuela",
+            canton: "Alajuela",
+            distrito: "Central",
+            tarifaBase: 12000,
+            disponible: true,
+            imagen: "diego.jpg",
+        },
+    });
+
+    const profLaura = await prisma.profesional.create({
+        data: {
+            usuarioId: userMap["laura@trazofit.com"],
+            titulo: "Fisioterapeuta y Entrenadora",
+            descripcion: "Experta en rehabilitación deportiva y entrenamiento correctivo.",
+            experiencia: 10,
+            modalidad: Modalidad.PRESENCIAL,
+            provincia: "Cartago",
+            canton: "Cartago",
+            distrito: "Oriental",
+            tarifaBase: 25000,
+            disponible: false,
+            imagen: "laura.jpg",
+        },
+    });
+
+    const profAndres = await prisma.profesional.create({
+        data: {
+            usuarioId: userMap["andres@trazofit.com"],
+            titulo: "Coach de Running",
+            descripcion: "Entrenador especializado en preparación para carreras y maratones.",
+            experiencia: 4,
+            modalidad: Modalidad.PRESENCIAL,
+            provincia: "San José",
+            canton: "Desamparados",
+            distrito: "Central",
+            tarifaBase: 10000,
+            disponible: true,
+            imagen: "andres.jpg",
+        },
+    });
+
+    // 5. Creación de Servicios
+    const servFuerza = await prisma.servicio.create({
+        data: {
+            nombre: "Sesión de Hipertrofia",
+            descripcion: "Entrenamiento enfocado en aumento de masa muscular con pesas.",
+            precio: 15000,
+            duracion: 60,
+            modalidad: Modalidad.PRESENCIAL,
+            estado: true,
+            profesionalId: profCarlos.id,
+            categoriaId: catMap["Fuerza"],
+            especialidades: {
                 create: [
-                    { videojuegoId: eldenRing.id, cantidad: 1, precioFixed: eldenRing.precio },
-                    { videojuegoId: zelda.id, cantidad: 1, precioFixed: zelda.precio },
+                    { especialidad: { connect: { id: specMap["Hipertrofia"] } } },
+                    { especialidad: { connect: { id: specMap["Crossfit"] } } },
                 ],
             },
         },
     });
-    // Orden 2
-    await prisma.orden.create({
+
+    const servNutricion = await prisma.servicio.create({
         data: {
-            usuarioId: userMap["ana@correo.com"],
-            estado: EstadoOrden.ENVIADA,
-            total: 42900,
-            videojuegos: {
+            nombre: "Plan Nutricional Personalizado",
+            descripcion: "Diseño de dieta adaptada a tus objetivos deportivos.",
+            precio: 20000,
+            duracion: 45,
+            modalidad: Modalidad.VIRTUAL,
+            estado: true,
+            profesionalId: profSofia.id,
+            categoriaId: catMap["Nutrición"],
+            especialidades: {
                 create: [
-                    { videojuegoId: zelda.id, cantidad: 1, precioFixed: zelda.precio },
+                    { especialidad: { connect: { id: specMap["Dieta cetogénica"] } } },
+                    { especialidad: { connect: { id: specMap["Pérdida de peso"] } } },
                 ],
             },
         },
     });
-    // Orden 3
-    await prisma.orden.create({
+
+    const servYoga = await prisma.servicio.create({
         data: {
-            usuarioId: userMap["ana@correo.com"],
-            estado: EstadoOrden.PENDIENTE,
-            total: 45900,
-            videojuegos: {
+            nombre: "Clase de Yoga Funcional",
+            descripcion: "Sesión de yoga orientada a movilidad y reducción del estrés.",
+            precio: 12000,
+            duracion: 60,
+            modalidad: Modalidad.MIXTA,
+            estado: true,
+            profesionalId: profDiego.id,
+            categoriaId: catMap["Bienestar"],
+            especialidades: {
                 create: [
-                    { videojuegoId: eaFc.id, cantidad: 1, precioFixed: eaFc.precio },
+                    { especialidad: { connect: { id: specMap["Yoga"] } } },
+                    { especialidad: { connect: { id: specMap["Movilidad"] } } },
                 ],
             },
         },
     });
-    // Orden 4
-    await prisma.orden.create({
+
+    const servRehabilitacion = await prisma.servicio.create({
         data: {
-            usuarioId: userMap["ana@correo.com"],
-            estado: EstadoOrden.CANCELADA,
-            total: 79800,
-            videojuegos: {
+            nombre: "Sesión de Rehabilitación",
+            descripcion: "Recuperación de lesiones musculares y articulares.",
+            precio: 25000,
+            duracion: 50,
+            modalidad: Modalidad.PRESENCIAL,
+            estado: false,
+            profesionalId: profLaura.id,
+            categoriaId: catMap["Rehabilitación"],
+            especialidades: {
                 create: [
-                    { videojuegoId: halo.id, cantidad: 1, precioFixed: halo.precio },
-                    { videojuegoId: civilization.id, cantidad: 1, precioFixed: civilization.precio },
+                    { especialidad: { connect: { id: specMap["Movilidad"] } } },
+                    { especialidad: { connect: { id: specMap["Pilates"] } } },
                 ],
             },
         },
     });
+
+    const servRunning = await prisma.servicio.create({
+        data: {
+            nombre: "Plan de Entrenamiento para Carrera",
+            descripcion: "Preparación progresiva para carreras de 5k, 10k o maratón.",
+            precio: 10000,
+            duracion: 45,
+            modalidad: Modalidad.PRESENCIAL,
+            estado: true,
+            profesionalId: profAndres.id,
+            categoriaId: catMap["Cardio"],
+            especialidades: {
+                create: [
+                    { especialidad: { connect: { id: specMap["Running"] } } },
+                ],
+            },
+        },
+    });
+
+    const servPerdidaPeso = await prisma.servicio.create({
+        data: {
+            nombre: "Programa de Pérdida de Peso",
+            descripcion: "Combinación de cardio y fuerza para quema de grasa efectiva.",
+            precio: 18000,
+            duracion: 60,
+            modalidad: Modalidad.VIRTUAL,
+            estado: true,
+            profesionalId: profCarlos.id,
+            categoriaId: catMap["Cardio"],
+            especialidades: {
+                create: [
+                    { especialidad: { connect: { id: specMap["Pérdida de peso"] } } },
+                    { especialidad: { connect: { id: specMap["Crossfit"] } } },
+                ],
+            },
+        },
+    });
+
+    // 6. Asociar especialidades a profesionales
+    await prisma.especialidadProfesional.createMany({
+        data: [
+            { profesionalId: profCarlos.id, especialidadId: specMap["Hipertrofia"] },
+            { profesionalId: profCarlos.id, especialidadId: specMap["Crossfit"] },
+            { profesionalId: profSofia.id, especialidadId: specMap["Dieta cetogénica"] },
+            { profesionalId: profSofia.id, especialidadId: specMap["Pérdida de peso"] },
+            { profesionalId: profDiego.id, especialidadId: specMap["Yoga"] },
+            { profesionalId: profDiego.id, especialidadId: specMap["Movilidad"] },
+            { profesionalId: profLaura.id, especialidadId: specMap["Pilates"] },
+            { profesionalId: profLaura.id, especialidadId: specMap["Movilidad"] },
+            { profesionalId: profAndres.id, especialidadId: specMap["Running"] },
+        ],
+    });
+
+    // 7. Creación de Citas
+    await prisma.cita.createMany({
+        data: [
+            {
+                clienteId: userMap["maria@trazofit.com"],
+                profesionalId: profCarlos.id,
+                servicioId: servFuerza.id,
+                fechaCita: new Date("2025-08-01"),
+                horaInicio: "08:00",
+                horaFin: "09:00",
+                modalidad: ModalidadCita.PRESENCIAL,
+                estado: EstadoCita.PENDIENTE,
+                comentarioCliente: "Quiero empezar rutina de hipertrofia.",
+                montoEstimado: 15000,
+            },
+            {
+                clienteId: userMap["pedro@trazofit.com"],
+                profesionalId: profSofia.id,
+                servicioId: servNutricion.id,
+                fechaCita: new Date("2025-08-02"),
+                horaInicio: "10:00",
+                horaFin: "10:45",
+                modalidad: ModalidadCita.VIRTUAL,
+                estado: EstadoCita.PENDIENTE,
+                comentarioCliente: "Necesito un plan para bajar de peso.",
+                montoEstimado: 20000,
+            },
+            {
+                clienteId: userMap["valeria@trazofit.com"],
+                profesionalId: profDiego.id,
+                servicioId: servYoga.id,
+                fechaCita: new Date("2025-08-03"),
+                horaInicio: "07:00",
+                horaFin: "08:00",
+                modalidad: ModalidadCita.PRESENCIAL,
+                estado: EstadoCita.ACEPTADA,
+                comentarioCliente: "Primera clase de yoga.",
+                montoEstimado: 12000,
+            },
+            {
+                clienteId: userMap["maria@trazofit.com"],
+                profesionalId: profAndres.id,
+                servicioId: servRunning.id,
+                fechaCita: new Date("2025-08-05"),
+                horaInicio: "06:00",
+                horaFin: "06:45",
+                modalidad: ModalidadCita.PRESENCIAL,
+                estado: EstadoCita.ACEPTADA,
+                comentarioCliente: "Me preparo para un 10k.",
+                montoEstimado: 10000,
+            },
+            {
+                clienteId: userMap["pedro@trazofit.com"],
+                profesionalId: profCarlos.id,
+                servicioId: servPerdidaPeso.id,
+                fechaCita: new Date("2025-08-06"),
+                horaInicio: "09:00",
+                horaFin: "10:00",
+                modalidad: ModalidadCita.VIRTUAL,
+                estado: EstadoCita.RECHAZADA,
+                comentarioCliente: "Quiero quemar grasa rápido.",
+                comentarioProfesional: "No tengo disponibilidad en esa fecha.",
+                montoEstimado: 18000,
+            },
+            {
+                clienteId: userMap["valeria@trazofit.com"],
+                profesionalId: profCarlos.id,
+                servicioId: servFuerza.id,
+                fechaCita: new Date("2025-08-07"),
+                horaInicio: "11:00",
+                horaFin: "12:00",
+                modalidad: ModalidadCita.PRESENCIAL,
+                estado: EstadoCita.CANCELADA,
+                comentarioCliente: "Cancelo por viaje.",
+                montoEstimado: 15000,
+            },
+            {
+                clienteId: userMap["maria@trazofit.com"],
+                profesionalId: profSofia.id,
+                servicioId: servNutricion.id,
+                fechaCita: new Date("2025-07-20"),
+                horaInicio: "14:00",
+                horaFin: "14:45",
+                modalidad: ModalidadCita.VIRTUAL,
+                estado: EstadoCita.COMPLETADA,
+                comentarioCliente: "Seguimiento de mi plan nutricional.",
+                comentarioProfesional: "Excelente progreso.",
+                montoEstimado: 20000,
+            },
+            {
+                clienteId: userMap["pedro@trazofit.com"],
+                profesionalId: profDiego.id,
+                servicioId: servYoga.id,
+                fechaCita: new Date("2025-07-22"),
+                horaInicio: "08:00",
+                horaFin: "09:00",
+                modalidad: ModalidadCita.PRESENCIAL,
+                estado: EstadoCita.COMPLETADA,
+                comentarioCliente: "Muy buena sesión.",
+                comentarioProfesional: "Gran avance en movilidad.",
+                montoEstimado: 12000,
+            },
+            {
+                clienteId: userMap["valeria@trazofit.com"],
+                profesionalId: profAndres.id,
+                servicioId: servRunning.id,
+                fechaCita: new Date("2025-08-10"),
+                horaInicio: "06:00",
+                horaFin: "06:45",
+                modalidad: ModalidadCita.PRESENCIAL,
+                estado: EstadoCita.PENDIENTE,
+                comentarioCliente: "Quiero mejorar mi tiempo en 5k.",
+                montoEstimado: 10000,
+            },
+            {
+                clienteId: userMap["maria@trazofit.com"],
+                profesionalId: profCarlos.id,
+                servicioId: servFuerza.id,
+                fechaCita: new Date("2025-08-12"),
+                horaInicio: "08:00",
+                horaFin: "09:00",
+                modalidad: ModalidadCita.PRESENCIAL,
+                estado: EstadoCita.PENDIENTE,
+                comentarioCliente: "Segunda sesión de hipertrofia.",
+                montoEstimado: 15000,
+            },
+            {
+                clienteId: userMap["pedro@trazofit.com"],
+                profesionalId: profSofia.id,
+                servicioId: servNutricion.id,
+                fechaCita: new Date("2025-08-15"),
+                horaInicio: "10:00",
+                horaFin: "10:45",
+                modalidad: ModalidadCita.VIRTUAL,
+                estado: EstadoCita.PENDIENTE,
+                comentarioCliente: "Revisión de mi dieta cetogénica.",
+                montoEstimado: 20000,
+            },
+            {
+                clienteId: userMap["valeria@trazofit.com"],
+                profesionalId: profDiego.id,
+                servicioId: servYoga.id,
+                fechaCita: new Date("2025-08-18"),
+                horaInicio: "07:00",
+                horaFin: "08:00",
+                modalidad: ModalidadCita.PRESENCIAL,
+                estado: EstadoCita.PENDIENTE,
+                comentarioCliente: "Continuar con clases de yoga.",
+                montoEstimado: 12000,
+            },
+        ],
+    });
+
     console.log("Seed completado con éxito.");
 }
 

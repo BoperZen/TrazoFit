@@ -25,19 +25,19 @@ export class MainLayout {
   currentUser = signal<User | null>(null);
   publicMenu = signal<MenuItem[]>([
     { label: 'Inicio', path: '/', icon: 'home' },
-    { label: 'Catálogo', path: '/videojuegos', icon: 'sports_esports' },
-    { label: 'Ofertas', path: '/ofertas', icon: 'local_offer' },
-    { label: 'Mis órdenes', path: '/ordenes', icon: 'receipt_long', roles: ['CLIENTE', 'ADMIN'] },
+    { label: 'Rutinas', path: '/videojuegos', icon: 'fitness_center' },
+    { label: 'Sesiones', path: '/ordenes', icon: 'event_repeat' },
+    { label: 'Miembros', path: '/admin/usuarios', icon: 'groups', roles: ['CLIENTE', 'ADMIN'] },
   ]);
   adminMaintenanceMenu = signal<MenuItem[]>([
-    { label: 'Videojuegos', path: '/admin/videojuegos', icon: 'sports_esports' },
-    { label: 'Categorías', path: '/admin/categorias', icon: 'category' },
-    { label: 'Plataformas', path: '/admin/plataformas', icon: 'devices' },
+    { label: 'Rutinas', path: '/admin/videojuegos', icon: 'fitness_center' },
+    { label: 'Sesiones', path: '/admin/ordenes', icon: 'event_repeat' },
+    { label: 'Miembros', path: '/admin/usuarios', icon: 'groups' },
   ]);
   adminManagementMenu = signal<MenuItem[]>([
-    { label: 'Órdenes', path: '/admin/ordenes', icon: 'shopping_bag' },
-    { label: 'Usuarios', path: '/admin/usuarios', icon: 'group' },
-    { label: 'Reportes', path: '/admin/reportes', icon: 'bar_chart' },
+    { label: 'Progreso', path: '/ordenes', icon: 'bar_chart' },
+    { label: 'Entrenamiento', path: '/videojuegos', icon: 'insights' },
+    { label: 'Equipo', path: '/admin/usuarios', icon: 'group' },
   ]);
   isAdmin = computed(() => this.currentUser()?.role === 'ADMIN');
   canShowItem(item: MenuItem): boolean {

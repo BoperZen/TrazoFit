@@ -1,37 +1,129 @@
-<section class="hero glass-card">
-    <div class="hero-content">
-        <span class="eyebrow">Angular + API REST</span>
-        <h1>GameStore </h1>
-        <p>
-            Gestionar videojuegos, órdenes,
-            usuarios y futuras funcionalidades del sistema.
-        </p>
-        <div class="hero-actions">
-            <button mat-flat-button class="secondary-button">
-                Ver videojuegos
-            </button>
-            <button mat-flat-button class="tertiary-button">
-                Ver órdenes
-            </button>
-        </div>
-    </div>
-    <div class="hero-visual">
-        <mat-icon>sports_esports</mat-icon>
-    </div>
-</section>
-<section class="summary-grid">
-    @for (card of cards(); track card.title) {
-    <mat-card class="dashboard-card glass-card">
-        <mat-card-header>
-            <div class="card-icon ">
-                <mat-icon>{{ card.icon }}</mat-icon>
-            </div>
-            <h2>{{ card.title }}</h2>
-        </mat-card-header>
-        <mat-card-content>
+<div class="page-shell">
+    <section class="hero-panel glass-card">
+        <div class="hero-copy">
+            <span class="eyebrow">TrazoFit · fitness club</span>
+            <h1>Entrena, controla el progreso y mantén todo en un solo tablero.</h1>
+            <p>
+                Una experiencia pensada para gimnasio y entrenamiento: rutinas, sesiones, miembros y control
+                diario con una lectura rápida y energética.
+            </p>
 
-            <p>{{ card.description }}</p>
-        </mat-card-content>
-    </mat-card>
-    }
-</section>
+            <div class="hero-actions">
+                <a mat-flat-button class="primary-button" routerLink="/videojuegos">
+                    Ver rutinas
+                </a>
+                <a mat-stroked-button class="secondary-button" routerLink="/ordenes">
+                    Revisar sesiones
+                </a>
+            </div>
+
+            <ul class="hero-points">
+                <li>
+                    <mat-icon>check_circle</mat-icon>
+                    Planes de entrenamiento
+                </li>
+                <li>
+                    <mat-icon>check_circle</mat-icon>
+                    Seguimiento diario
+                </li>
+                <li>
+                    <mat-icon>check_circle</mat-icon>
+                    Miembros y staff
+                </li>
+            </ul>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+            <div class="visual-orb visual-orb--one"></div>
+            <div class="visual-orb visual-orb--two"></div>
+
+            <div class="dashboard-preview">
+                <div class="preview-card preview-card--accent">
+                    <mat-icon>fitness_center</mat-icon>
+                    <div>
+                        <span>Rutinas</span>
+                        <strong>Plan del día activo</strong>
+                    </div>
+                </div>
+
+                <div class="preview-grid">
+                    <div class="preview-mini-card">
+                        <span>Sesiones</span>
+                        <strong>En control</strong>
+                    </div>
+                    <div class="preview-mini-card">
+                        <span>Miembros</span>
+                        <strong>Acceso controlado</strong>
+                    </div>
+                    <div class="preview-mini-card preview-mini-card--wide">
+                        <span>Estado general</span>
+                        <strong>Entrenamiento listo para comenzar</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-grid" aria-label="Resumen de entrenamiento">
+        @for (stat of stats(); track stat.label) {
+            <article class="stat-card glass-card">
+                <mat-icon>{{ stat.icon }}</mat-icon>
+                <strong>{{ stat.value }}</strong>
+                <span>{{ stat.label }}</span>
+            </article>
+        }
+    </section>
+
+    <section class="content-grid">
+        <article class="glass-card surface-card">
+            <div class="section-heading">
+                <span class="section-kicker">Accesos rápidos</span>
+                <h2>Entradas directas a las zonas que más usas en el día a día.</h2>
+            </div>
+
+            <div class="feature-grid">
+                @for (card of cards(); track card.title) {
+                    <mat-card class="dashboard-card">
+                        <mat-card-header>
+                            <div class="card-icon">
+                                <mat-icon>{{ card.icon }}</mat-icon>
+                            </div>
+                            <div>
+                                <h3>{{ card.title }}</h3>
+                                <p>{{ card.description }}</p>
+                            </div>
+                        </mat-card-header>
+
+                        <mat-card-content>
+                            <a mat-button class="card-link" [routerLink]="card.route">
+                                {{ card.label }}
+                                <mat-icon>arrow_forward</mat-icon>
+                            </a>
+                        </mat-card-content>
+                    </mat-card>
+                }
+            </div>
+        </article>
+
+        <article class="glass-card surface-card surface-card--steps">
+            <div class="section-heading">
+                <span class="section-kicker">Flujo sugerido</span>
+                <h2>Una home creada para arrancar sesión, medir avance y seguir el ritmo.</h2>
+            </div>
+
+            <div class="steps-list">
+                @for (step of steps(); track step.title) {
+                    <div class="step-item">
+                        <div class="step-icon">
+                            <mat-icon>{{ step.icon }}</mat-icon>
+                        </div>
+                        <div>
+                            <h3>{{ step.title }}</h3>
+                            <p>{{ step.description }}</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </article>
+    </section>
+</div>

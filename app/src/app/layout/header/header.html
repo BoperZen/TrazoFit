@@ -2,17 +2,17 @@
     <mat-toolbar class="toolbar">
         <a class="brand" routerLink="/">
             <span class="brand-icon">
-                <mat-icon>sports_esports</mat-icon>
+                <mat-icon>fitness_center</mat-icon>
             </span>
             <span class="brand-text">
-                <strong>GameStore</strong>
-                <small>Tienda de videojuegos</small>
+                <strong>TrazoFit</strong>
+                <small>Fitness club</small>
             </span>
         </a>
         <nav class="desktop-nav">
             @for (item of publicMenu(); track item.path) {
             @if (canShowItem()(item)) {
-            <a mat-button [routerLink]="item.path" routerLinkActive="active-link"
+            <a class="nav-link" mat-button [routerLink]="item.path" routerLinkActive="active-link"
                 [routerLinkActiveOptions]="{ exact: item.path === '/' }">
                 <mat-icon>{{ item.icon }}</mat-icon>
                 {{ item.label }}
@@ -20,18 +20,18 @@
             }
             }
             @if (isAdmin()) {
-            <button mat-button [matMenuTriggerFor]="maintenanceMenu">
+            <button class="nav-link" mat-button [matMenuTriggerFor]="maintenanceMenu">
                 <mat-icon>settings</mat-icon>
                 Mantenimientos
             </button>
-            <button mat-button [matMenuTriggerFor]="managementMenu">
+            <button class="nav-link" mat-button [matMenuTriggerFor]="managementMenu">
                 <mat-icon>admin_panel_settings</mat-icon>
                 Gestión
             </button>
             }
         </nav>
         <span class="spacer"></span>
-        <button mat-icon-button routerLink="/carrito" aria-label="Carrito de compras">
+        <button class="icon-button" mat-icon-button routerLink="/carrito" aria-label="Carrito de compras">
             <mat-icon [matBadge]="cartCount()" [matBadgeHidden]="cartCount() === 0" matBadgeColor="accent">
                 shopping_cart
             </mat-icon>
@@ -42,18 +42,18 @@
             <span>{{ user.nombre }}</span>
             <strong>{{ user.role }}</strong>
         </div>
-        <button mat-flat-button color="primary" (click)="logoutUser.emit()">
+        <button class="action-button action-button--solid" mat-flat-button (click)="logoutUser.emit()">
             Salir
         </button>
         } @else {
-        <button mat-stroked-button color="primary" (click)="loginClient.emit()">
-            Cliente demo
+        <button class="action-button action-button--outline" mat-stroked-button (click)="loginClient.emit()">
+            Cliente normal
         </button>
-        <button mat-flat-button color="primary" (click)="loginAdmin.emit()">
+        <button class="action-button action-button--solid" mat-flat-button (click)="loginAdmin.emit()">
             Admin demo
         </button>
         }
-        <button class="mobile-menu-button" mat-icon-button [matMenuTriggerFor]="mobileMenu">
+        <button class="icon-button mobile-menu-button" mat-icon-button [matMenuTriggerFor]="mobileMenu">
             <mat-icon>menu</mat-icon>
         </button>
     </mat-toolbar>

@@ -3,8 +3,12 @@
     top: 0;
     z-index: 50;
     backdrop-filter: blur(16px);
-    background: color-mix(in srgb, var(--mat-sys-surface) 86%, transparent);
-    border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 22%, transparent);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-card) 94%, transparent),
+        color-mix(in srgb, var(--color-bg) 88%, transparent)
+    );
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 90%, transparent);
 }
 
 .toolbar {
@@ -14,13 +18,14 @@
     padding: 0;
     background: transparent;
     gap: 0.75rem;
+    color: var(--color-text);
 }
 
 .brand {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: inherit;
+    color: var(--color-text);
     text-decoration: none;
 }
 
@@ -30,9 +35,9 @@
     display: grid;
     place-items: center;
     border-radius: 14px;
-    color: var(--mat-sys-on-primary);
-    background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-tertiary));
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    color: var(--color-primary-fg);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--color-bg) 70%, transparent);
 }
 
 .brand-text {
@@ -42,10 +47,11 @@
 
     strong {
         font-size: 1.05rem;
+        color: var(--color-text);
     }
 
     small {
-        opacity: 0.72;
+        color: var(--color-text-muted);
         font-size: 0.75rem;
     }
 }
@@ -61,14 +67,24 @@
         border-radius: 999px;
     }
 
+    .nav-link {
+        color: var(--color-text-muted);
+        transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+
+    .nav-link:hover {
+        background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+        color: var(--color-text);
+    }
+
     mat-icon {
         margin-right: 0.35rem;
     }
 }
 
 .active-link {
-    background: color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
-    color: var(--mat-sys-primary);
+    background: color-mix(in srgb, var(--color-primary) 16%, transparent);
+    color: var(--color-primary);
 }
 
 .spacer {
@@ -81,17 +97,43 @@
     gap: 0.4rem;
     padding: 0.4rem 0.75rem;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--mat-sys-surface-container-high) 85%, transparent);
-    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+    background: color-mix(in srgb, var(--color-bg-card) 88%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
     font-size: 0.82rem;
+    color: var(--color-text);
 
     strong {
         font-size: 0.7rem;
         padding: 0.15rem 0.45rem;
         border-radius: 999px;
-        color: var(--mat-sys-on-tertiary);
-        background: var(--mat-sys-tertiary);
+        color: var(--color-secondary-fg);
+        background: var(--color-secondary);
     }
+}
+
+.icon-button {
+    color: var(--color-text-muted);
+}
+
+.icon-button:hover {
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    color: var(--color-text);
+}
+
+.action-button--solid {
+    background: var(--color-primary) !important;
+    color: var(--color-primary-fg) !important;
+}
+
+.action-button--outline {
+    border: 1px solid var(--color-primary) !important;
+    color: var(--color-primary) !important;
+    background: transparent !important;
+}
+
+.action-button--solid:hover,
+.action-button--outline:hover {
+    filter: brightness(1.03);
 }
 
 .mobile-menu-button {

@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -12,24 +10,46 @@ generator client {
 datasource db {
   provider = "mysql"
 }
+
 //Modelos
 enum Role {
-  USER
   ADMIN
+  PROFESIONAL
+  CLIENTE
 }
-enum EstadoOrden {
+
+enum Modalidad {
+  VIRTUAL
+  PRESENCIAL
+  MIXTA
+}
+
+enum ModalidadCita {
+  VIRTUAL
+  PRESENCIAL
+}
+
+enum EstadoCita {
   PENDIENTE
-  PAGADA
-  ENVIADA
+  ACEPTADA
+  RECHAZADA
   CANCELADA
+  COMPLETADA
 }
+
 model Usuario {
   id        Int      @id @default(autoincrement())
+  nombre    String   @db.VarChar(120)
+  apellidos String   @db.VarChar(120)
   email     String   @unique @db.VarChar(150)
-  nombre    String?  @db.VarChar(120)
   password  String   @db.VarChar(255)
-  role      Role     @default(USER)
-  ordenes   Orden[]
+  telefono  String?  @db.VarChar(20)
+  role      Role     @default(CLIENTE)
+  estado    Boolean  @default(true)
+
+  profesional Profesional?
+  citasCliente Cita[]  @relation("ClienteCitas")
+  resenas      Resena[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -37,106 +57,151 @@ model Usuario {
   @@map("usuario")
 }
 
-model Categoria {
-  id          Int          @id @default(autoincrement())
-  nombre      String       @unique @db.VarChar(100)
-  descripcion String?      @db.VarChar(255)
-  videojuegos Videojuego[]
+model Profesional {
+  id          Int       @id @default(autoincrement())
+  usuarioId   Int       @unique
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id])
 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now()) @updatedAt
+  titulo      String    @db.VarChar(150)
+  descripcion String    @db.VarChar(500)
+  experiencia Int       @default(0)
+  modalidad   Modalidad @default(PRESENCIAL)
+  provincia   String    @db.VarChar(100)
+  canton      String    @db.VarChar(100)
+  distrito    String    @db.VarChar(100)
+  tarifaBase  Decimal   @db.Decimal(10, 2)
+  disponible  Boolean   @default(true)
+  imagen      String    @default("profile-not-found.jpg") @db.VarChar(255)
+
+  servicios      Servicio[]
+  citas          Cita[]                    @relation("ProfesionalCitas")
+  especialidades EspecialidadProfesional[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("profesional")
+}
+
+model Categoria {
+  id          Int        @id @default(autoincrement())
+  nombre      String     @unique @db.VarChar(100)
+  descripcion String?    @db.VarChar(255)
+  estado      Boolean    @default(true)
+  servicios   Servicio[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@map("categoria")
 }
 
-model Videojuego {
-  id          Int                    @id @default(autoincrement())
-  nombre      String                 @db.VarChar(150)
-  descripcion String                 @db.VarChar(500)
-  publicar    Boolean                @default(true)
-  precio      Decimal                @db.Decimal(10, 2)
-  stock       Int                    @default(0)
-  imagen      String                 @default("image-not-found.jpg") @db.VarChar(255)
+model Especialidad {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @unique @db.VarChar(100)
+  descripcion String?  @db.VarChar(255)
+  estado      Boolean  @default(true)
 
-  categoriaId Int                    
-  categoria   Categoria              @relation(fields: [categoriaId], references: [id])
+  servicios     EspecialidadServicio[]
+  profesionales EspecialidadProfesional[]
 
-  ordenes     OrdenVideojuego[]
-  plataformas PlataformaVideojuego[]
-  etiquetas   Etiqueta[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  createdAt   DateTime               @default(now())
-  updatedAt   DateTime               @updatedAt
-
-  @@map("videojuego")
-  
-}
-model Etiqueta {
-  id          Int          @id @default(autoincrement())
-  nombre      String       @unique @db.VarChar(80)
-  videojuegos Videojuego[]
-
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  @@map("etiqueta")
+  @@map("especialidad")
 }
 
-model Plataforma {
-  id          Int                    @id @default(autoincrement())
-  nombre      String                 @unique @db.VarChar(100)
-  videojuegos PlataformaVideojuego[]
+model Servicio {
+  id            Int       @id @default(autoincrement())
+  nombre        String    @db.VarChar(150)
+  descripcion   String    @db.VarChar(500)
+  precio        Decimal   @db.Decimal(10, 2)
+  duracion      Int
+  modalidad     Modalidad @default(PRESENCIAL)
+  estado        Boolean   @default(true)
 
-  createdAt   DateTime               @default(now())
-  updatedAt   DateTime               @updatedAt
+  profesionalId Int
+  profesional   Profesional @relation(fields: [profesionalId], references: [id])
 
-  @@map("plataforma")
+  categoriaId   Int
+  categoria     Categoria   @relation(fields: [categoriaId], references: [id])
+
+  especialidades EspecialidadServicio[]
+  citas          Cita[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("servicio")
 }
 
-model PlataformaVideojuego {
-  plataformaId    Int
-  videojuegoId    Int
-  annoLanzamiento Int
+model EspecialidadServicio {
+  servicioId     Int
+  especialidadId Int
 
-  plataforma      Plataforma @relation(fields: [plataformaId], references: [id], onDelete: Cascade)
-  videojuego      Videojuego @relation(fields: [videojuegoId], references: [id], onDelete: Cascade)
+  servicio       Servicio     @relation(fields: [servicioId], references: [id], onDelete: Cascade)
+  especialidad   Especialidad @relation(fields: [especialidadId], references: [id], onDelete: Cascade)
 
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  createdAt DateTime @default(now())
 
-  @@id([plataformaId, videojuegoId])
-  @@map("plataforma_videojuego")
+  @@id([servicioId, especialidadId])
+  @@map("especialidad_servicio")
 }
 
-model Orden {
-  id          Int               @id @default(autoincrement())
-  fechaOrden  DateTime          @default(now())
-  estado      EstadoOrden       @default(PENDIENTE)
-  total       Decimal           @default(0.00) @db.Decimal(10, 2)
+model EspecialidadProfesional {
+  profesionalId  Int
+  especialidadId Int
 
-  usuarioId   Int              
-  usuario     Usuario           @relation(fields: [usuarioId], references: [id])
+  profesional    Profesional  @relation(fields: [profesionalId], references: [id], onDelete: Cascade)
+  especialidad   Especialidad @relation(fields: [especialidadId], references: [id], onDelete: Cascade)
 
-  videojuegos OrdenVideojuego[]
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-
-  @@map("orden")
+  @@id([profesionalId, especialidadId])
+  @@map("especialidad_profesional")
 }
 
-model OrdenVideojuego {
- ordenId      Int
-  videojuegoId Int
-  cantidad     Int
-  precioFixed  Decimal    @db.Decimal(10, 2)
+model Cita {
+  id                    Int           @id @default(autoincrement())
+  fechaCita             DateTime
+  horaInicio            String        @db.VarChar(10)
+  horaFin               String        @db.VarChar(10)
+  modalidad             ModalidadCita @default(PRESENCIAL)
+  estado                EstadoCita    @default(PENDIENTE)
+  comentarioCliente     String?       @db.VarChar(500)
+  comentarioProfesional String?       @db.VarChar(500)
+  montoEstimado         Decimal       @default(0.00) @db.Decimal(10, 2)
 
-  orden        Orden      @relation(fields: [ordenId], references: [id], onDelete: Cascade)
-  videojuego   Videojuego @relation(fields: [videojuegoId], references: [id])
+  clienteId     Int
+  cliente       Usuario     @relation("ClienteCitas", fields: [clienteId], references: [id])
 
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  profesionalId Int
+  profesional   Profesional @relation("ProfesionalCitas", fields: [profesionalId], references: [id])
 
-  @@id([ordenId, videojuegoId])
-  @@map("orden_videojuego")
+  servicioId    Int
+  servicio      Servicio    @relation(fields: [servicioId], references: [id])
+
+  resena        Resena?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cita")
+}
+
+model Resena {
+  id         Int      @id @default(autoincrement())
+  puntuacion Int
+  comentario String?  @db.VarChar(500)
+
+  citaId     Int      @unique
+  cita       Cita     @relation(fields: [citaId], references: [id])
+
+  clienteId  Int
+  cliente    Usuario  @relation(fields: [clienteId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("resena")
 }

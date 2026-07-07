@@ -1,6 +1,10 @@
 .footer {
-    border-top: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
-    background: color-mix(in srgb, var(--mat-sys-surface-container) 82%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-card) 92%, transparent),
+        color-mix(in srgb, var(--color-bg) 88%, transparent)
+    );
 }
 
 .footer-content {
@@ -11,10 +15,11 @@
     justify-content: space-between;
     gap: 1rem;
     align-items: center;
+    color: var(--color-text);
 
     p {
         margin: 0.25rem 0 0;
-        opacity: 0.72;
+        color: var(--color-text-muted);
     }
 }
 
@@ -22,7 +27,7 @@
     display: flex;
     gap: 1rem;
     align-items: center;
-    opacity: 0.75;
+    color: var(--color-text-muted);
     font-size: 0.85rem;
 
     span {
@@ -35,6 +40,7 @@
         font-size: 1.1rem;
         width: 1.1rem;
         height: 1.1rem;
+        color: var(--color-primary);
     }
 }
 
