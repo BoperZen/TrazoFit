@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from "http-status-codes";
-import { categoriaService } from '../services/categoria.service';
+import { usuarioService } from '../services/usuario.service';
 
-export class CategoriaController {
+export class UsuarioController {
     listar = async (request: Request, response: Response, next: NextFunction) => {
-        const resultado = await categoriaService.listar();
+        const resultado = await usuarioService.listar();
         return response.status(StatusCodes.OK).json({
             success: true,
             data: resultado,
@@ -18,12 +18,12 @@ export class CategoriaController {
             return response.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "ID inválido" });
         }
 
-        const categoria = await categoriaService.obtenerPorId(id);
-        if (!categoria) {
-            return response.status(StatusCodes.NOT_FOUND).json({ success: false, message: "Categoría no encontrada" });
+        const usuario = await usuarioService.obtenerPorId(id);
+        if (!usuario) {
+            return response.status(StatusCodes.NOT_FOUND).json({ success: false, message: "Usuario no encontrado" });
         }
 
-        return response.status(StatusCodes.OK).json({ success: true, data: categoria });
+        return response.status(StatusCodes.OK).json({ success: true, data: usuario });
     };
 
     toggleEstado = async (request: Request, response: Response, next: NextFunction) => {
@@ -33,11 +33,11 @@ export class CategoriaController {
             return response.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "ID inválido" });
         }
 
-        const categoria = await categoriaService.toggleEstado(id);
+        const usuario = await usuarioService.toggleEstado(id);
         return response.status(StatusCodes.OK).json({
             success: true,
             message: "Estado actualizado correctamente",
-            data: categoria,
+            data: usuario,
         });
     };
 }

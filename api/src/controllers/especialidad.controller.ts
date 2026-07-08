@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from "http-status-codes";
-import { categoriaService } from '../services/categoria.service';
+import { especialidadService } from '../services/especialidad.service';
 
-export class CategoriaController {
+export class EspecialidadController {
     listar = async (request: Request, response: Response, next: NextFunction) => {
-        const resultado = await categoriaService.listar();
+        const resultado = await especialidadService.listar();
         return response.status(StatusCodes.OK).json({
             success: true,
             data: resultado,
@@ -18,12 +18,8 @@ export class CategoriaController {
             return response.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "ID inválido" });
         }
 
-        const categoria = await categoriaService.obtenerPorId(id);
-        if (!categoria) {
-            return response.status(StatusCodes.NOT_FOUND).json({ success: false, message: "Categoría no encontrada" });
-        }
-
-        return response.status(StatusCodes.OK).json({ success: true, data: categoria });
+        const especialidad = await especialidadService.obtenerPorId(id);
+        return response.status(StatusCodes.OK).json({ success: true, data: especialidad });
     };
 
     toggleEstado = async (request: Request, response: Response, next: NextFunction) => {
@@ -33,11 +29,11 @@ export class CategoriaController {
             return response.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "ID inválido" });
         }
 
-        const categoria = await categoriaService.toggleEstado(id);
+        const especialidad = await especialidadService.toggleEstado(id);
         return response.status(StatusCodes.OK).json({
             success: true,
             message: "Estado actualizado correctamente",
-            data: categoria,
+            data: especialidad,
         });
     };
 }

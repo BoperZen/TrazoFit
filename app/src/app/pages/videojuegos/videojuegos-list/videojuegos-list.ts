@@ -12,7 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { RouterLink } from '@angular/router';
 import { VideojuegoService } from '../../../core/services/videojuego-service';
-import { Videojuego } from '../../../core/models/videojuego.model';
+import { Videojuego } from '../../../core/models/old-models/videojuego.model';
 import { Categoria } from '../../../core/models/categoria.model';
 
 

@@ -1,4 +1,4 @@
-export interface Categoria {
+export interface Especialidad {
     id: number;
     nombre: string;
     descripcion?: string;

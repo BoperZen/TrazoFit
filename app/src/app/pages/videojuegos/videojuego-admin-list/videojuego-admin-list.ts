@@ -9,7 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Videojuego } from '../../../core/models/videojuego.model';
+import { Videojuego } from '../../../core/models/old-models/videojuego.model';
 import { VideojuegoService } from '../../../core/services/videojuego-service';
 @Component({
   selector: 'app-videojuego-admin-list',

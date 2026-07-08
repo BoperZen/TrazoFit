@@ -1,27 +1,13 @@
-import { Orden } from './orden.model';
-import { Role } from './role.model';
-
+export type Role = 'ADMIN' | 'PROFESIONAL' | 'CLIENTE';
 
 export interface Usuario {
     id: number;
+    nombre: string;
+    apellidos: string;
     email: string;
-    nombre?: string | null;
+    telefono?: string;
     role: Role;
-    ordenes?: Orden[];
+    estado: boolean;
     createdAt: string;
     updatedAt: string;
-}
-
-export interface UsuarioCreateDto {
-    email: string;
-    nombre?: string | null;
-    password: string;
-    role?: Role;
-}
-
-export interface UsuarioUpdateDto {
-    email?: string;
-    nombre?: string | null;
-    password?: string;
-    role?: Role;
 }

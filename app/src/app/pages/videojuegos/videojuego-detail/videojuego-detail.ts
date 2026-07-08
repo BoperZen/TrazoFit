@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Videojuego } from '../../../core/models/videojuego.model';
+import { Videojuego } from '../../../core/models/old-models/videojuego.model';
 import { VideojuegoService } from '../../../core/services/videojuego-service';
 
 @Component({
