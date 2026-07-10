@@ -1,0 +1,67 @@
+<section class="usuarios-card">
+  <div class="header">
+    <div>
+      <p class="eyebrow">Administración</p>
+      <h2>Especialidades</h2>
+      <p class="subtitle">Consulta y filtra las especialidades de servicio.</p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <div class="search-row">
+      <input
+        type="text"
+        placeholder="Buscar por nombre..."
+        (input)="onSearch($any($event.target).value)"
+      />
+      <button
+        mat-stroked-button
+        type="button"
+        class="role-filter-btn"
+        [matMenuTriggerFor]="estadoMenu"
+      >
+        <mat-icon>filter_alt</mat-icon>
+        <span>Estado: {{ estadoFilterLabel() }}</span>
+      </button>
+    </div>
+  </div>
+
+  <mat-menu #estadoMenu="matMenu">
+    @for (option of estadoOptions; track option.label) {
+      <button mat-menu-item type="button" (click)="setEstadoFilter(option.value)">
+        {{ option.label }}
+      </button>
+    }
+  </mat-menu>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (especialidad of especialidadesFiltradas(); track especialidad.id) {
+          <tr>
+            <td class="name">{{ especialidad.nombre }}</td>
+            <td>{{ especialidad.descripcion ?? '—' }}</td>
+            <td>
+              @if (especialidad.estado) {
+                <button type="button" class="badge badge-success status-toggle"
+                  (click)="confirmarCambioEstado(especialidad)">Activo</button>
+              } @else {
+                <button type="button" class="badge badge-danger status-toggle"
+                  (click)="confirmarCambioEstado(especialidad)">Inactivo</button>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="3">No hay especialidades registradas.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

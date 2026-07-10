@@ -135,24 +135,24 @@ $tertiary-palette: map.merge(map.get($_palettes, tertiary), $_rest);
 
 // ===== VARIABLES CSS TRAZOFIT =====
 :root {
-  --color-primary: #d87757;
-  --color-primary-fg: #ffffff;
-  --color-secondary: #faf8f1;
-  --color-secondary-fg: #303030;
-  --color-destructive: #f14444;
-  --color-bg: #1a1a1a;
-  --color-bg-card: #1e1e1e;
-  --color-border: #2a2a2a;
+  --color-primary: #ffd84d;
+  --color-primary-fg: #111111;
+  --color-secondary: #2a2a2a;
+  --color-secondary-fg: #f5f5f5;
+  --color-destructive: #ef4444;
+  --color-bg: #0d0d0d;
+  --color-bg-card: #161616;
+  --color-border: #2b2b2b;
   --color-text: #f5f5f5;
-  --color-text-muted: #a3a3a3;
+  --color-text-muted: #b0b0b0;
   --color-success: #22c55e;
-  --color-warning: #eab308;
+  --color-warning: #ffd84d;
 
-  --font-base: 'Roboto', sans-serif;
-  --font-heading: 'Roboto Slab', serif;
-  --font-mono: 'Roboto Mono', monospace;
+  --font-base: 'Inter', sans-serif;
+  --font-heading: 'Bebas Neue', cursive;
+  --font-mono: 'Inter', sans-serif;
 
-  --radius: 8px;
-  --radius-sm: 4px;
-  --radius-lg: 12px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 18px;
 }

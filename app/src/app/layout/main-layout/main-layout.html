@@ -4,10 +4,8 @@
         [adminMaintenanceMenu]="adminMaintenanceMenu()"
         [adminManagementMenu]="adminManagementMenu()" 
         [currentUser]="currentUser()" 
-        [cartCount]="cartCount()"
         [isAdmin]="isAdmin()" 
         [canShowItem]="canShowItem.bind(this)" 
-        (loginClient)="loginAsClient()"
         (loginAdmin)="loginAsAdmin()" 
         (logoutUser)="logout()" />
     <main class="content">

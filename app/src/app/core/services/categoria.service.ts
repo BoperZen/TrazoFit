@@ -17,4 +17,22 @@ export class CategoriaService {
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<Categoria>>(`${this.apiUrl}/${id}`);
   }
+
+  // ✅ Agregar el método toggleEstado
+  toggleEstado(id: number) {
+    return this.http.patch<ApiResponse<Categoria>>(`${this.apiUrl}/${id}/toggle-estado`, {});
+  }
+
+  // También puedes agregar otros métodos útiles:
+  crear(categoria: Partial<Categoria>) {
+    return this.http.post<ApiResponse<Categoria>>(this.apiUrl, categoria);
+  }
+
+  actualizar(id: number, categoria: Partial<Categoria>) {
+    return this.http.put<ApiResponse<Categoria>>(`${this.apiUrl}/${id}`, categoria);
+  }
+
+  eliminar(id: number) {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
+  }
 }

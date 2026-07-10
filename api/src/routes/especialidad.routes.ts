@@ -10,6 +10,7 @@ export class EspecialidadRoutes {
         //locahost:3000/especialidad/
         router.get('/', asyncHandler(controller.listar))
         router.get('/:id', asyncHandler(controller.obtenerPorId))
+         router.patch('/:id/toggle-estado', asyncHandler(controller.toggleEstado))
         return router
     }
 }

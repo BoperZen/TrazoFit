@@ -6,6 +6,8 @@ import { OrdenesList } from './pages/ordenes/ordenes-list/ordenes-list';
 import { UsuariosList } from './pages/usuarios/usuarios-list/usuarios-list';
 import { VideojuegoAdminList } from './pages/videojuegos/videojuego-admin-list/videojuego-admin-list';
 import { VideojuegoDetail } from './pages/videojuegos/videojuego-detail/videojuego-detail';
+import { CategoriasList } from './pages/categorias/categorias-list/categorias-list';
+import { EspecialidadesList } from './pages/especialidades/especialidades-list/especialidades-list';
 
 export const routes: Routes = [
     {
@@ -41,6 +43,16 @@ export const routes: Routes = [
                 path:'admin/usuarios',
                 component:UsuariosList,
                 title: 'Gestión de usuarios'
+            },
+            {
+            path:'admin/categorias',
+                component:CategoriasList,
+                title:'Mantenimiento de categorías'
+            },
+            {
+            path:'admin/especialidades',
+                component:EspecialidadesList,
+                title:'Mantenimiento de especialidades'
             }
         ]
     },

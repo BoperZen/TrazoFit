@@ -1,2 +1,87 @@
-<h1>Usuarios</h1>
-<p>Listado para gestionar los usuarios del sistema.</p>
+<section class="usuarios-card">
+  <div class="header">
+    <div>
+      <p class="eyebrow">Administración</p>
+      <h2>Usuarios</h2>
+      <p class="subtitle">Consulta y filtra los usuarios registrados.</p>
+    </div>
+
+    <button class="btn-primary">Nuevo Usuario</button>
+  </div>
+
+  <div class="actions">
+    <div class="search-row">
+      <input
+        type="text"
+        placeholder="Buscar por nombre o email..."
+        (input)="onSearch($any($event.target).value)"
+      />
+
+      <button
+        mat-stroked-button
+        type="button"
+        class="role-filter-btn"
+        [matMenuTriggerFor]="roleMenu"
+      >
+        <mat-icon>filter_alt</mat-icon>
+        <span>Rol: {{ roleFilterLabel() }}</span>
+      </button>
+    </div>
+  </div>
+
+  <mat-menu #roleMenu="matMenu">
+    @for (option of roleOptions; track option.value) {
+      <button mat-menu-item type="button" (click)="setRoleFilter(option.value)">
+        {{ option.label }}
+      </button>
+    }
+  </mat-menu>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (usuario of usuariosFiltrados(); track usuario.id) {
+          <tr>
+            <td class="name">{{ usuario.nombre }} {{ usuario.apellidos }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>
+              <span class="role">{{ usuario.role }}</span>
+            </td>
+            <td>
+              @if (usuario.estado) {
+                <button
+                  type="button"
+                  class="badge badge-success status-toggle"
+                  (click)="confirmarCambioEstado(usuario)"
+                >
+                  Activo
+                </button>
+              } @else {
+                <button
+                  type="button"
+                  class="badge badge-danger status-toggle"
+                  (click)="confirmarCambioEstado(usuario)"
+                >
+                  Inactivo
+                </button>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4">No hay usuarios registrados.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

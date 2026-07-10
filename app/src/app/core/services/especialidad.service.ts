@@ -17,4 +17,8 @@ export class EspecialidadService {
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<Especialidad>>(`${this.apiUrl}/${id}`);
   }
+
+  toggleEstado(id: number) {
+    return this.http.patch<ApiResponse<Especialidad>>(`${this.apiUrl}/${id}/toggle-estado`, {});
+  }
 }

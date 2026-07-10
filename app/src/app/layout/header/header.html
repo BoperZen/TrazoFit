@@ -2,40 +2,40 @@
     <mat-toolbar class="toolbar">
         <a class="brand" routerLink="/">
             <span class="brand-icon">
-                <mat-icon>fitness_center</mat-icon>
+                <mat-icon svgIcon="arm-bicep"></mat-icon>
             </span>
             <span class="brand-text">
                 <strong>TrazoFit</strong>
-                <small>Fitness club</small>
+                <small>Marketplace de fitness</small>
             </span>
         </a>
         <nav class="desktop-nav">
-            @for (item of publicMenu(); track item.path) {
-            @if (canShowItem()(item)) {
+    @if (!isAdmin()) {
+        @for (item of publicMenu(); track item.path) {
             <a class="nav-link" mat-button [routerLink]="item.path" routerLinkActive="active-link"
                 [routerLinkActiveOptions]="{ exact: item.path === '/' }">
                 <mat-icon>{{ item.icon }}</mat-icon>
                 {{ item.label }}
             </a>
-            }
-            }
-            @if (isAdmin()) {
-            <button class="nav-link" mat-button [matMenuTriggerFor]="maintenanceMenu">
-                <mat-icon>settings</mat-icon>
-                Mantenimientos
-            </button>
-            <button class="nav-link" mat-button [matMenuTriggerFor]="managementMenu">
-                <mat-icon>admin_panel_settings</mat-icon>
-                Gestión
-            </button>
-            }
-        </nav>
-        <span class="spacer"></span>
-        <button class="icon-button" mat-icon-button routerLink="/carrito" aria-label="Carrito de compras">
-            <mat-icon [matBadge]="cartCount()" [matBadgeHidden]="cartCount() === 0" matBadgeColor="accent">
-                shopping_cart
-            </mat-icon>
+        }
+    } @else {
+        <a class="nav-link" mat-button routerLink="/" routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <mat-icon>home</mat-icon>
+            Inicio
+        </a>
+        <button class="nav-link" mat-button [matMenuTriggerFor]="maintenanceMenu">
+            <mat-icon>settings</mat-icon>
+            Mantenimientos
         </button>
+        <button class="nav-link" mat-button [matMenuTriggerFor]="managementMenu">
+            <mat-icon>admin_panel_settings</mat-icon>
+            Gestión
+        </button>
+    }
+</nav>
+        <span class="spacer"></span>
+        <div class="header-pill">Profesionales activos</div>
         @if (currentUser(); as user) {
         <div class="user-chip">
             <mat-icon>person</mat-icon>
@@ -46,11 +46,8 @@
             Salir
         </button>
         } @else {
-        <button class="action-button action-button--outline" mat-stroked-button (click)="loginClient.emit()">
-            Cliente normal
-        </button>
         <button class="action-button action-button--solid" mat-flat-button (click)="loginAdmin.emit()">
-            Admin demo
+            Vista admin
         </button>
         }
         <button class="icon-button mobile-menu-button" mat-icon-button [matMenuTriggerFor]="mobileMenu">

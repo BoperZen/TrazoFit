@@ -1,129 +1,170 @@
 <div class="page-shell">
-    <section class="hero-panel glass-card">
-        <div class="hero-copy">
-            <span class="eyebrow">TrazoFit · fitness club</span>
-            <h1>Entrena, controla el progreso y mantén todo en un solo tablero.</h1>
-            <p>
-                Una experiencia pensada para gimnasio y entrenamiento: rutinas, sesiones, miembros y control
-                diario con una lectura rápida y energética.
-            </p>
-
-            <div class="hero-actions">
-                <a mat-flat-button class="primary-button" routerLink="/videojuegos">
-                    Ver rutinas
-                </a>
-                <a mat-stroked-button class="secondary-button" routerLink="/ordenes">
-                    Revisar sesiones
-                </a>
+    <section id="inicio" class="hero hero-modern">
+        <div class="hero-content">
+            <div class="hero-copy">
+                <span class="hero-kicker">TrazoFit Marketplace</span>
+                <h1 class="hero-title">Encuentra profesionales de fitness.</h1>
+                <p class="hero-subtitle">
+                    Conecta con coaches, gestiona reservas y descubre el talento correcto con una interfaz
+                    clara, actual y enfocada en conversión.
+                </p>
+                <div class="hero-buttons">
+                    <a mat-flat-button class="btn btn-primary" routerLink="/profesional">Explorar profesionales</a>
+                    <a mat-stroked-button class="btn btn-secondary" routerLink="/citas">Citas Disponibles</a>
+                </div>
+                <div class="hero-stats-mini">
+                    @for (stat of stats(); track stat.label) {
+                    <div class="mini-stat">
+                        <strong>{{ stat.value }}</strong>
+                        <span>{{ stat.label }}</span>
+                    </div>
+                    }
+                </div>
             </div>
 
-            <ul class="hero-points">
-                <li>
-                    <mat-icon>check_circle</mat-icon>
-                    Planes de entrenamiento
-                </li>
-                <li>
-                    <mat-icon>check_circle</mat-icon>
-                    Seguimiento diario
-                </li>
-                <li>
-                    <mat-icon>check_circle</mat-icon>
-                    Miembros y staff
-                </li>
-            </ul>
-        </div>
-
-        <div class="hero-visual" aria-hidden="true">
-            <div class="visual-orb visual-orb--one"></div>
-            <div class="visual-orb visual-orb--two"></div>
-
-            <div class="dashboard-preview">
-                <div class="preview-card preview-card--accent">
-                    <mat-icon>fitness_center</mat-icon>
-                    <div>
-                        <span>Rutinas</span>
-                        <strong>Plan del día activo</strong>
-                    </div>
+            <div class="hero-panel panel-card">
+                <div class="hero-panel__top">
+                    <span class="hero-panel__tag">Top matches</span>
+                    <span class="hero-panel__status">Disponible siempre</span>
                 </div>
 
-                <div class="preview-grid">
-                    <div class="preview-mini-card">
-                        <span>Sesiones</span>
-                        <strong>En control</strong>
-                    </div>
-                    <div class="preview-mini-card">
-                        <span>Miembros</span>
-                        <strong>Acceso controlado</strong>
-                    </div>
-                    <div class="preview-mini-card preview-mini-card--wide">
-                        <span>Estado general</span>
-                        <strong>Entrenamiento listo para comenzar</strong>
-                    </div>
+                <div class="hero-panel__list">
+                    @for (item of cards(); track item.title) {
+                    <article class="hero-card">
+                        <div class="hero-card__icon">
+                            <mat-icon>{{ item.icon }}</mat-icon>
+                        </div>
+                        <div class="hero-card__body">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.description }}</p>
+                        </div>
+                    </article>
+                    }
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="stats-grid" aria-label="Resumen de entrenamiento">
-        @for (stat of stats(); track stat.label) {
-            <article class="stat-card glass-card">
-                <mat-icon>{{ stat.icon }}</mat-icon>
-                <strong>{{ stat.value }}</strong>
-                <span>{{ stat.label }}</span>
-            </article>
+    <section class="section-block">
+        <div class="container">
+            <div class="section-header section-header--split">
+                <div>
+                    <span class="section-kicker">Flujo</span>
+                    <h2 class="section-title">Cómo funciona</h2>
+                </div>
+                <p class="section-description">De la búsqueda a la sesión en cuatro pasos simples.</p>
+            </div>
+
+            <div class="flow-grid">
+                <article class="flow-card panel-card">
+                    <div class="flow-step">01</div>
+                    <mat-icon>search</mat-icon>
+                    <h3>Explorá</h3>
+                    <p>Filtrá por especialidad, modalidad o precio y encontrá el profesional ideal.</p>
+                </article>
+                <article class="flow-card panel-card">
+                    <div class="flow-step">02</div>
+                    <mat-icon>person_check</mat-icon>
+                    <h3>Elegí</h3>
+                    <p>Revisá el perfil completo, calificaciones y disponibilidad antes de decidir.</p>
+                </article>
+                <article class="flow-card panel-card">
+                    <div class="flow-step">03</div>
+                    <mat-icon>event_available</mat-icon>
+                    <h3>Agendá</h3>
+                    <p>Reservá tu cita con fecha, hora y modalidad en un formulario directo.</p>
+                </article>
+                <article class="flow-card panel-card">
+                    <div class="flow-step">04</div>
+                    <mat-icon>star</mat-icon>
+                    <h3>Calificá</h3>
+                    <p>Al terminar la sesión dejá tu reseña y ayudá a otros a elegir mejor.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter-section section-block--top">
+        <div class="container">
+            <div class="newsletter-content panel-card">
+                <h3>¿EMPEZAR A ENTRENAR?</h3>
+                <p>Explora profesionales, revisa reservas y administra miembros desde un solo lugar.</p>
+                <div class="learning-links">
+                    <a mat-flat-button class="btn btn-primary" routerLink="/videojuegos">Revisar profesionales</a>
+                    <a mat-stroked-button class="btn btn-secondary" routerLink="/admin/usuarios">Observar servicios</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- <section class="section-block">
+    <div class="container">
+      <div class="section-header section-header--split">
+        <div>
+          <span class="section-kicker">Marketplace</span>
+          <h2 class="section-title">Perfiles destacados</h2>
+        </div>
+        <p class="section-description">
+          Una vista más directa para recorrer profesionales, especialidades y nivel de servicio.
+        </p>
+      </div>
+
+      <div class="profile-grid">
+        @for (feature of features(); track feature.title) {
+          <article class="profile-card panel-card">
+            <div class="profile-card__icon">
+              <mat-icon>{{ feature.icon }}</mat-icon>
+            </div>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+          </article>
         }
+      </div>
+    </div>
+  </section> -->
+
+    <section class="section-block section-block--accent">
+        <div class="container">
+            <div class="section-header section-header--split">
+                <div>
+                    <span class="section-kicker">Progreso</span>
+                    <h2 class="section-title">Agendas populares</h2>
+                </div>
+                <p class="section-description">
+                    Seguimiento rápido del día para ver quién entrena, con quién y en qué horario.
+                </p>
+            </div>
+
+            <div class="booking-grid">
+                <article class="booking-card panel-card">
+                    <span class="booking-card__tag">08:00</span>
+                    <h3>Valeria Cruz</h3>
+                    <p>Fuerza + recomposición</p>
+                </article>
+                <article class="booking-card panel-card">
+                    <span class="booking-card__tag">10:30</span>
+                    <h3>Diego Rojas</h3>
+                    <p>HIIT y acondicionamiento</p>
+                </article>
+                <article class="booking-card panel-card">
+                    <span class="booking-card__tag">13:00</span>
+                    <h3>Mara León</h3>
+                    <p>Movilidad y recuperación</p>
+                </article>
+            </div>
+        </div>
     </section>
 
-    <section class="content-grid">
-        <article class="glass-card surface-card">
-            <div class="section-heading">
-                <span class="section-kicker">Accesos rápidos</span>
-                <h2>Entradas directas a las zonas que más usas en el día a día.</h2>
+    <section class="newsletter-section section-block--bottom">
+        <div class="container">
+            <div class="newsletter-content panel-card">
+                <h3>¿LISTO PARA ENTRENAR?</h3>
+                <p>Explora profesionales, revisa reservas y administra miembros desde un solo lugar.</p>
+                <div class="learning-links">
+                    <a mat-flat-button class="btn btn-primary" routerLink="/videojuegos">Revisar profesionales</a>
+                    <a mat-stroked-button class="btn btn-secondary" routerLink="/admin/usuarios">Observar servicios</a>
+                </div>
             </div>
-
-            <div class="feature-grid">
-                @for (card of cards(); track card.title) {
-                    <mat-card class="dashboard-card">
-                        <mat-card-header>
-                            <div class="card-icon">
-                                <mat-icon>{{ card.icon }}</mat-icon>
-                            </div>
-                            <div>
-                                <h3>{{ card.title }}</h3>
-                                <p>{{ card.description }}</p>
-                            </div>
-                        </mat-card-header>
-
-                        <mat-card-content>
-                            <a mat-button class="card-link" [routerLink]="card.route">
-                                {{ card.label }}
-                                <mat-icon>arrow_forward</mat-icon>
-                            </a>
-                        </mat-card-content>
-                    </mat-card>
-                }
-            </div>
-        </article>
-
-        <article class="glass-card surface-card surface-card--steps">
-            <div class="section-heading">
-                <span class="section-kicker">Flujo sugerido</span>
-                <h2>Una home creada para arrancar sesión, medir avance y seguir el ritmo.</h2>
-            </div>
-
-            <div class="steps-list">
-                @for (step of steps(); track step.title) {
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <mat-icon>{{ step.icon }}</mat-icon>
-                        </div>
-                        <div>
-                            <h3>{{ step.title }}</h3>
-                            <p>{{ step.description }}</p>
-                        </div>
-                    </div>
-                }
-            </div>
-        </article>
+        </div>
     </section>
 </div>
