@@ -1,0 +1,240 @@
+<section class="form-shell">
+  <div class="form-header">
+    <div>
+      <p class="eyebrow">
+        {{ modo() === 'crear' ? 'Nuevo' : modo() === 'editar' ? 'Editar' : 'Detalle' }} profesional
+        @if (profesionalId) {
+          <span class="prof-id">#{{ profesionalId }}</span>
+        }
+      </p>
+      <h2>{{ modo() === 'editar' ? 'Actualizar perfil' : modo() === 'detalle' ? 'Información del profesional' : 'Crear perfil profesional' }}</h2>
+      <p class="subtitle">{{ modo() === 'detalle' ? 'Vista de solo lectura.' : 'Completá los datos del profesional.' }}</p>
+    </div>
+    <button class="btn-ghost" type="button" (click)="volver()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ error() }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="form-grid">
+
+      <div class="form-card">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>person</mat-icon></div>
+          <h3>Información personal</h3>
+        </div>
+        <label>Imagen de perfil <span class="required">*</span></label>
+        <div class="imagen-upload">
+          <div class="imagen-preview">
+            @if (imagenPreview()) {
+              <img [src]="imagenPreview()" alt="Imagen de perfil" />
+            } @else {
+              <mat-icon>person</mat-icon>
+            }
+          </div>
+          @if (modo() !== 'detalle') {
+            <label class="imagen-label" for="imagen">
+              <mat-icon>upload</mat-icon>
+              Subir imagen
+              <input id="imagen" type="file" accept="image/*" (change)="onImagenChange($event)" hidden />
+            </label>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>Usuario <span class="required">*</span></label>
+          @if (modo() === 'detalle') {
+            <div class="user-dropdown__trigger readonly">
+              @if (usuarioSeleccionado()) {
+                <div class="user-dropdown__selected">
+                  <div class="user-avatar">{{ usuarioSeleccionado()!.nombre[0] }}{{ usuarioSeleccionado()!.apellidos[0] }}</div>
+                  <div>
+                    <strong>{{ usuarioSeleccionado()!.nombre }} {{ usuarioSeleccionado()!.apellidos }}</strong>
+                   <span>{{ usuarioSeleccionado()!.email }}{{ usuarioSeleccionado()?.telefono ? ' - ' + usuarioSeleccionado()?.telefono : '' }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="user-dropdown" [class.open]="dropdownOpen()">
+              <button type="button" class="user-dropdown__trigger" (click)="dropdownOpen.set(!dropdownOpen())">
+                @if (usuarioSeleccionado()) {
+                  <div class="user-dropdown__selected">
+                    <div class="user-avatar">{{ usuarioSeleccionado()!.nombre[0] }}{{ usuarioSeleccionado()!.apellidos[0] }}</div>
+                    <div>
+                      <strong>{{ usuarioSeleccionado()!.nombre }} {{ usuarioSeleccionado()!.apellidos }}</strong>
+                      <span>{{ usuarioSeleccionado()!.email }}{{ usuarioSeleccionado()?.telefono ? ' - ' + usuarioSeleccionado()?.telefono : '' }}</span>
+                    </div>
+                  </div>
+                } @else {
+                  <span class="user-dropdown__placeholder">Seleccioná un usuario...</span>
+                }
+                <mat-icon>{{ dropdownOpen() ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+
+              @if (dropdownOpen()) {
+                <div class="user-dropdown__list">
+                  @for (u of usuarios(); track u.id) {
+                    <button type="button" class="user-dropdown__item" (click)="seleccionarUsuario(u)">
+                      <div class="user-avatar">{{ u.nombre[0] }}{{ u.apellidos[0] }}</div>
+                      <div class="user-dropdown__info">
+                        <strong>{{ u.nombre }} {{ u.apellidos }}</strong>
+                        <span>{{ u.email }}</span>
+                        @if (u.telefono) {
+                          <span>{{ u.telefono }}</span>
+                        }
+                      </div>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          }
+          @if (form.get('usuarioId')?.invalid && form.get('usuarioId')?.touched) {
+            <span class="field-error">Seleccioná un usuario</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>Título profesional <span class="required">*</span></label>
+          <input type="text" formControlName="titulo" placeholder="Ej: Entrenador Personal Certificado" />
+          @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+            <span class="field-error">Mínimo 3 caracteres</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>Descripción <span class="required">*</span></label>
+          <textarea formControlName="descripcion" rows="4" placeholder="Descripción del profesional..."></textarea>
+          @if (form.get('descripcion')?.invalid && form.get('descripcion')?.touched) {
+            <span class="field-error">Mínimo 10 caracteres</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>location_on</mat-icon></div>
+          <h3>Ubicación y modalidad</h3>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Experiencia (años) <span class="required">*</span></label>
+            <input type="number" formControlName="experiencia" placeholder="0" min="0" />
+            @if (form.get('experiencia')?.invalid && form.get('experiencia')?.touched) {
+              <span class="field-error">Valor válido requerido</span>
+            }
+          </div>
+          <div class="field-group">
+            <label>Tarifa base (₡) <span class="required">*</span></label>
+            <input type="number" formControlName="tarifaBase" placeholder="0" min="1" />
+            @if (form.get('tarifaBase')?.invalid && form.get('tarifaBase')?.touched) {
+              <span class="field-error">Debe ser mayor a 0</span>
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Modalidad <span class="required">*</span></label>
+          <select formControlName="modalidad">
+            <option value="PRESENCIAL">Presencial</option>
+            <option value="VIRTUAL">Virtual</option>
+            <option value="MIXTA">Mixta</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Provincia <span class="required">*</span></label>
+            <input type="text" formControlName="provincia" placeholder="Ej: San José" />
+            @if (form.get('provincia')?.invalid && form.get('provincia')?.touched) {
+              <span class="field-error">Requerido</span>
+            }
+          </div>
+          <div class="field-group">
+            <label>Cantón <span class="required">*</span></label>
+            <input type="text" formControlName="canton" placeholder="Ej: Central" />
+            @if (form.get('canton')?.invalid && form.get('canton')?.touched) {
+              <span class="field-error">Requerido</span>
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Distrito <span class="required">*</span></label>
+          <input type="text" formControlName="distrito" placeholder="Ej: Carmen" />
+          @if (form.get('distrito')?.invalid && form.get('distrito')?.touched) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label class="toggle-label">
+            <span>Disponible para citas</span>
+            <div class="toggle-wrap">
+              <input type="checkbox" formControlName="disponible" id="disponible" />
+              <label class="toggle" for="disponible"></label>
+            </div>
+          </label>
+          <p class="field-hint">Si está desactivado, el profesional no recibirá nuevas citas.</p>
+        </div>
+      </div>
+
+      <div class="form-card form-card--full">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>star</mat-icon></div>
+          <h3>Especialidades</h3>
+        </div>
+        <p class="field-hint">Seleccioná las especialidades que aplican a este profesional.</p>
+        <div class="especialidades-grid">
+          @for (esp of especialidades(); track esp.id) {
+            <button
+              type="button"
+              class="esp-chip"
+              [class.esp-chip--selected]="isEspecialidadSelected(esp.id)"
+              [disabled]="modo() === 'detalle'"
+              (click)="toggleEspecialidad(esp.id)"
+            >
+              <mat-icon>{{ isEspecialidadSelected(esp.id) ? 'check' : 'add' }}</mat-icon>
+              {{ esp.nombre }}
+            </button>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-footer">
+      @if (modo() === 'detalle') {
+        <button type="button" class="btn-ghost" (click)="volver()">
+          <mat-icon>arrow_back</mat-icon>
+          Volver
+        </button>
+        <button type="button" class="btn-primary" (click)="irAEditar(profesionalId!)">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </button>
+      } @else {
+        <button type="button" class="btn-ghost" (click)="volver()">Cancelar</button>
+        <button type="submit" class="btn-primary" [disabled]="loading()">
+          @if (loading()) {
+            <mat-icon class="spinning">sync</mat-icon>
+            Guardando...
+          } @else {
+            <mat-icon>save</mat-icon>
+            {{ modo() === 'editar' ? 'Actualizar' : 'Crear profesional' }}
+          }
+        </button>
+      }
+    </div>
+  </form>
+</section>

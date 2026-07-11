@@ -17,4 +17,15 @@ export class ServicioService {
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<Servicio>>(`${this.apiUrl}/${id}`);
   }
+
+  toggleEstado(id: number) {
+    return this.http.patch<ApiResponse<Servicio>>(`${this.apiUrl}/${id}/toggle-estado`, {});
+  }
+  crear(data: any) {
+    return this.http.post<ApiResponse<Servicio>>(this.apiUrl, data);
+  }
+
+  actualizar(id: number, data: any) {
+    return this.http.put<ApiResponse<Servicio>>(`${this.apiUrl}/${id}`, data);
+  }
 }

@@ -3,7 +3,7 @@
   padding: 5.5rem;
 }
 
-.usuarios-card {
+.list-card {
   padding: 1.5rem;
   border: 1px solid var(--color-border);
   min-height: 650px;
@@ -92,6 +92,13 @@ input {
   transform: translateY(-2px);
 }
 
+.btn btn-primary {
+    --mdc-filled-button-container-color: var(--color-primary);
+    --mdc-filled-button-label-text-color: var(--color-primary-fg);
+    background: var(--color-primary) !important;
+    color: var(--color-primary-fg) !important;
+}
+
 input::placeholder {
   opacity: .7;
 }
@@ -139,6 +146,30 @@ tbody tr:hover {
   border: 0;
   cursor: pointer;
   font: inherit;
+}
+
+.precio-menu {
+  padding: 1rem;
+  display: grid;
+  gap: .75rem;
+  min-width: 200px;
+}
+
+.precio-menu label {
+  font-size: .82rem;
+  color: var(--color-text-muted);
+  display: block;
+  margin-bottom: .25rem;
+}
+
+.precio-menu input {
+  width: 100%;
+  padding: .5rem .75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  color: var(--color-text);
+  font-size: .85rem;
 }
 
 @media (max-width: 720px) {

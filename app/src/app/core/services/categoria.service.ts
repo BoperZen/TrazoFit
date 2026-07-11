@@ -18,12 +18,10 @@ export class CategoriaService {
     return this.http.get<ApiResponse<Categoria>>(`${this.apiUrl}/${id}`);
   }
 
-  // ✅ Agregar el método toggleEstado
   toggleEstado(id: number) {
     return this.http.patch<ApiResponse<Categoria>>(`${this.apiUrl}/${id}/toggle-estado`, {});
   }
 
-  // También puedes agregar otros métodos útiles:
   crear(categoria: Partial<Categoria>) {
     return this.http.post<ApiResponse<Categoria>>(this.apiUrl, categoria);
   }

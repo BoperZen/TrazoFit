@@ -29,6 +29,8 @@ export class ProfesionalController {
     };
 
     crear = async (request: Request, response: Response, next: NextFunction) => {
+        console.log('BODY:', request.body);
+        console.log('FILES:', request.files);
         const profesional = await profesionalService.crear(request.body);
         return sendSuccess(
             response,
@@ -62,4 +64,5 @@ export class ProfesionalController {
             data: profesional,
         });
     };
+    
 }

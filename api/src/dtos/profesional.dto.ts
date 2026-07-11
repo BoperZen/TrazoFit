@@ -1,10 +1,7 @@
 import { z } from "zod";
 
 export const createProfesionalSchema = z.object({
-    usuarioId: z
-        .number()
-        .int()
-        .positive("El usuario es obligatorio"),
+    usuarioId: z.coerce.number().int().positive("El usuario es obligatorio"),
 
     titulo: z
         .string()
@@ -18,10 +15,7 @@ export const createProfesionalSchema = z.object({
         .min(10, "La descripción debe tener al menos 10 caracteres")
         .max(500, "La descripción no puede superar 500 caracteres"),
 
-    experiencia: z
-        .number()
-        .int()
-        .min(0, "La experiencia no puede ser negativa"),
+    experiencia: z.coerce.number().int().min(0, "La experiencia no puede ser negativa"),
 
     modalidad: z.enum(["VIRTUAL", "PRESENCIAL", "MIXTA"]),
 
@@ -40,9 +34,7 @@ export const createProfesionalSchema = z.object({
         .trim()
         .min(2, "El distrito es obligatorio"),
 
-    tarifaBase: z
-        .number()
-        .positive("La tarifa debe ser mayor a 0"),
+    tarifaBase: z.coerce.number().positive("La tarifa debe ser mayor a 0"),
 
     disponible: z.boolean().optional(),
 

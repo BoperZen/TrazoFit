@@ -1,0 +1,81 @@
+<section class="list-card">
+  <div class="header">
+    <div>
+      <p class="eyebrow">Administración</p>
+      <h2>Profesionales</h2>
+      <p class="subtitle">Gestiona los perfiles profesionales del marketplace.</p>
+    </div>
+    <button class="btn btn-primary" (click)="irACrear()">Nuevo Profesional</button>
+  </div>
+
+  <div class="actions">
+    <div class="search-row">
+      <input type="text" placeholder="Buscar por nombre o título..."
+        (input)="onSearch($any($event.target).value)" />
+      <button mat-stroked-button type="button" class="role-filter-btn" [matMenuTriggerFor]="modalidadMenu">
+        <mat-icon>tune</mat-icon>
+        <span>Modalidad: {{ modalidadLabel() }}</span>
+      </button>
+      <button mat-stroked-button type="button" class="role-filter-btn" [matMenuTriggerFor]="disponibleMenu">
+        <mat-icon>event_available</mat-icon>
+        <span>{{ disponibleLabel() }}</span>
+      </button>
+    </div>
+  </div>
+
+  <mat-menu #modalidadMenu="matMenu">
+    @for (o of modalidadOptions; track o.value) {
+      <button mat-menu-item (click)="setModalidadFilter(o.value)">{{ o.label }}</button>
+    }
+  </mat-menu>
+
+  <mat-menu #disponibleMenu="matMenu">
+    @for (o of disponibleOptions; track o.label) {
+      <button mat-menu-item (click)="setDisponibleFilter(o.value)">{{ o.label }}</button>
+    }
+  </mat-menu>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Título</th>
+          <th>Modalidad</th>
+          <th>Tarifa base</th>
+          <th>Disponible</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of profesionalesFiltrados(); track p.id) {
+          <tr>
+            <td class="name">{{ p.usuario?.nombre }} {{ p.usuario?.apellidos }}</td>
+            <td>{{ p.titulo }}</td>
+            <td><span class="role">{{ p.modalidad }}</span></td>
+            <td>₡{{ p.tarifaBase }}</td>
+            <td>
+              @if (p.disponible) {
+                <button type="button" class="badge badge-success status-toggle"
+                  (click)="confirmarCambioDisponible(p)">Disponible</button>
+              } @else {
+                <button type="button" class="badge badge-danger status-toggle"
+                  (click)="confirmarCambioDisponible(p)">No disponible</button>
+              }
+            </td>
+            <td class="actions-cell">
+              <button mat-icon-button (click)="irADetalle(p.id)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button (click)="irAEditar(p.id)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6">No hay profesionales registrados.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

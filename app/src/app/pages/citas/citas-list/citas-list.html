@@ -1,0 +1,94 @@
+<section class="list-card">
+  <div class="header">
+    <div>
+      <p class="eyebrow">Administración</p>
+      <h2>Citas</h2>
+      <p class="subtitle">Consulta y filtra las citas registradas en el sistema.</p>
+    </div>
+    <button class="btn btn-primary" (click)="irACrear()">Nueva Cita</button>
+  </div>
+
+  <div class="actions">
+    <div class="search-row">
+      <button mat-stroked-button type="button" class="role-filter-btn" [matMenuTriggerFor]="estadoMenu">
+        <mat-icon>flag</mat-icon>
+        <span>Estado: {{ estadoLabel() }}</span>
+      </button>
+
+      <button mat-stroked-button type="button" class="role-filter-btn" [matMenuTriggerFor]="profesionalMenu">
+        <mat-icon>person</mat-icon>
+        <span>Profesional: {{ profesionalLabel() }}</span>
+      </button>
+
+      <button mat-stroked-button type="button" class="role-filter-btn" [matMenuTriggerFor]="fechaMenu">
+        <mat-icon>date_range</mat-icon>
+        <span>Fechas</span>
+      </button>
+    </div>
+  </div>
+
+  <mat-menu #estadoMenu="matMenu">
+    @for (o of estadoOptions; track o.value) {
+      <button mat-menu-item (click)="setEstadoFilter(o.value)">{{ o.label }}</button>
+    }
+  </mat-menu>
+
+  <mat-menu #profesionalMenu="matMenu">
+    <button mat-menu-item (click)="setProfesionalFilter('TODOS')">Todos</button>
+    @for (p of profesionales(); track p.id) {
+      <button mat-menu-item (click)="setProfesionalFilter(p.id)">
+        {{ p.usuario?.nombre }} {{ p.usuario?.apellidos }}
+      </button>
+    }
+  </mat-menu>
+
+  <mat-menu #fechaMenu="matMenu">
+    <div class="precio-menu" (click)="$event.stopPropagation()">
+      <div class="field-group">
+        <label>Desde</label>
+        <input type="date" (input)="onFechaInicio($any($event.target).value)" />
+      </div>
+      <div class="field-group">
+        <label>Hasta</label>
+        <input type="date" (input)="onFechaFin($any($event.target).value)" />
+      </div>
+    </div>
+  </mat-menu>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Profesional</th>
+          <th>Servicio</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Modalidad</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of citasFiltradas(); track c.id) {
+          <tr>
+            <td class="name">{{ c.cliente?.nombre }} {{ c.cliente?.apellidos }}</td>
+            <td>{{ c.profesional?.usuario?.nombre }} {{ c.profesional?.usuario?.apellidos }}</td>
+            <td>{{ c.servicio?.nombre }}</td>
+            <td>{{ c.fechaCita | date:'dd/MM/yyyy' }}</td>
+            <td>{{ c.horaInicio }}</td>
+            <td><span class="role">{{ c.modalidad }}</span></td>
+            <td><span class="badge" [class]="getBadgeClass(c.estado)">{{ c.estado }}</span></td>
+            <td class="actions-cell">
+              <button mat-icon-button (click)="irADetalle(c.id)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="8">No hay citas registradas.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

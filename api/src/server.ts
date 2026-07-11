@@ -24,7 +24,7 @@ app.use(
 );
 app.get("/", (req, res) => {
     res.json({
-        message: "API de videojuegos funcionando correctamente",
+        message: "API de TrazoFit funcionando correctamente",
     });
 });
 //---- Definir rutas ----

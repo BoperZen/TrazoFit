@@ -1,0 +1,104 @@
+<section class="list-card">
+  <div class="header">
+    <div>
+      <p class="eyebrow">Administración</p>
+      <h2>Servicios</h2>
+      <p class="subtitle">Gestiona los servicios ofrecidos en el marketplace.</p>
+    </div>
+    <button class="btn btn-primary" (click)="irACrear()">Nuevo Servicio</button>
+  </div>
+
+  <div class="actions">
+    <div class="search-row">
+      <input type="text" placeholder="Buscar por nombre..."
+        (input)="onSearch($any($event.target).value)" />
+
+      <button mat-stroked-button type="button" class="role-filter-btn" [matMenuTriggerFor]="categoriaMenu">
+        <mat-icon>category</mat-icon>
+        <span>Categoría: {{ categoriaLabel() }}</span>
+      </button>
+
+      <button mat-stroked-button type="button" class="role-filter-btn" [matMenuTriggerFor]="modalidadMenu">
+        <mat-icon>tune</mat-icon>
+        <span>Modalidad: {{ modalidadLabel() }}</span>
+      </button>
+
+      <button mat-stroked-button type="button" class="role-filter-btn" [matMenuTriggerFor]="precioMenu">
+        <mat-icon>attach_money</mat-icon>
+        <span>Precio</span>
+      </button>
+    </div>
+  </div>
+
+  <mat-menu #categoriaMenu="matMenu">
+    <button mat-menu-item (click)="setCategoriaFilter('TODOS')">Todos</button>
+    @for (c of categorias(); track c.id) {
+      <button mat-menu-item (click)="setCategoriaFilter(c.id)">{{ c.nombre }}</button>
+    }
+  </mat-menu>
+
+  <mat-menu #modalidadMenu="matMenu">
+    @for (o of modalidadOptions; track o.value) {
+      <button mat-menu-item (click)="setModalidadFilter(o.value)">{{ o.label }}</button>
+    }
+  </mat-menu>
+
+  <mat-menu #precioMenu="matMenu">
+    <div class="precio-menu" (click)="$event.stopPropagation()">
+      <div class="field-group">
+        <label>Precio mínimo</label>
+        <input type="number" placeholder="0" (input)="onPrecioMin($any($event.target).value)" />
+      </div>
+      <div class="field-group">
+        <label>Precio máximo</label>
+        <input type="number" placeholder="999999" (input)="onPrecioMax($any($event.target).value)" />
+      </div>
+    </div>
+  </mat-menu>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Profesional</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Modalidad</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of serviciosFiltrados(); track s.id) {
+          <tr>
+            <td class="name">{{ s.nombre }}</td>
+            <td>{{ s.profesional?.usuario?.nombre }} {{ s.profesional?.usuario?.apellidos }}</td>
+            <td>{{ s.categoria?.nombre }}</td>
+            <td>₡{{ s.precio }}</td>
+            <td><span class="role">{{ s.modalidad }}</span></td>
+            <td>
+              @if (s.estado) {
+                <button type="button" class="badge badge-success status-toggle"
+                  (click)="confirmarCambioEstado(s)">Activo</button>
+              } @else {
+                <button type="button" class="badge badge-danger status-toggle"
+                  (click)="confirmarCambioEstado(s)">Inactivo</button>
+              }
+            </td>
+            <td class="actions-cell">
+              <button mat-icon-button (click)="irADetalle(s.id)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button (click)="irAEditar(s.id)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="7">No hay servicios registrados.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

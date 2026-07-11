@@ -56,6 +56,9 @@ async function main() {
             { nombre: "María", apellidos: "Castro", email: "maria@trazofit.com", password: "hash_password", role: Role.CLIENTE },
             { nombre: "Pedro", apellidos: "Mora", email: "pedro@trazofit.com", password: "hash_password", role: Role.CLIENTE },
             { nombre: "Valeria", apellidos: "Núñez", email: "valeria@trazofit.com", password: "hash_password", role: Role.CLIENTE },
+            { nombre: "Juan", apellidos: "Pérez", email: "juan@trazofit.com", password: "hash_password", role: Role.PROFESIONAL, telefono: "8888-1111" },
+            { nombre: "Ana", apellidos: "López", email: "ana@trazofit.com", password: "hash_password", role: Role.PROFESIONAL, telefono: "8888-2222" },
+            { nombre: "Mario", apellidos: "Vega", email: "mario@trazofit.com", password: "hash_password", role: Role.PROFESIONAL, telefono: "8888-3333" },
         ],
     });
 
@@ -260,6 +263,78 @@ async function main() {
                 create: [
                     { especialidad: { connect: { id: specMap["Pérdida de peso"] } } },
                     { especialidad: { connect: { id: specMap["Crossfit"] } } },
+                ],
+            },
+        },
+    });
+
+    await prisma.servicio.create({
+        data: {
+            nombre: "Entrenamiento Funcional",
+            descripcion: "Sesión de movimientos funcionales para mejorar rendimiento atlético.",
+            precio: 14000,
+            duracion: 50,
+            modalidad: Modalidad.PRESENCIAL,
+            estado: true,
+            profesionalId: profCarlos.id,
+            categoriaId: catMap["Fuerza"],
+            especialidades: {
+                create: [
+                    { especialidad: { connect: { id: specMap["Crossfit"] } } },
+                ],
+            },
+        },
+    });
+
+    await prisma.servicio.create({
+        data: {
+            nombre: "Asesoría Nutricional Deportiva",
+            descripcion: "Consulta nutricional orientada al rendimiento y recuperación.",
+            precio: 18000,
+            duracion: 40,
+            modalidad: Modalidad.VIRTUAL,
+            estado: true,
+            profesionalId: profSofia.id,
+            categoriaId: catMap["Nutrición"],
+            especialidades: {
+                create: [
+                    { especialidad: { connect: { id: specMap["Pérdida de peso"] } } },
+                ],
+            },
+        },
+    });
+
+    await prisma.servicio.create({
+        data: {
+            nombre: "Clase de Pilates",
+            descripcion: "Fortalecimiento del core y mejora postural con técnica Pilates.",
+            precio: 11000,
+            duracion: 55,
+            modalidad: Modalidad.PRESENCIAL,
+            estado: false,
+            profesionalId: profDiego.id,
+            categoriaId: catMap["Bienestar"],
+            especialidades: {
+                create: [
+                    { especialidad: { connect: { id: specMap["Pilates"] } } },
+                ],
+            },
+        },
+    });
+
+    await prisma.servicio.create({
+        data: {
+            nombre: "Preparación Maratón",
+            descripcion: "Plan intensivo de 12 semanas para corredores de maratón.",
+            precio: 22000,
+            duracion: 60,
+            modalidad: Modalidad.PRESENCIAL,
+            estado: true,
+            profesionalId: profAndres.id,
+            categoriaId: catMap["Cardio"],
+            especialidades: {
+                create: [
+                    { especialidad: { connect: { id: specMap["Running"] } } },
                 ],
             },
         },

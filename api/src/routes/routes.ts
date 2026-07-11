@@ -29,6 +29,7 @@ export class AppRoutes {
         router.use('/profesional', ProfesionalRoutes.routes) 
         router.use('/servicio', ServicioRoutes.routes)
         router.use('/cita', CitaRoutes.routes)
+        router.use('/images', ImageRoutes.routes)
         return router;
     }
 }

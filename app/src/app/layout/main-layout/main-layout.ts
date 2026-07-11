@@ -34,7 +34,7 @@ export class MainLayout {
 
   adminMaintenanceMenu = signal<MenuItem[]>([
     { label: 'Profesionales', path: '/admin/profesionales', icon: 'fitness_center' },
-    { label: 'Reservas', path: '/admin/ordenes', icon: 'event_repeat' },
+    { label: 'Servicos', path: '/admin/servicios', icon: 'event_repeat' },
     { label: 'Usuarios', path: '/admin/usuarios', icon: 'groups' },
     { label: 'Categorías', path: '/admin/categorias', icon: 'category' },
     { label: 'Especialidades', path: '/admin/especialidades', icon: 'medical_services' },

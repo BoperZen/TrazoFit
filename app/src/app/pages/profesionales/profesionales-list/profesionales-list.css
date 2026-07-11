@@ -3,7 +3,7 @@
   padding: 5.5rem;
 }
 
-.usuarios-card {
+.list-card {
   padding: 1.5rem;
   border: 1px solid var(--color-border);
   min-height: 650px;
@@ -90,6 +90,13 @@ input {
   background: transparent;
   color: var(--color-primary);
   transform: translateY(-2px);
+}
+
+.btn btn-primary {
+    --mdc-filled-button-container-color: var(--color-primary);
+    --mdc-filled-button-label-text-color: var(--color-primary-fg);
+    background: var(--color-primary) !important;
+    color: var(--color-primary-fg) !important;
 }
 
 input::placeholder {

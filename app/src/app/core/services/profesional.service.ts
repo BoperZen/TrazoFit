@@ -21,4 +21,21 @@ export class ProfesionalService {
   getImageUrl(imageName: string): string {
     return `${environment.imageUrl}/${imageName}`;
   }
+  toggleDisponible(id: number) {
+    return this.http.patch<ApiResponse<Profesional>>(`${this.apiUrl}/${id}/toggle-disponible`, {});
+  }
+  crear(data: any) {
+    return this.http.post<ApiResponse<Profesional>>(this.apiUrl, data);
+  }
+
+  actualizar(id: number, data: any) {
+    return this.http.put<ApiResponse<Profesional>>(`${this.apiUrl}/${id}`, data);
+  }
+  subirImagen(formData: FormData) {
+  return this.http.post<{ message: string; fileName: string }>(
+    `${environment.apiUrl}/images/upload`,
+    formData
+  );
+}
+
 }

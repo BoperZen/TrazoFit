@@ -1,0 +1,164 @@
+<section class="form-shell">
+  <div class="form-header">
+    <div>
+      <p class="eyebrow">
+        {{ modo() === 'crear' ? 'Nueva cita' : 'Detalle de cita' }}
+        @if (citaId) {
+          <span class="prof-id">#{{ citaId }}</span>
+        }
+      </p>
+      <h2>{{ modo() === 'crear' ? 'Registrar cita' : 'Información de la cita' }}</h2>
+      <p class="subtitle">
+        {{
+          modo() === 'detalle'
+            ? 'Vista de solo lectura.'
+            : 'Completá los datos para registrar la cita.'
+        }}
+      </p>
+    </div>
+    <button class="btn-ghost" type="button" (click)="volver()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ error() }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="form-grid">
+      <div class="form-card">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>people</mat-icon></div>
+          <h3>Participantes</h3>
+        </div>
+
+        <div class="field-group">
+          <label>Cliente <span class="required">*</span></label>
+          <select formControlName="clienteId">
+            <option [value]="null" disabled>Seleccioná un cliente...</option>
+            @for (c of clientes(); track c.id) {
+              <option [value]="c.id">{{ c.nombre }} {{ c.apellidos }} — {{ c.email }}</option>
+            }
+          </select>
+          @if (form.get('clienteId')?.invalid && form.get('clienteId')?.touched) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>Profesional <span class="required">*</span></label>
+          <select formControlName="profesionalId" (change)="onProfesionalChange($event)">
+            <option [value]="null" disabled>Seleccioná un profesional...</option>
+            @for (p of profesionales(); track p.id) {
+              <option [value]="p.id">
+                {{ p.usuario?.nombre }} {{ p.usuario?.apellidos }} — {{ p.titulo }}
+              </option>
+            }
+          </select>
+          @if (form.get('profesionalId')?.invalid && form.get('profesionalId')?.touched) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>Servicio <span class="required">*</span></label>
+          <select formControlName="servicioId">
+            <option [value]="null" disabled>Seleccioná un servicio...</option>
+            @for (s of serviciosFiltrados(); track s.id) {
+              <option [value]="s.id">{{ s.nombre }} — ₡{{ s.precio }}</option>
+            }
+          </select>
+          @if (form.get('servicioId')?.invalid && form.get('servicioId')?.touched) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>event</mat-icon></div>
+          <h3>Fecha y modalidad</h3>
+        </div>
+
+        <div class="field-group">
+          <label>Fecha de la cita <span class="required">*</span></label>
+          <input type="date" formControlName="fechaCita" />
+          @if (form.get('fechaCita')?.invalid && form.get('fechaCita')?.touched) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Hora inicio <span class="required">*</span></label>
+            <input type="time" formControlName="horaInicio" />
+            @if (form.get('horaInicio')?.invalid && form.get('horaInicio')?.touched) {
+              <span class="field-error">Requerido</span>
+            }
+          </div>
+          <div class="field-group">
+            <label>Hora fin <span class="required">*</span></label>
+            <input type="time" formControlName="horaFin" />
+            @if (form.get('horaFin')?.invalid && form.get('horaFin')?.touched) {
+              <span class="field-error">Requerido</span>
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Modalidad <span class="required">*</span></label>
+          <select formControlName="modalidad">
+            <option value="PRESENCIAL">Presencial</option>
+            <option value="VIRTUAL">Virtual</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-card form-card--full">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>comment</mat-icon></div>
+          <h3>Comentario</h3>
+        </div>
+        <div class="field-group">
+          <label>Descripción o necesidad <span class="required">*</span></label>
+          <textarea
+            formControlName="comentarioCliente"
+            rows="4"
+            placeholder="Describí tu necesidad o comentario inicial..."
+          ></textarea>
+          @if (modo() === 'detalle') {
+            <div class="field-group">
+              <label>Estado</label>
+              <input type="text" [value]="form.get('estado')?.value ?? '—'" readonly />
+            </div>
+          }
+          @if (form.get('comentarioCliente')?.invalid && form.get('comentarioCliente')?.touched) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button type="button" class="btn-ghost" (click)="volver()">
+        {{ modo() === 'detalle' ? 'Volver' : 'Cancelar' }}
+      </button>
+      @if (modo() === 'crear') {
+        <button type="submit" class="btn-primary" [disabled]="loading()">
+          @if (loading()) {
+            <mat-icon class="spinning">sync</mat-icon>
+            Guardando...
+          } @else {
+            <mat-icon>save</mat-icon>
+            Registrar cita
+          }
+        </button>
+      }
+    </div>
+  </form>
+</section>

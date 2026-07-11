@@ -1,0 +1,195 @@
+<section class="form-shell">
+  <div class="form-header">
+    <div>
+      <p class="eyebrow">
+        {{ modo() === 'crear' ? 'Nuevo' : modo() === 'editar' ? 'Editar' : 'Detalle' }} servicio
+
+        @if (servicioId) {
+          <span class="prof-id">#{{ servicioId }}</span>
+        }
+      </p>
+
+      <h2>
+        {{
+          modo() === 'editar'
+            ? 'Actualizar servicio'
+            : modo() === 'detalle'
+              ? 'Información del servicio'
+              : 'Crear servicio'
+        }}
+      </h2>
+
+      <p class="subtitle">
+        {{
+          modo() === 'detalle' ? 'Vista de solo lectura.' : 'Completá la información del servicio.'
+        }}
+      </p>
+    </div>
+
+    <button class="btn-ghost" type="button" (click)="volver()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ error() }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="form-grid">
+      <!-- Información -->
+
+      <div class="form-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>fitness_center</mat-icon>
+          </div>
+
+          <h3>Información del servicio</h3>
+        </div>
+
+        <div class="field-group">
+          <label>Nombre <span class="required">*</span></label>
+
+          <input type="text" formControlName="nombre" placeholder="Nombre del servicio" />
+
+          @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+            <span class="field-error"> Mínimo 3 caracteres. </span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>Descripción <span class="required">*</span></label>
+
+          <textarea rows="5" formControlName="descripcion"> </textarea>
+
+          @if (form.get('descripcion')?.invalid && form.get('descripcion')?.touched) {
+            <span class="field-error"> Mínimo 10 caracteres. </span>
+          }
+        </div>
+      </div>
+
+      <!-- Configuración -->
+
+      <div class="form-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>settings</mat-icon>
+          </div>
+
+          <h3>Configuración</h3>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Precio <span class="required">*</span></label>
+
+            <input type="number" formControlName="precio" />
+
+            @if (form.get('precio')?.invalid && form.get('precio')?.touched) {
+              <span class="field-error"> Debe ser mayor a 0. </span>
+            }
+          </div>
+
+          <div class="field-group">
+            <label>Duración (min.) <span class="required">*</span></label>
+
+            <input type="number" formControlName="duracion" />
+
+            @if (form.get('duracion')?.invalid && form.get('duracion')?.touched) {
+              <span class="field-error"> Debe ser mayor a 0. </span>
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Modalidad <span class="required">*</span></label>
+
+          <select formControlName="modalidad">
+            <option value="PRESENCIAL">Presencial</option>
+            <option value="VIRTUAL">Virtual</option>
+            <option value="MIXTA">Mixta</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label>Categoría <span class="required">*</span></label>
+
+          <select formControlName="categoriaId">
+            <option [ngValue]="null">Seleccione una categoría</option>
+
+            @for (categoria of categorias(); track categoria.id) {
+              <option [ngValue]="categoria.id">
+                {{ categoria.nombre }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label>Profesional <span class="required">*</span></label>
+
+          <select formControlName="profesionalId">
+            <option [ngValue]="null">Seleccione un profesional</option>
+
+            @for (profesional of profesionales(); track profesional.id) {
+              <option [ngValue]="profesional.id">
+                {{ profesional.usuario?.nombre }}
+                {{ profesional.usuario?.apellidos }}
+                - {{ profesional.titulo }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="toggle-label">
+            <span>Servicio activo</span>
+
+            <div class="toggle-wrap">
+              <input id="estado" type="checkbox" formControlName="estado" />
+
+              <label for="estado" class="toggle"> </label>
+            </div>
+          </label>
+
+          <p class="field-hint">Si está desactivado no aparecerá disponible para nuevas citas.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      @if (modo() === 'detalle') {
+        <button type="button" class="btn-ghost" (click)="volver()">
+          <mat-icon>arrow_back</mat-icon>
+
+          Volver
+        </button>
+
+        <button type="button" class="btn-primary" (click)="irAEditar(servicioId!)">
+          <mat-icon>edit</mat-icon>
+
+          Editar
+        </button>
+      } @else {
+        <button type="button" class="btn-ghost" (click)="volver()">Cancelar</button>
+
+        <button type="submit" class="btn-primary" [disabled]="loading()">
+          @if (loading()) {
+            <mat-icon class="spinning"> sync </mat-icon>
+
+            Guardando...
+          } @else {
+            <mat-icon> save </mat-icon>
+
+            {{ modo() === 'editar' ? 'Actualizar' : 'Crear servicio' }}
+          }
+        </button>
+      }
+    </div>
+  </form>
+</section>
