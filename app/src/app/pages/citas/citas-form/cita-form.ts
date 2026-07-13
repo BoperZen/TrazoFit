@@ -38,15 +38,15 @@ export class CitaForm implements OnInit {
   citaId: number | null = null;
 
   readonly form = this.fb.group({
-    clienteId:           [null as number | null, Validators.required],
-    profesionalId:       [null as number | null, Validators.required],
-    servicioId:          [null as number | null, Validators.required],
-    fechaCita:           ['', Validators.required],
-    horaInicio:          ['', Validators.required],
-    horaFin:             ['', Validators.required],
-    modalidad:           ['PRESENCIAL', Validators.required],
-    comentarioCliente:   ['', Validators.required],
-    estado:              [{ value: '', disabled: true }],
+    clienteId: [null as number | null, Validators.required],
+    profesionalId: [null as number | null, Validators.required],
+    servicioId: [null as number | null, Validators.required],
+    fechaCita: ['', Validators.required],
+    horaInicio: ['', Validators.required],
+    horaFin: ['', Validators.required],
+    modalidad: ['PRESENCIAL', Validators.required],
+    comentarioCliente: ['', Validators.required],
+    estado: [{ value: '', disabled: true }],
   });
 
   ngOnInit(): void {
@@ -55,7 +55,6 @@ export class CitaForm implements OnInit {
     if (id) {
       this.modo.set('detalle');
       this.citaId = +id;
-      this.cargarCita(+id);
       this.form.disable();
     }
   }
@@ -70,7 +69,12 @@ export class CitaForm implements OnInit {
       error: (err) => console.error(err),
     });
     this.servicioService.listar().subscribe({
-      next: (res) => this.servicios.set(res.data.filter((s: any) => s.estado)),
+      next: (res) => {
+        this.servicios.set(res.data.filter((s: any) => s.estado));
+        if (this.citaId) {
+          this.cargarCita(this.citaId);
+        }
+      },
       error: (err) => console.error(err),
     });
   }
@@ -88,13 +92,13 @@ export class CitaForm implements OnInit {
       next: (res) => {
         const c = res.data;
         this.form.patchValue({
-          clienteId:         c.clienteId,
-          profesionalId:     c.profesionalId,
-          servicioId:        c.servicioId,
-          fechaCita:         c.fechaCita.split('T')[0],
-          horaInicio:        c.horaInicio,
-          horaFin:           c.horaFin,
-          modalidad:         c.modalidad,
+          clienteId: c.clienteId,
+          profesionalId: c.profesionalId,
+          servicioId: c.servicioId,
+          fechaCita: c.fechaCita.split('T')[0],
+          horaInicio: c.horaInicio,
+          horaFin: c.horaFin,
+          modalidad: c.modalidad,
           comentarioCliente: c.comentarioCliente ?? '',
           estado: c.estado,
         });
@@ -116,13 +120,13 @@ export class CitaForm implements OnInit {
 
     const values = this.form.value;
     const data = {
-      clienteId:         Number(values.clienteId),
-      profesionalId:     Number(values.profesionalId),
-      servicioId:        Number(values.servicioId),
-      fechaCita:         values.fechaCita,
-      horaInicio:        values.horaInicio,
-      horaFin:           values.horaFin,
-      modalidad:         values.modalidad,
+      clienteId: Number(values.clienteId),
+      profesionalId: Number(values.profesionalId),
+      servicioId: Number(values.servicioId),
+      fechaCita: values.fechaCita,
+      horaInicio: values.horaInicio,
+      horaFin: values.horaFin,
+      modalidad: values.modalidad,
       comentarioCliente: values.comentarioCliente,
     };
 
