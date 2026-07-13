@@ -9,6 +9,7 @@ import { CategoriaService } from '../../../core/services/categoria.service';
 import { Servicio } from '../../../core/models/servicio.model';
 import { Categoria } from '../../../core/models/categoria.model';
 import { EstadoConfirmDialogComponent } from '../../../shared/components/estado-confirm-dialog.component';
+import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
 
 @Component({
   selector: 'app-servicios-list',
@@ -114,11 +115,25 @@ export class ServiciosList implements OnInit {
           this.servicios.update(items =>
             items.map(item => item.id === res.data.id ? { ...item, ...res.data } : item)
           );
+          this.dialog.open(SuccessDialogComponent, {
+            width: '380px',
+            data: {
+              titulo: '¡Estado actualizado!',
+              mensaje: `${servicio.nombre} fue marcado como ${nuevo ? 'activo' : 'inactivo'}.`
+            }
+          });
         },
         error: (err) => {
           this.servicios.update(items =>
             items.map(item => item.id === servicio.id ? { ...item, estado: anterior } : item)
           );
+          this.dialog.open(SuccessDialogComponent, {
+            width: '380px',
+            data: {
+              titulo: 'Error',
+              mensaje: 'No se pudo cambiar el estado. Intentá de nuevo.'
+            }
+          });
           console.error(err);
         },
       });

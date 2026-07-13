@@ -11,6 +11,9 @@ import { CategoriaService } from '../../../core/services/categoria.service';
 import { Profesional } from '../../../core/models/profesional.model';
 import { Categoria } from '../../../core/models/categoria.model';
 
+import { MatDialog } from '@angular/material/dialog';
+import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
+
 @Component({
   selector: 'app-servicios-form',
   standalone: true,
@@ -31,6 +34,7 @@ export class ServicioForm implements OnInit {
   private readonly servicioService = inject(ServicioService);
   private readonly profesionalService = inject(ProfesionalService);
   private readonly categoriaService = inject(CategoriaService);
+  private readonly dialog = inject(MatDialog);
 
   readonly modo = signal<'crear' | 'editar' | 'detalle'>('crear');
 
@@ -118,7 +122,6 @@ export class ServicioForm implements OnInit {
   }
 
   guardar() {
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -126,26 +129,44 @@ export class ServicioForm implements OnInit {
 
     this.loading.set(true);
 
+    const esEditar = this.modo() === 'editar';
+
     const data: any = {
       ...this.form.value,
       precio: Number(this.form.value.precio),
       duracion: Number(this.form.value.duracion),
     };
 
-    const request$ =
-      this.modo() === 'editar'
-        ? this.servicioService.actualizar(this.servicioId!, data)
-        : this.servicioService.crear(data);
+    const request$ = esEditar
+      ? this.servicioService.actualizar(this.servicioId!, data)
+      : this.servicioService.crear(data);
 
     request$.subscribe({
-      next: () => this.router.navigate(['/admin/servicios']),
+      next: () => {
+        this.dialog.open(SuccessDialogComponent, {
+          width: '380px',
+          data: {
+            titulo: esEditar ? '¡Actualizado!' : '¡Creado!',
+            mensaje: esEditar
+              ? 'El servicio fue actualizado correctamente.'
+              : 'El servicio fue registrado correctamente.',
+          }
+        }).afterClosed().subscribe(() => {
+          this.router.navigate(['/admin/servicios']);
+        });
+      },
       error: err => {
-        console.error(err);
+        this.dialog.open(SuccessDialogComponent, {
+          width: '380px',
+          data: {
+            titulo: 'Error',
+            mensaje: 'Ocurrió un error al guardar. Revisá los datos.',
+          }
+        });
         this.loading.set(false);
-        this.error.set('Ocurrió un error al guardar.');
+        console.error(err);
       }
     });
-
   }
 
   volver() {

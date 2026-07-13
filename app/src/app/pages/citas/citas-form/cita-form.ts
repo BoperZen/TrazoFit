@@ -10,6 +10,8 @@ import { ServicioService } from '../../../core/services/servicio.service';
 import { Usuario } from '../../../core/models/usuario.model';
 import { Profesional } from '../../../core/models/profesional.model';
 import { Servicio } from '../../../core/models/servicio.model';
+import { MatDialog } from '@angular/material/dialog';
+import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
 
 @Component({
   selector: 'app-cita-form',
@@ -27,6 +29,7 @@ export class CitaForm implements OnInit {
   private readonly usuarioService = inject(UsuarioService);
   private readonly profesionalService = inject(ProfesionalService);
   private readonly servicioService = inject(ServicioService);
+  private readonly dialog = inject(MatDialog);
 
   readonly modo = signal<'crear' | 'detalle'>('crear');
   readonly clientes = signal<Usuario[]>([]);
@@ -111,34 +114,50 @@ export class CitaForm implements OnInit {
   }
 
   guardar() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.loading.set(true);
-    this.error.set(null);
-
-    const values = this.form.value;
-    const data = {
-      clienteId: Number(values.clienteId),
-      profesionalId: Number(values.profesionalId),
-      servicioId: Number(values.servicioId),
-      fechaCita: values.fechaCita,
-      horaInicio: values.horaInicio,
-      horaFin: values.horaFin,
-      modalidad: values.modalidad,
-      comentarioCliente: values.comentarioCliente,
-    };
-
-    this.citaService.crear(data).subscribe({
-      next: () => this.router.navigate(['/admin/citas']),
-      error: (err) => {
-        this.error.set('Ocurrió un error al guardar. Revisá los datos.');
-        this.loading.set(false);
-        console.error(err);
-      },
-    });
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
   }
+  this.loading.set(true);
+  this.error.set(null);
+
+  const values = this.form.value;
+  const data = {
+    clienteId:         Number(values.clienteId),
+    profesionalId:     Number(values.profesionalId),
+    servicioId:        Number(values.servicioId),
+    fechaCita:         values.fechaCita,
+    horaInicio:        values.horaInicio,
+    horaFin:           values.horaFin,
+    modalidad:         values.modalidad,
+    comentarioCliente: values.comentarioCliente,
+  };
+
+  this.citaService.crear(data).subscribe({
+    next: () => {
+      this.dialog.open(SuccessDialogComponent, {
+        width: '380px',
+        data: {
+          titulo: '¡Cita registrada!',
+          mensaje: 'La cita fue creada correctamente con estado Pendiente.',
+        }
+      }).afterClosed().subscribe(() => {
+        this.router.navigate(['/admin/citas']);
+      });
+    },
+    error: (err) => {
+      this.dialog.open(SuccessDialogComponent, {
+        width: '380px',
+        data: {
+          titulo: 'Error',
+          mensaje: 'Ocurrió un error al registrar la cita. Revisá los datos.',
+        }
+      });
+      this.loading.set(false);
+      console.error(err);
+    },
+  });
+}
 
   volver() {
     this.router.navigate(['/admin/citas']);

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ProfesionalService } from '../../../core/services/profesional.service';
 import { Profesional } from '../../../core/models/profesional.model';
 import { EstadoConfirmDialogComponent } from '../../../shared/components/estado-confirm-dialog.component';
+import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
 
 @Component({
   selector: 'app-profesionales-list',
@@ -103,6 +104,13 @@ export class ProfesionalesList implements OnInit {
           this.profesionales.update((items) =>
             items.map((item) => item.id === response.data.id ? { ...item, ...response.data } : item)
           );
+          this.dialog.open(SuccessDialogComponent, {
+      width: '380px',
+      data: {
+        titulo: '¡Estado actualizado!',
+        mensaje: `${profesional.usuario?.nombre} fue marcado como ${nuevo ? 'disponible' : 'no disponible'}.`
+      }
+    });
         },
         error: (err) => {
           this.profesionales.update((items) =>

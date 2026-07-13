@@ -7,6 +7,7 @@ import { EspecialidadService } from '../../../core/services/especialidad.service
 import { Especialidad } from '../../../core/models/especialidad.model';
 import { EstadoConfirmDialogComponent } from '../../../shared/components/estado-confirm-dialog.component';
 import { ApiResponse } from '../../../core/models/api-response.model';
+import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
 
 @Component({
   selector: 'app-especialidades-list',
@@ -79,7 +80,7 @@ export class EspecialidadesList implements OnInit {
       if (!confirmed) return;
 
       this.especialidades.update((items) =>
-        items.map((item) => 
+        items.map((item) =>
           item.id === especialidadId ? { ...item, estado: estadoNuevo } : item
         )
       );
@@ -87,17 +88,31 @@ export class EspecialidadesList implements OnInit {
       this.especialidadService.toggleEstado(especialidadId).subscribe({
         next: (response: ApiResponse<Especialidad>) => {
           this.especialidades.update((items) =>
-            items.map((item) => 
+            items.map((item) =>
               item.id === response.data.id ? { ...item, ...response.data } : item
             )
           );
+          this.dialog.open(SuccessDialogComponent, {
+            width: '380px',
+            data: {
+              titulo: '¡Estado actualizado!',
+              mensaje: `${especialidad.nombre} fue marcado como ${estadoNuevo ? 'activo' : 'inactivo'}.`
+            }
+          });
         },
         error: (err) => {
           this.especialidades.update((items) =>
-            items.map((item) => 
+            items.map((item) =>
               item.id === especialidadId ? { ...item, estado: estadoAnterior } : item
             )
           );
+          this.dialog.open(SuccessDialogComponent, {
+            width: '380px',
+            data: {
+              titulo: 'Error',
+              mensaje: 'No se pudo cambiar el estado. Intentá de nuevo.'
+            }
+          });
           console.error('Error al cambiar el estado:', err);
         },
       });

@@ -7,6 +7,7 @@ import { CategoriaService } from '../../../core/services/categoria.service';
 import { Categoria } from '../../../core/models/categoria.model';
 import { EstadoConfirmDialogComponent } from '../../../shared/components/estado-confirm-dialog.component';
 import { ApiResponse } from '../../../core/models/api-response.model';
+import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
 
 @Component({
   selector: 'app-categorias-list',
@@ -79,7 +80,7 @@ export class CategoriasList implements OnInit {
       if (!confirmed) return;
 
       this.categorias.update((items) =>
-        items.map((item) => 
+        items.map((item) =>
           item.id === categoriaId ? { ...item, estado: estadoNuevo } : item
         )
       );
@@ -87,17 +88,31 @@ export class CategoriasList implements OnInit {
       this.categoriaService.toggleEstado(categoriaId).subscribe({
         next: (response: ApiResponse<Categoria>) => {
           this.categorias.update((items) =>
-            items.map((item) => 
+            items.map((item) =>
               item.id === response.data.id ? { ...item, ...response.data } : item
             )
           );
+          this.dialog.open(SuccessDialogComponent, {
+            width: '380px',
+            data: {
+              titulo: '¡Estado actualizado!',
+              mensaje: `${categoria.nombre} fue marcado como ${estadoNuevo ? 'activo' : 'inactivo'}.`
+            }
+          });
         },
         error: (err) => {
           this.categorias.update((items) =>
-            items.map((item) => 
+            items.map((item) =>
               item.id === categoriaId ? { ...item, estado: estadoAnterior } : item
             )
           );
+          this.dialog.open(SuccessDialogComponent, {
+            width: '380px',
+            data: {
+              titulo: 'Error',
+              mensaje: 'No se pudo cambiar el estado. Intentá de nuevo.'
+            }
+          });
           console.error('Error al cambiar el estado:', err);
         },
       });

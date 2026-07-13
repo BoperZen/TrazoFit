@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { UsuarioService } from '../../../core/services/usuario.service';
 import { Role, Usuario } from '../../../core/models/usuario.model';
 import { UsuarioEstadoConfirmDialogComponent } from './usuario-estado-confirm-dialog.component';
+import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -101,11 +102,25 @@ export class UsuariosList implements OnInit {
           this.usuarios.update((items) =>
             items.map((item) => (item.id === response.data.id ? { ...item, ...response.data } : item)),
           );
+          this.dialog.open(SuccessDialogComponent, {
+            width: '380px',
+            data: {
+              titulo: '¡Estado actualizado!',
+              mensaje: `${usuario.nombre} fue marcado como ${estadoNuevo ? 'activo' : 'inactivo'}.`
+            }
+          });
         },
         error: (err) => {
           this.usuarios.update((items) =>
             items.map((item) => (item.id === usuario.id ? { ...item, estado: estadoAnterior } : item)),
           );
+          this.dialog.open(SuccessDialogComponent, {
+            width: '380px',
+            data: {
+              titulo: 'Error',
+              mensaje: 'No se pudo cambiar el estado. Intentá de nuevo.'
+            }
+          });
           console.error(err);
         },
       });

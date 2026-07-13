@@ -8,6 +8,8 @@ import { EspecialidadService } from '../../../core/services/especialidad.service
 import { UsuarioService } from '../../../core/services/usuario.service';
 import { Especialidad } from '../../../core/models/especialidad.model';
 import { Usuario } from '../../../core/models/usuario.model';
+import { MatDialog } from '@angular/material/dialog';
+import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
 
 @Component({
   selector: 'app-profesional-form',
@@ -24,6 +26,7 @@ export class ProfesionalForm implements OnInit {
   private readonly profesionalService = inject(ProfesionalService);
   private readonly especialidadService = inject(EspecialidadService);
   private readonly usuarioService = inject(UsuarioService);
+  private readonly dialog = inject(MatDialog);
 
   readonly modo = signal<'crear' | 'editar' | 'detalle'>('crear');
   readonly especialidades = signal<Especialidad[]>([]);
@@ -86,11 +89,11 @@ export class ProfesionalForm implements OnInit {
 }
 
   cargarEspecialidades() {
-    this.especialidadService.listar().subscribe({
-      next: (res) => this.especialidades.set(res.data),
-      error: (err) => console.error(err),
-    });
-  }
+  this.especialidadService.listar().subscribe({
+    next: (res) => this.especialidades.set(res.data.filter((e: any) => e.estado)),
+    error: (err) => console.error(err),
+  });
+}
 
   cargarProfesional(id: number) {
   this.profesionalService.obtenerPorId(id).subscribe({
@@ -183,28 +186,48 @@ export class ProfesionalForm implements OnInit {
 private enviarProfesional(imagen: string | null) {
   const values = this.form.value;
   const data: any = {
-    usuarioId:      values.usuarioId,
-    titulo:         values.titulo,
-    descripcion:    values.descripcion,
-    experiencia:    Number(values.experiencia),
-    modalidad:      values.modalidad,
-    provincia:      values.provincia,
-    canton:         values.canton,
-    distrito:       values.distrito,
-    tarifaBase:     Number(values.tarifaBase),
-    disponible:     values.disponible ?? true,
+    usuarioId:       values.usuarioId,
+    titulo:          values.titulo,
+    descripcion:     values.descripcion,
+    experiencia:     Number(values.experiencia),
+    modalidad:       values.modalidad,
+    provincia:       values.provincia,
+    canton:          values.canton,
+    distrito:        values.distrito,
+    tarifaBase:      Number(values.tarifaBase),
+    disponible:      values.disponible ?? true,
     especialidadIds: values.especialidadIds ?? [],
   };
   if (imagen) data.imagen = imagen;
 
-  const request$ = this.modo() === 'editar'
+  const esEditar = this.modo() === 'editar';
+
+  const request$ = esEditar
     ? this.profesionalService.actualizar(this.profesionalId!, data)
     : this.profesionalService.crear(data);
 
   request$.subscribe({
-    next: () => this.router.navigate(['/admin/profesionales']),
+    next: () => {
+      this.dialog.open(SuccessDialogComponent, {
+        width: '380px',
+        data: {
+          titulo: esEditar ? '¡Actualizado!' : '¡Creado!',
+          mensaje: esEditar
+            ? 'El profesional fue actualizado correctamente.'
+            : 'El profesional fue registrado correctamente.',
+        }
+      }).afterClosed().subscribe(() => {
+        this.router.navigate(['/admin/profesionales']);
+      });
+    },
     error: (err) => {
-      this.error.set('Ocurrió un error al guardar.');
+      this.dialog.open(SuccessDialogComponent, {
+        width: '380px',
+        data: {
+          titulo: 'Error',
+          mensaje: 'Ocurrió un error al guardar. Revisá los datos.',
+        }
+      });
       this.loading.set(false);
       console.error(err);
     },
