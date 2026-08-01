@@ -1,0 +1,22 @@
+<!-- top-professionals-chart.component.html -->
+<div class="chart-wrapper">
+  <h3 class="chart-title">Profesionales con Mayor Cantidad de Citas</h3>
+  <p class="chart-subtitle">Ranking por volumen total de citas atendidas</p>
+
+  <ngx-charts-bar-horizontal
+    [view]="view"
+    [results]="data()"
+    [scheme]="colorScheme"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="false"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    xAxisLabel="Cantidad de citas"
+    yAxisLabel="Profesional"
+    [gradient]="false"
+    [tooltipDisabled]="false"
+    [roundDomains]="true"
+    [showDataLabel]="true"
+  />
+</div>

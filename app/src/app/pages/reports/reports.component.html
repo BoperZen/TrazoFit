@@ -1,0 +1,33 @@
+<!-- reports.component.html -->
+<div class="reports-container">
+
+  <header class="reports-header">
+    <h1>Panel de Reportes</h1>
+    <p>Análisis de rendimiento, demanda y distribución — TrazoFit</p>
+  </header>
+
+  <div class="charts-grid">
+
+    <section class="chart-section">
+      <span class="chart-badge compare">COMPARAR</span>
+      <app-top-professionals-chart />
+    </section>
+
+    <section class="chart-section">
+      <span class="chart-badge time">TIEMPO</span>
+      <app-demand-trend-chart />
+    </section>
+
+    <section class="chart-section">
+      <span class="chart-badge relation">RELACIÓN</span>
+      <app-ratings-volume-chart />
+    </section>
+
+    <section class="chart-section">
+      <span class="chart-badge distribution">DISTRIBUCIÓN</span>
+      <app-duration-histogram-chart />
+    </section>
+
+  </div>
+
+</div>

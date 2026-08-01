@@ -1,0 +1,23 @@
+<!-- duration-histogram-chart.component.html -->
+<div class="chart-wrapper">
+  <h3 class="chart-title">Distribución de Duración de Citas</h3>
+  <p class="chart-subtitle">Frecuencia de citas agrupadas por rango de tiempo</p>
+
+  <ngx-charts-bar-vertical
+    [view]="view"
+    [results]="data()"
+    [scheme]="colorScheme"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="false"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    xAxisLabel="Rango de duración"
+    yAxisLabel="Cantidad de citas"
+    [gradient]="false"
+    [barPadding]="1"
+    [roundEdges]="false"
+    [showDataLabel]="true"
+    [tooltipDisabled]="false"
+  />
+</div>

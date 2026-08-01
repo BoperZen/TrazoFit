@@ -1,0 +1,37 @@
+/* reports-charts.css */
+
+.chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.chart-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+  color: #f0f0f0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.chart-subtitle {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0 0 1.25rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+.ngx-charts text {
+  fill: #aaa !important;
+  font-family: 'Roboto', sans-serif !important;
+  font-size: 11px !important;
+}
+
+.ngx-charts .gridline-path {
+  stroke: #333 !important;
+}
+
+.ngx-charts .tooltip-anchor {
+  fill: #d87757;
+}
