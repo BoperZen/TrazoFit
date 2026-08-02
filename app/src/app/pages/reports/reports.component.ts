@@ -4,7 +4,6 @@ import { NgxChartsModule, Color, ScaleType, LegendPosition } from '@swimlane/ngx
 import { CitaService } from '../../core/services/cita.service';
 import { ProfesionalService } from '../../core/services/profesional.service';
 import { Cita } from '../../core/models/cita.model';
-import { Profesional } from '../../core/models/profesional.model';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -20,14 +19,14 @@ export class ReportsComponent implements OnInit {
   private readonly profesionalService = inject(ProfesionalService);
   readonly legendBelow = LegendPosition.Below;
 
-  citasPorEstado   = signal<{ name: string; value: number }[]>([]);
+  citasPorEstado = signal<{ name: string; value: number }[]>([]);
   topProfesionales = signal<{ name: string; value: number }[]>([]);
   topServiciosBubble = signal<{ name: string; series: { name: string; x: number; y: number; r: number }[] }[]>([]);
-  profPorModalidad = signal<{ name: string; value: number }[]>([]);
+  promedioCalificaciones = signal<{ name: string; value: number }[]>([]);
 
-  readonly viewPie:    [number, number] = [500, 320];
-  readonly viewBar:    [number, number] = [500, 320];
-  readonly viewBubble: [number, number] = [500, 320];
+  readonly viewPie: [number, number] = [500, 380];
+  readonly viewBar: [number, number] = [500, 320];
+  readonly viewBubble: [number, number] = [500, 360];
 
   readonly schemeNaranja: Color = {
     name: 'naranja', selectable: true, group: ScaleType.Ordinal,
@@ -49,22 +48,26 @@ export class ReportsComponent implements OnInit {
     domain: ['#d87757', '#5b9bd5', '#70c18e', '#9b7fd4', '#e8956d', '#4a84be'],
   };
 
+  readonly schemeAzul: Color = {
+    name: 'azul', selectable: true, group: ScaleType.Ordinal,
+    domain: ['#5b9bd5', '#4a84be', '#3a6da7', '#2a5690', '#1a3f79'],
+  };
+
   formatInt = (value: number): string =>
     Number.isInteger(value) ? value.toString() : '';
 
   ngOnInit(): void {
     forkJoin({
-      citas:         this.citaService.listar(),
+      citas: this.citaService.listar(),
       profesionales: this.profesionalService.listar(),
     }).subscribe({
-      next: ({ citas, profesionales }) => {
-        const listaCitas: Cita[]          = citas.data;
-        const listaProfs: Profesional[]   = profesionales.data;
+      next: ({ citas }) => {
+        const listaCitas: Cita[] = citas.data;
 
         this.procesarCitasPorEstado(listaCitas);
         this.procesarTopProfesionales(listaCitas);
         this.procesarTopServiciosBubble(listaCitas);
-        this.procesarProfPorModalidad(listaProfs);
+        this.procesarPromedioCalificaciones(listaCitas);
       },
       error: (err) => console.error('Error cargando datos:', err),
     });
@@ -96,27 +99,26 @@ export class ReportsComponent implements OnInit {
     );
   }
 
+  private servicioLabels = new Map<number, string>();
+
   private procesarTopServiciosBubble(citas: Cita[]): void {
-    // Conteo de citas por servicio
     const conteo = new Map<string, number>();
     for (const c of citas) {
       const nombre = c.servicio?.nombre ?? `Servicio #${c.servicioId}`;
       conteo.set(nombre, (conteo.get(nombre) ?? 0) + 1);
     }
 
-    // Convertir a formato bubble: cada servicio es una serie con un punto
     const ordenado = Array.from(conteo.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6);
 
-    // X = índice del servicio, Y = cantidad de citas, R = proporcional
     const maxVal = Math.max(...ordenado.map(([, v]) => v));
 
     this.topServiciosBubble.set(
       ordenado.map(([nombre, cantidad], i) => ({
         name: nombre,
         series: [{
-          name: nombre,
+          name: '',
           x: i + 1,
           y: cantidad,
           r: Math.max(5, Math.round((cantidad / maxVal) * 20)),
@@ -124,14 +126,30 @@ export class ReportsComponent implements OnInit {
       }))
     );
   }
+  formatVacio = (): string => '';
 
-  private procesarProfPorModalidad(profesionales: Profesional[]): void {
-    const conteo = new Map<string, number>();
-    for (const p of profesionales) {
-      conteo.set(p.modalidad, (conteo.get(p.modalidad) ?? 0) + 1);
+  private procesarPromedioCalificaciones(citas: Cita[]): void {
+    const mapa = new Map<string, { suma: number; total: number }>();
+
+    for (const c of citas) {
+      if (!c.resena) continue;
+
+      const nombre = c.profesional?.usuario
+        ? `${c.profesional.usuario.nombre} ${c.profesional.usuario.apellidos}`.trim()
+        : `Prof. #${c.profesionalId}`;
+
+      const actual = mapa.get(nombre) ?? { suma: 0, total: 0 };
+      mapa.set(nombre, {
+        suma: actual.suma + c.resena.puntuacion,
+        total: actual.total + 1,
+      });
     }
-    this.profPorModalidad.set(
-      Array.from(conteo.entries()).map(([name, value]) => ({ name, value }))
+
+    this.promedioCalificaciones.set(
+      Array.from(mapa.entries()).map(([name, { suma, total }]) => ({
+        name,
+        value: parseFloat((suma / total).toFixed(2)),
+      }))
     );
   }
 }

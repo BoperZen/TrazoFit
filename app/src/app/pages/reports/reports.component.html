@@ -1,5 +1,4 @@
 <div class="reports-container">
-
   <header class="reports-header">
     <p class="eyebrow">Administración</p>
     <h1>Panel de Reportes</h1>
@@ -7,17 +6,21 @@
   </header>
 
   <div class="charts-grid">
-
     <!-- 1. Citas por estado — Advanced Pie -->
     <div class="chart-card">
       <span class="chart-badge badge--morado">DISTRIBUCIÓN</span>
       <h3>Citas por Estado</h3>
       <p>Estado actual de todas las citas registradas</p>
-      <ngx-charts-advanced-pie-chart
+      <ngx-charts-pie-chart
         [view]="viewPie"
         [results]="citasPorEstado()"
         [scheme]="schemeMorado"
-        [gradient]="false"
+        [legend]="false"
+        [legendPosition]="legendBelow"
+        [labels]="true"
+        [trimLabels]="false"
+        [doughnut]="true"
+        [arcWidth]="0.4"
         [tooltipDisabled]="false"
       />
     </div>
@@ -54,37 +57,41 @@
         [scheme]="schemeMulti"
         [xAxis]="true"
         [yAxis]="true"
-        [legend]="true"
+        [legend]="false"
         [legendPosition]="legendBelow"
         [showXAxisLabel]="true"
         [showYAxisLabel]="true"
-        xAxisLabel="Servicio"
+        xAxisLabel="Servicios"
         yAxisLabel="Cantidad de citas"
         [minRadius]="5"
         [maxRadius]="20"
         [tooltipDisabled]="false"
-        [xAxisTickFormatting]="formatInt"
         [yAxisTickFormatting]="formatInt"
+        [xAxisTickFormatting]="formatInt"
       />
     </div>
 
     <!-- 4. Profesionales por modalidad — Pie Chart -->
     <div class="chart-card">
-      <span class="chart-badge badge--azul">DISTRIBUCIÓN</span>
-      <h3>Profesionales por Modalidad</h3>
-      <p>Distribución según tipo de atención ofrecida</p>
-      <ngx-charts-pie-chart
-        [view]="viewPie"
-        [results]="profPorModalidad()"
-        [scheme]="schemeVerde"
-        [legend]="true"
-        [legendPosition]="legendBelow"
-        [labels]="true"
-        [doughnut]="true"
-        [tooltipDisabled]="false"
+      <span class="chart-badge badge--azul">CALIFICACIONES</span>
+      <h3>Promedio de Calificaciones</h3>
+      <p>Puntuación promedio por profesional según reseñas recibidas</p>
+      <ngx-charts-bar-vertical
+        [view]="viewBar"
+        [results]="promedioCalificaciones()"
+        [scheme]="schemeAzul"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        xAxisLabel="Profesional"
+        yAxisLabel="Puntuación (1–5)"
+        [showDataLabel]="true"
+        [roundEdges]="true"
+        [yScaleMax]="5"
+        [yAxisTickFormatting]="formatInt"
       />
     </div>
-
   </div>
-
 </div>

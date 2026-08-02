@@ -30,7 +30,8 @@ export const citaService = {
                         precio: true,
                         duracion: true,
                     }
-                }
+                },
+                resena: true
             }
         });
     },
@@ -59,6 +60,7 @@ export const citaService = {
                     }
                 },
                 servicio: true,
+                resena: true
             }
         });
 

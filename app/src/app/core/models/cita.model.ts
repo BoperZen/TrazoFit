@@ -23,6 +23,7 @@ export interface Cita {
     montoEstimado: number | string;
     createdAt: string;
     updatedAt: string;
+    resena?: Resena;
 }
 
 export interface CitaCreateDto {
@@ -34,4 +35,14 @@ export interface CitaCreateDto {
     horaFin: string;
     modalidad: ModalidadCita;
     comentarioCliente?: string;
+}
+
+export interface Resena {
+  id:         number;
+  puntuacion: number;
+  comentario?: string;
+  clienteId:  number;
+  citaId:     number;
+  createdAt:  string;
+  updatedAt:  string;
 }

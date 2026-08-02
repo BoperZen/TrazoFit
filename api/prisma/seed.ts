@@ -508,6 +508,25 @@ async function main() {
         ],
     });
 
+    // 8. Creación de Reseñas (solo citas COMPLETADA)
+    const citasCompletadas = await prisma.cita.findMany({
+        where: { estado: EstadoCita.COMPLETADA },
+        include: { cliente: true },
+    });
+
+    for (const cita of citasCompletadas) {
+        await prisma.resena.create({
+            data: {
+                citaId: cita.id,
+                clienteId: cita.clienteId,
+                puntuacion: cita.profesionalId === profSofia.id ? 5 : 4,
+                comentario: cita.profesionalId === profSofia.id
+                    ? "Excelente nutricionista, muy profesional y detallada."
+                    : "Buena clase de yoga, me ayudó mucho con la movilidad.",
+            },
+        });
+    }
+
     console.log("Seed completado con éxito.");
 }
 
