@@ -14,6 +14,8 @@ import { ServiciosList } from './pages/servicios/servicios-list/servicios-list';
 import { ServicioForm } from './pages/servicios/servicios-form/servicios-form';
 import { CitasList } from './pages/citas/citas-list/citas-list';
 import { CitaForm } from './pages/citas/citas-form/cita-form';
+import { ReportsComponent } from './pages/reports/reports.component';
+
 
 export const routes: Routes = [
     {
@@ -124,6 +126,16 @@ export const routes: Routes = [
                 component: CitaForm,
                 title: 'Detalle de cita'
             },
+            {
+                path: 'admin/citas/:id',
+                component: CitaForm,
+                title: 'Detalle de cita'
+            },
+            {
+                path: 'admin/reportes',
+                component: ReportsComponent,
+                title: 'Reportes y Estadísticas'
+            }
         ]
     },
 

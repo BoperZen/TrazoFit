@@ -1,32 +1,89 @@
-<!-- reports.component.html -->
 <div class="reports-container">
 
   <header class="reports-header">
+    <p class="eyebrow">Administración</p>
     <h1>Panel de Reportes</h1>
     <p>Análisis de rendimiento, demanda y distribución — TrazoFit</p>
   </header>
 
   <div class="charts-grid">
 
-    <section class="chart-section">
-      <span class="chart-badge compare">COMPARAR</span>
-      <app-top-professionals-chart />
-    </section>
+    <!-- 1. Citas por estado — Advanced Pie -->
+    <div class="chart-card">
+      <span class="chart-badge badge--morado">DISTRIBUCIÓN</span>
+      <h3>Citas por Estado</h3>
+      <p>Estado actual de todas las citas registradas</p>
+      <ngx-charts-advanced-pie-chart
+        [view]="viewPie"
+        [results]="citasPorEstado()"
+        [scheme]="schemeMorado"
+        [gradient]="false"
+        [tooltipDisabled]="false"
+      />
+    </div>
 
-    <section class="chart-section">
-      <span class="chart-badge time">TIEMPO</span>
-      <app-demand-trend-chart />
-    </section>
+    <!-- 2. Top profesionales — Bar Horizontal -->
+    <div class="chart-card">
+      <span class="chart-badge badge--naranja">COMPARAR</span>
+      <h3>Profesionales con Más Citas</h3>
+      <p>Ranking por volumen total de citas atendidas</p>
+      <ngx-charts-bar-horizontal
+        [view]="viewBar"
+        [results]="topProfesionales()"
+        [scheme]="schemeNaranja"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        xAxisLabel="Cantidad de citas"
+        yAxisLabel="Profesional"
+        [showDataLabel]="true"
+        [xAxisTickFormatting]="formatInt"
+      />
+    </div>
 
-    <section class="chart-section">
-      <span class="chart-badge relation">RELACIÓN</span>
-      <app-ratings-volume-chart />
-    </section>
+    <!-- 3. Servicios más solicitados — Bubble Chart -->
+    <div class="chart-card">
+      <span class="chart-badge badge--verde">RELACIÓN</span>
+      <h3>Servicios Más Solicitados</h3>
+      <p>Volumen de citas por servicio — tamaño proporcional a la demanda</p>
+      <ngx-charts-bubble-chart
+        [view]="viewBubble"
+        [results]="topServiciosBubble()"
+        [scheme]="schemeMulti"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [legendPosition]="legendBelow"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        xAxisLabel="Servicio"
+        yAxisLabel="Cantidad de citas"
+        [minRadius]="5"
+        [maxRadius]="20"
+        [tooltipDisabled]="false"
+        [xAxisTickFormatting]="formatInt"
+        [yAxisTickFormatting]="formatInt"
+      />
+    </div>
 
-    <section class="chart-section">
-      <span class="chart-badge distribution">DISTRIBUCIÓN</span>
-      <app-duration-histogram-chart />
-    </section>
+    <!-- 4. Profesionales por modalidad — Pie Chart -->
+    <div class="chart-card">
+      <span class="chart-badge badge--azul">DISTRIBUCIÓN</span>
+      <h3>Profesionales por Modalidad</h3>
+      <p>Distribución según tipo de atención ofrecida</p>
+      <ngx-charts-pie-chart
+        [view]="viewPie"
+        [results]="profPorModalidad()"
+        [scheme]="schemeVerde"
+        [legend]="true"
+        [legendPosition]="legendBelow"
+        [labels]="true"
+        [doughnut]="true"
+        [tooltipDisabled]="false"
+      />
+    </div>
 
   </div>
 

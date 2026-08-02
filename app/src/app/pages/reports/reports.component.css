@@ -1,60 +1,91 @@
-/* reports.component.css */
-
-.reports-container {
-  padding: 2rem;
-  background: #1a1a1a;
-  min-height: 100vh;
-  color: #f0f0f0;
+:host {
+  display: block;
+  padding: 5.5rem;
 }
 
 .reports-header {
   margin-bottom: 2rem;
 }
 
+.eyebrow {
+  margin: 0 0 .25rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .75rem;
+  opacity: .7;
+}
+
 .reports-header h1 {
-  font-size: 1.75rem;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
   font-weight: 700;
-  color: #d87757;
-  margin: 0 0 0.4rem;
+  color: var(--color-primary);
 }
 
 .reports-header p {
-  color: #9e9e9e;
-  font-size: 0.9rem;
-  margin: 0;
+  margin: .35rem 0 0;
+  opacity: .75;
 }
 
 .charts-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.75rem;
+  gap: 1.5rem;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 900px) {
   .charts-grid {
     grid-template-columns: 1fr;
   }
 }
 
-.chart-section {
-  background: #242424;
-  border-radius: 12px;
+.chart-card {
   padding: 1.5rem;
-  border: 1px solid #2e2e2e;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+.chart-card h3 {
+  margin: .4rem 0 .2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.chart-card p {
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  opacity: .65;
 }
 
 .chart-badge {
-  display: inline-block;
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: 999px;
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.09em;
-  padding: 3px 10px;
-  border-radius: 4px;
-  margin-bottom: 0.6rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.chart-badge.compare      { background: #d87757; color: #fff; }
-.chart-badge.time         { background: #5b9bd5; color: #fff; }
-.chart-badge.relation     { background: #70c18e; color: #111; }
-.chart-badge.distribution { background: #9b7fd4; color: #fff; }
+.badge--naranja  { background: rgba(216,119,87,0.16);  color: #f0b090; }
+.badge--azul     { background: rgba(91,155,213,0.16);  color: #8fc1f0; }
+.badge--verde    { background: rgba(84,179,122,0.16);  color: #9be0b5; }
+.badge--morado   { background: rgba(155,127,212,0.16); color: #c9b6ff; }
+
+::ng-deep .ngx-charts text {
+  fill: #ffffff !important;
+  font-family: var(--font-base), sans-serif !important;
+}
+
+::ng-deep .ngx-charts .gridline-path {
+  stroke: rgba(255,255,255,0.08) !important;
+}
+
+::ng-deep .ngx-charts .domain {
+  stroke: rgba(255,255,255,0.15) !important;
+}
