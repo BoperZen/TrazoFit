@@ -12,6 +12,7 @@ import { especialidadService } from '../services/especialidad.service';
 import { ProfesionalRoutes } from './profesionales.routes';
 import { ServicioRoutes } from './servicio.routes';
 import { CitaRoutes } from './cita.routes';
+import { ReporteRoutes } from './reporte.routes';
 
 export class AppRoutes {
     static get routes(): Router {
@@ -30,6 +31,7 @@ export class AppRoutes {
         router.use('/servicio', ServicioRoutes.routes)
         router.use('/cita', CitaRoutes.routes)
         router.use('/images', ImageRoutes.routes)
+        router.use('/reportes', ReporteRoutes.routes);
         return router;
     }
 }
