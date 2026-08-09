@@ -5,8 +5,7 @@
         [adminManagementMenu]="adminManagementMenu()" 
         [currentUser]="currentUser()" 
         [isAdmin]="isAdmin()" 
-        [canShowItem]="canShowItem.bind(this)" 
-        (loginAdmin)="loginAsAdmin()" 
+        [canShowItem]="canShowItem()" 
         (logoutUser)="logout()" />
     <main class="content">
         <router-outlet />

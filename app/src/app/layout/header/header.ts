@@ -6,9 +6,8 @@ import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
-import { provideHttpClient } from '@angular/common/http';
 
-type Role = 'CLIENTE' | 'ADMIN';
+type Role = 'CLIENTE' | 'ADMIN' | 'PROFESIONAL';
 interface MenuItem {
   label: string;
   path: string;
@@ -43,7 +42,6 @@ export class Header {
     this.matIconRegistry.addSvgIcon(
       'arm-bicep',
       this.domSanitizer.bypassSecurityTrustResourceUrl('icons/arm-bicep.svg')
-
     );
   }
 
@@ -51,8 +49,7 @@ export class Header {
   adminMaintenanceMenu = input.required<MenuItem[]>();
   adminManagementMenu = input.required<MenuItem[]>();
   currentUser = input<User | null>(null);
-  cartCount = input(0);
-  isAdmin = input(false);
+  isAdmin = input<boolean>(false);
   canShowItem = input.required<(item: MenuItem) => boolean>();
   loginClient = output<void>();
   loginAdmin = output<void>();
