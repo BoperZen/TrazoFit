@@ -8,29 +8,23 @@ import { RoleRoutes } from './old-routes/role.routes';
 import { EstadoOrdenRoutes } from './old-routes/estado-orden.routes';
 import { ImageRoutes } from './image.routes copy';
 import { UsuarioRoutes } from './usuario.routes';
-import { especialidadService } from '../services/especialidad.service';
 import { ProfesionalRoutes } from './profesionales.routes';
 import { ServicioRoutes } from './servicio.routes';
 import { CitaRoutes } from './cita.routes';
 import { ReporteRoutes } from './reporte.routes';
+import { AuthRoutes } from './auth.routes';
 
 export class AppRoutes {
     static get routes(): Router {
         const router = Router();
-        // ----Agregar las rutas----
-        // router.use('/role', RoleRoutes.routes)   
-        // router.use('/estadoOrden', EstadoOrdenRoutes.routes) 
-        router.use('/categoria', CategoriaRoutes.routes)   
-        router.use('/especialidad', EspecialidadRoutes.routes)   
-        // router.use('/plataforma', PlataformaRoutes.routes)   
-        // router.use('/videojuego', VideojuegoRoutes.routes) 
-        // router.use('/orden', OrdenRoutes.routes)             
-        // router.use('/images', ImageRoutes.routes)    
-        router.use('/usuario', UsuarioRoutes.routes) 
-        router.use('/profesional', ProfesionalRoutes.routes) 
-        router.use('/servicio', ServicioRoutes.routes)
-        router.use('/cita', CitaRoutes.routes)
-        router.use('/images', ImageRoutes.routes)
+        router.use('/auth', AuthRoutes.routes);
+        router.use('/categoria', CategoriaRoutes.routes);
+        router.use('/especialidad', EspecialidadRoutes.routes);
+        router.use('/usuario', UsuarioRoutes.routes);
+        router.use('/profesional', ProfesionalRoutes.routes);
+        router.use('/servicio', ServicioRoutes.routes);
+        router.use('/cita', CitaRoutes.routes);
+        router.use('/images', ImageRoutes.routes);
         router.use('/reportes', ReporteRoutes.routes);
         return router;
     }

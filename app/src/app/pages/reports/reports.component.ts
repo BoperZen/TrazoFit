@@ -87,7 +87,8 @@ export class ReportsComponent implements OnInit {
     const conteo = new Map<string, number>();
     for (const c of citas) {
       const nombre = c.profesional?.usuario
-        ? `${c.profesional.usuario.nombre} ${c.profesional.usuario.apellidos}`.trim()
+        ? `${c.profesional.usuario.nombre} 
+        ${c.profesional.usuario.apellidos}`.trim()
         : `Prof. #${c.profesionalId}`;
       conteo.set(nombre, (conteo.get(nombre) ?? 0) + 1);
     }
