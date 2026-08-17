@@ -7,7 +7,7 @@ import { Cita, CitaCreateDto, CitaCambiarEstadoDto } from '../models/cita.model'
 @Injectable({ providedIn: 'root' })
 export class CitaService {
     private readonly http = inject(HttpClient);
-    private readonly apiUrl = `${environment.apiUrl}/api/cita`;
+    private readonly apiUrl = `${environment.apiUrl}/cita`;
 
     listar() {
         return this.http.get<ApiResponse<Cita[]>>(this.apiUrl);

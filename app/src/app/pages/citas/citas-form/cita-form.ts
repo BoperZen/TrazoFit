@@ -12,6 +12,7 @@ import { Profesional } from '../../../core/models/profesional.model';
 import { Servicio } from '../../../core/models/servicio.model';
 import { MatDialog } from '@angular/material/dialog';
 import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
+import { CitaCreateDto } from '../../../core/models/cita.model';
 
 @Component({
   selector: 'app-cita-form',
@@ -122,16 +123,16 @@ export class CitaForm implements OnInit {
   this.error.set(null);
 
   const values = this.form.value;
-  const data = {
+  const data: CitaCreateDto = {
     clienteId:         Number(values.clienteId),
     profesionalId:     Number(values.profesionalId),
     servicioId:        Number(values.servicioId),
-    fechaCita:         values.fechaCita,
-    horaInicio:        values.horaInicio,
-    horaFin:           values.horaFin,
-    modalidad:         values.modalidad,
-    comentarioCliente: values.comentarioCliente,
-  };
+    fechaCita:         values.fechaCita!,
+    horaInicio:        values.horaInicio!,
+    horaFin:           values.horaFin!,
+    modalidad:         values.modalidad as 'VIRTUAL' | 'PRESENCIAL',
+    comentarioCliente: values.comentarioCliente ?? undefined,
+};
 
   this.citaService.crear(data).subscribe({
     next: () => {

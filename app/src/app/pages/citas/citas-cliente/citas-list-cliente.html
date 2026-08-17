@@ -1,0 +1,142 @@
+<section class="mis-citas">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Cliente</p>
+      <h2>Mis Citas</h2>
+      <p class="subtitle">Revisá el estado de tus citas y dejá reseñas.</p>
+      <div class="filtros">
+        @for (op of estadoOptions; track op.value) {
+          <button
+            class="chip"
+            [class.chip--active]="filtroEstado() === op.value"
+            (click)="filtroEstado.set(op.value)"
+          >
+            {{ op.label }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p class="empty">Cargando citas...</p>
+  } @else if (citasFiltradas().length === 0) {
+    <p class="empty">No tenés citas en este estado.</p>
+  } @else {
+    <div class="cards-grid">
+      @for (cita of citasFiltradas(); track cita.id) {
+        <div class="cita-card">
+          <div class="cita-card__header">
+            <div class="prof-info">
+              <div class="avatar">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div>
+                <strong
+                  >{{ cita.profesional?.usuario?.nombre }}
+                  {{ cita.profesional?.usuario?.apellidos }}</strong
+                >
+                <span>{{ cita.servicio?.nombre }}</span>
+              </div>
+            </div>
+            <span class="badge" [class]="getBadgeClass(cita.estado)">{{ cita.estado }}</span>
+          </div>
+
+          <div class="cita-card__body">
+            <div class="info-row">
+              <mat-icon>calendar_today</mat-icon>
+              <span>{{ cita.fechaCita | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="info-row">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ cita.horaInicio }} – {{ cita.horaFin }}</span>
+            </div>
+            <div class="info-row">
+              <mat-icon>place</mat-icon>
+              <span>{{ cita.modalidad }}</span>
+            </div>
+            <div class="info-row">
+              <mat-icon>attach_money</mat-icon>
+              <span>₡{{ cita.montoEstimado }}</span>
+            </div>
+          </div>
+
+          @if (cita.comentarioProfesional) {
+            <p class="comentario">
+              <mat-icon>comment</mat-icon>
+              {{ cita.comentarioProfesional }}
+            </p>
+          }
+
+          <div class="cita-card__footer">
+            @if (cita.estado === 'PENDIENTE' || cita.estado === 'ACEPTADA') {
+              <button class="btn btn-danger btn-sm" (click)="cancelarCita(cita.id)">
+                <mat-icon>cancel</mat-icon> Cancelar
+              </button>
+            }
+            @if (cita.estado === 'COMPLETADA' && !cita.resena) {
+              <button class="btn btn-primary btn-sm" (click)="abrirResena(cita.id)">
+                <mat-icon>star</mat-icon> Dejar reseña
+              </button>
+            }
+            @if (cita.resena) {
+              <span class="resena-done"> <mat-icon>verified</mat-icon> Reseña enviada </span>
+            }
+          </div>
+
+          @if (cita.resena) {
+            <div class="resena-display">
+              <p class="resena-display__title">Tu reseña</p>
+              <div class="estrellas">
+                @for (e of estrellas; track e) {
+                  <mat-icon
+                    class="estrella-display"
+                    [class.estrella--on]="e <= cita.resena.puntuacion"
+                  >
+                    {{ e <= cita.resena.puntuacion ? 'star' : 'star_border' }}
+                  </mat-icon>
+                }
+              </div>
+              @if (cita.resena.comentario) {
+                <p class="resena-display__comentario">{{ cita.resena.comentario }}</p>
+              }
+            </div>
+          }
+
+          @if (citaResenando() === cita.id) {
+            <div class="resena-form">
+              <p class="resena-form__title">Tu calificación</p>
+              <div class="estrellas">
+                @for (e of estrellas; track e) {
+                  <button
+                    class="estrella"
+                    [class.estrella--on]="e <= puntuacion()"
+                    (click)="puntuacion.set(e)"
+                  >
+                    <mat-icon>{{ e <= puntuacion() ? 'star' : 'star_border' }}</mat-icon>
+                  </button>
+                }
+              </div>
+              <textarea
+                class="resena-textarea"
+                rows="3"
+                placeholder="Comentario opcional..."
+                (input)="comentarioResena.set($any($event.target).value)"
+              ></textarea>
+              <div class="resena-form__actions">
+                <button class="btn btn-ghost btn-sm" (click)="cerrarResena()">Cancelar</button>
+                <button
+                  class="btn btn-primary btn-sm"
+                  [disabled]="enviandoResena()"
+                  (click)="enviarResena(cita.id)"
+                >
+                  {{ enviandoResena() ? 'Enviando...' : 'Enviar reseña' }}
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

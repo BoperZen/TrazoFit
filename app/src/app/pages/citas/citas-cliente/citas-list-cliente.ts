@@ -6,6 +6,8 @@ import { CitaService } from '../../../core/services/cita.service';
 import { ResenaService } from '../../../core/services/resena.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Cita, EstadoCita, ResenaCreateDto } from '../../../core/models/cita.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 
 @Component({
   selector: 'app-citas-list-cliente',
@@ -18,6 +20,7 @@ export class CitasListCliente implements OnInit {
   private readonly citaService = inject(CitaService);
   private readonly resenaService = inject(ResenaService);
   private readonly authService = inject(AuthService);
+  private readonly dialog = inject(MatDialog);
 
   readonly citas = signal<Cita[]>([]);
   readonly loading = signal(true);
@@ -55,12 +58,20 @@ export class CitasListCliente implements OnInit {
   }
 
   cancelarCita(id: number) {
+  this.dialog.open(ConfirmDialogComponent, {
+    width: '380px',
+    data: {
+      titulo: 'Cancelar cita',
+      mensaje: '¿Seguro que querés cancelar esta cita?',
+      confirmLabel: 'Sí, cancelar',
+    }
+  }).afterClosed().subscribe(confirmado => {
+    if (!confirmado) return;
     this.citaService.cambiarEstado(id, { estado: 'CANCELADA' }).subscribe({
-      next: (res) => {
-        this.citas.update(list => list.map(c => c.id === id ? res.data : c));
-      },
+      next: (res) => this.citas.update(list => list.map(c => c.id === id ? res.data : c)),
     });
-  }
+  });
+}
 
   abrirResena(citaId: number) {
     this.citaResenando.set(citaId);
@@ -71,17 +82,25 @@ export class CitasListCliente implements OnInit {
   cerrarResena() { this.citaResenando.set(null); }
 
   enviarResena(citaId: number) {
-    const user = this.authService.currentUser();
-    if (!user) return;
-    this.enviandoResena.set(true);
+  const user = this.authService.currentUser();
+  if (!user) return;
 
+  this.dialog.open(ConfirmDialogComponent, {
+    width: '380px',
+    data: {
+      titulo: 'Enviar reseña',
+      mensaje: `¿Confirmás tu calificación de ${this.puntuacion()} estrella(s)?`,
+      confirmLabel: 'Enviar',
+    }
+  }).afterClosed().subscribe(confirmado => {
+    if (!confirmado) return;
+    this.enviandoResena.set(true);
     const data: ResenaCreateDto = {
       citaId,
       clienteId: user.id,
       puntuacion: this.puntuacion(),
       comentario: this.comentarioResena() || undefined,
     };
-
     this.resenaService.crear(data).subscribe({
       next: () => {
         this.citas.update(list => list.map(c =>
@@ -92,7 +111,8 @@ export class CitasListCliente implements OnInit {
       },
       error: () => this.enviandoResena.set(false),
     });
-  }
+  });
+}
 
   getBadgeClass(estado: EstadoCita): string {
     const map: Record<EstadoCita, string> = {

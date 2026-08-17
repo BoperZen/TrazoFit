@@ -15,6 +15,7 @@ import { adminGuard } from './core/guards/admin.guard';
 import { profesionalGuard } from './core/guards/profesional.guard';
 import { clienteGuard } from './core/guards/cliente.guard';
 import { authGuard } from './core/guards/auth.guard';
+import { CitasListCliente } from './pages/citas/citas-cliente/citas-list-cliente';
 
 export const routes: Routes = [
   {
@@ -51,7 +52,7 @@ export const routes: Routes = [
       // ── Cliente ──────────────────────────────────────────
       // TODO: agregar componentes cuando estén listos
       // { path: 'profesionales',        component: ProfesionalesPublicList, canActivate: [clienteGuard] },
-      // { path: 'cliente/citas',        component: ClienteCitasList, canActivate: [clienteGuard] },
+      { path: 'cliente/citas',        component: CitasListCliente, canActivate: [clienteGuard] },
 
     ]
   },

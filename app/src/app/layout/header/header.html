@@ -1,57 +1,63 @@
 <header class="site-header">
     <mat-toolbar class="toolbar">
+
         <a class="brand" routerLink="/">
             <span class="brand-icon">
                 <mat-icon svgIcon="arm-bicep"></mat-icon>
             </span>
+
             <span class="brand-text">
                 <strong>TrazoFit</strong>
                 <small>Marketplace de fitness</small>
             </span>
         </a>
+
         <nav class="desktop-nav">
-    @if (!isAdmin()) {
-        @for (item of publicMenu(); track item.path) {
-            <a class="nav-link" mat-button [routerLink]="item.path" routerLinkActive="active-link"
-                [routerLinkActiveOptions]="{ exact: item.path === '/' }">
-                <mat-icon>{{ item.icon }}</mat-icon>
-                {{ item.label }}
-            </a>
-        }
-    } @else {
-        <a class="nav-link" mat-button routerLink="/" routerLinkActive="active-link"
-            [routerLinkActiveOptions]="{ exact: true }">
-            <mat-icon>home</mat-icon>
-            Inicio
-        </a>
-        <button class="nav-link" mat-button [matMenuTriggerFor]="maintenanceMenu">
-            <mat-icon>settings</mat-icon>
-            Mantenimientos
-        </button>
-        <button class="nav-link" mat-button [matMenuTriggerFor]="managementMenu">
-            <mat-icon>admin_panel_settings</mat-icon>
-            Gestión
-        </button>
-    }
-</nav>
+            @if (!isAdmin()) {
+                @for (item of publicMenu(); track item.path) {
+                    <a class="nav-link" mat-button
+                       [routerLink]="item.path"
+                       routerLinkActive="active-link"
+                       [routerLinkActiveOptions]="{ exact: item.path === '/' }">
+                        <mat-icon>{{ item.icon }}</mat-icon>
+                        {{ item.label }}
+                    </a>
+                }
+            } @else {
+                <a class="nav-link" mat-button routerLink="/" routerLinkActive="active-link"
+                   [routerLinkActiveOptions]="{ exact: true }">
+                    <mat-icon>home</mat-icon>
+                    Inicio
+                </a>
+
+                <button class="nav-link" mat-button [matMenuTriggerFor]="maintenanceMenu">
+                    <mat-icon>settings</mat-icon>
+                    Mantenimientos
+                </button>
+
+                <button class="nav-link" mat-button [matMenuTriggerFor]="managementMenu">
+                    <mat-icon>admin_panel_settings</mat-icon>
+                    Gestión
+                </button>
+            }
+        </nav>
+
         <span class="spacer"></span>
+
         @if (currentUser(); as user) {
-        <div class="user-chip">
-            <mat-icon>person</mat-icon>
-            <span>{{ user.nombre }}</span>
-            <strong>{{ user.role }}</strong>
-        </div>
-        <button class="action-button action-button--solid" mat-flat-button (click)="logoutUser.emit()">
-            Salir
-        </button>
-        } @else {
-        <button class="action-button action-button--solid" mat-flat-button (click)="loginAdmin.emit()">
-            Vista admin
-        </button>
+            <div class="user-chip">
+                <mat-icon>person</mat-icon>
+                <span>{{ user.nombre }}</span>
+                <strong>{{ user.role }}</strong>
+            </div>
         }
-        <button class="icon-button mobile-menu-button" mat-icon-button [matMenuTriggerFor]="mobileMenu">
+
+        <button class="icon-button mobile-menu-button"
+                mat-icon-button
+                [matMenuTriggerFor]="mobileMenu">
             <mat-icon>menu</mat-icon>
         </button>
+
     </mat-toolbar>
 </header>
 

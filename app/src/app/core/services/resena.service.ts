@@ -7,7 +7,7 @@ import { Resena, ResenaCreateDto } from '../models/cita.model';
 @Injectable({ providedIn: 'root' })
 export class ResenaService {
     private readonly http = inject(HttpClient);
-    private readonly apiUrl = `${environment.apiUrl}/api/resena`;
+    private readonly apiUrl = `${environment.apiUrl}/resena`;
 
     listar() {
         return this.http.get<ApiResponse<Resena[]>>(this.apiUrl);
