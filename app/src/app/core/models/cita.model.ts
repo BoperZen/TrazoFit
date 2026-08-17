@@ -37,12 +37,24 @@ export interface CitaCreateDto {
     comentarioCliente?: string;
 }
 
+export interface CitaCambiarEstadoDto {
+    estado: 'ACEPTADA' | 'RECHAZADA' | 'COMPLETADA' | 'CANCELADA';
+    comentario?: string;
+}
+
 export interface Resena {
-  id:         number;
-  puntuacion: number;
-  comentario?: string;
-  clienteId:  number;
-  citaId:     number;
-  createdAt:  string;
-  updatedAt:  string;
+    id: number;
+    puntuacion: number;
+    comentario?: string;
+    clienteId: number;
+    citaId: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ResenaCreateDto {
+    citaId: number;
+    clienteId: number;
+    puntuacion: number;
+    comentario?: string;
 }

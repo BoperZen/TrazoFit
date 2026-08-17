@@ -13,6 +13,7 @@ import { ServicioRoutes } from './servicio.routes';
 import { CitaRoutes } from './cita.routes';
 import { ReporteRoutes } from './reporte.routes';
 import { AuthRoutes } from './auth.routes';
+import { ResenaRoutes } from './resena.route';
 
 export class AppRoutes {
     static get routes(): Router {
@@ -26,6 +27,7 @@ export class AppRoutes {
         router.use('/cita', CitaRoutes.routes);
         router.use('/images', ImageRoutes.routes);
         router.use('/reportes', ReporteRoutes.routes);
+        router.use('/resena', ResenaRoutes.routes);
         return router;
     }
 }

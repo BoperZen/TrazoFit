@@ -2,23 +2,34 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { ApiResponse } from '../models/api-response.model';
-import { Cita } from '../models/cita.model';
+import { Cita, CitaCreateDto, CitaCambiarEstadoDto } from '../models/cita.model';
 
 @Injectable({ providedIn: 'root' })
 export class CitaService {
+    private readonly http = inject(HttpClient);
+    private readonly apiUrl = `${environment.apiUrl}/api/cita`;
 
-  private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/cita`;
+    listar() {
+        return this.http.get<ApiResponse<Cita[]>>(this.apiUrl);
+    }
 
-  listar() {
-    return this.http.get<ApiResponse<Cita[]>>(this.apiUrl);
-  }
+    listarPorCliente(clienteId: number) {
+        return this.http.get<ApiResponse<Cita[]>>(`${this.apiUrl}/cliente/${clienteId}`);
+    }
 
-  obtenerPorId(id: number) {
-    return this.http.get<ApiResponse<Cita>>(`${this.apiUrl}/${id}`);
-  }
+    listarPorProfesional(profesionalId: number) {
+        return this.http.get<ApiResponse<Cita[]>>(`${this.apiUrl}/profesional/${profesionalId}`);
+    }
 
-  crear(data: any) {
-    return this.http.post<ApiResponse<Cita>>(this.apiUrl, data);
-  }
+    obtenerPorId(id: number) {
+        return this.http.get<ApiResponse<Cita>>(`${this.apiUrl}/${id}`);
+    }
+
+    crear(data: CitaCreateDto) {
+        return this.http.post<ApiResponse<Cita>>(this.apiUrl, data);
+    }
+
+    cambiarEstado(id: number, data: CitaCambiarEstadoDto) {
+        return this.http.patch<ApiResponse<Cita>>(`${this.apiUrl}/${id}/estado`, data);
+    }
 }
