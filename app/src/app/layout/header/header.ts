@@ -6,6 +6,7 @@ import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
+import { Usuario } from '../../core/models/usuario.model';
 
 type Role = 'CLIENTE' | 'ADMIN' | 'PROFESIONAL';
 interface MenuItem {
@@ -46,16 +47,15 @@ export class Header {
   }
 
   profilePath(user: User): string | null {
-    switch (user.role) {
-      case 'CLIENTE':
-        return '/perfil';
-
-      case 'PROFESIONAL':
-        return '/profesional/perfil';
-
-      default:
-        return null;
+    if (user.role === 'PROFESIONAL') {
+      return '/profesional/perfil';
     }
+
+    if (user.role === 'CLIENTE') {
+      return '/perfil';
+    }
+
+    return null;
   }
 
   publicMenu = input.required<MenuItem[]>();

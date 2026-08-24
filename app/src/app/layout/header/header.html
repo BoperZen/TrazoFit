@@ -59,14 +59,8 @@
         <strong>{{ user.role }}</strong>
       </div>
 
-      @if (profilePath(user); as profilePath) {
-        <a
-          class="profile-button"
-          mat-icon-button
-          [routerLink]="profilePath"
-          routerLinkActive="active-profile"
-          aria-label="Mi perfil"
-        >
+      @if (profilePath(user); as path) {
+        <a class="profile-button" mat-icon-button [routerLink]="path" aria-label="Mi perfil">
           <mat-icon>account_circle</mat-icon>
         </a>
       }

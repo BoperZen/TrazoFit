@@ -38,7 +38,7 @@ export const routes: Routes = [
       { path: 'registro', component: Registro, title: 'Crear cuenta' },
 
       // ── Perfil ─────────────────────────────────────────────
-      { path: 'perfil/profesional', component: PerfilProfesional, title: 'Mi perfil', canActivate: [profesionalGuard] },
+      { path: 'profesional/perfil', component: PerfilProfesional, title: 'Mi perfil', canActivate: [profesionalGuard] },
       { path: 'perfil', component: PerfilCliente, title: 'Mi perfil', canActivate: [clienteGuard] },
 
       // ── Admin ────────────────────────────────────────────
