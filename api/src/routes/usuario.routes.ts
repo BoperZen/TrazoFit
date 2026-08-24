@@ -10,6 +10,7 @@ export class UsuarioRoutes {
         router.get('/', asyncHandler(controller.listar))
         router.get('/:id', asyncHandler(controller.obtenerPorId))
         router.patch('/:id/toggle-estado', asyncHandler(controller.toggleEstado))
+        router.patch('/:id', asyncHandler(controller.actualizar))
 
         return router
     }

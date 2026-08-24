@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,7 @@ import { Categoria } from '../../../core/models/categoria.model';
 
 import { MatDialog } from '@angular/material/dialog';
 import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-servicios-form',
@@ -36,7 +37,9 @@ export class ServicioForm implements OnInit {
   private readonly categoriaService = inject(CategoriaService);
   private readonly dialog = inject(MatDialog);
 
+  readonly authService = inject(AuthService);
   readonly modo = signal<'crear' | 'editar' | 'detalle'>('crear');
+  readonly esProfesional = computed(() => this.authService.isProfesional());
 
   readonly profesionales = signal<Profesional[]>([]);
   readonly categorias = signal<Categoria[]>([]);
@@ -59,7 +62,10 @@ export class ServicioForm implements OnInit {
 
   ngOnInit(): void {
 
-    this.cargarProfesionales();
+    if (!this.esProfesional()) {
+      this.cargarProfesionales();
+    }
+
     this.cargarCategorias();
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -78,8 +84,16 @@ export class ServicioForm implements OnInit {
     }
     else {
       this.modo.set('crear');
+
+      // Si es profesional, asignarlo automáticamente
+      if (this.esProfesional()) {
+        this.form.patchValue({
+          profesionalId: this.authService.profesionalId()
+        });
+      }
     }
   }
+
 
   cargarProfesionales() {
     this.profesionalService.listar().subscribe({
@@ -131,8 +145,19 @@ export class ServicioForm implements OnInit {
 
     const esEditar = this.modo() === 'editar';
 
+    const profesionalId = this.esProfesional()
+      ? this.authService.profesionalId()
+      : this.form.value.profesionalId;
+
+    if (!profesionalId) {
+      this.error.set('No se pudo identificar el profesional.');
+      this.loading.set(false);
+      return;
+    }
+
     const data: any = {
       ...this.form.value,
+      profesionalId,
       precio: Number(this.form.value.precio),
       duracion: Number(this.form.value.duracion),
     };
@@ -152,9 +177,14 @@ export class ServicioForm implements OnInit {
               : 'El servicio fue registrado correctamente.',
           }
         }).afterClosed().subscribe(() => {
-          this.router.navigate(['/admin/servicios']);
+          this.router.navigate([
+            this.esProfesional()
+              ? '/profesional/servicios'
+              : '/admin/servicios'
+          ]);
         });
       },
+
       error: err => {
         this.dialog.open(SuccessDialogComponent, {
           width: '380px',
@@ -163,6 +193,7 @@ export class ServicioForm implements OnInit {
             mensaje: 'Ocurrió un error al guardar. Revisá los datos.',
           }
         });
+
         this.loading.set(false);
         console.error(err);
       }
@@ -170,11 +201,21 @@ export class ServicioForm implements OnInit {
   }
 
   volver() {
-    this.router.navigate(['/admin/servicios']);
+    this.router.navigate([
+      this.esProfesional()
+        ? '/profesional/servicios'
+        : '/admin/servicios'
+    ]);
   }
 
   irAEditar(id: number) {
-    this.router.navigate(['/admin/servicios', id, 'editar']);
+    this.router.navigate([
+      this.esProfesional()
+        ? '/profesional/servicios'
+        : '/admin/servicios',
+      id,
+      'editar'
+    ]);
   }
 
 }

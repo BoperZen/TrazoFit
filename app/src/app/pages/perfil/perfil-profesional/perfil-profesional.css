@@ -1,0 +1,406 @@
+.profile-shell {
+    width: min(960px, calc(100% - 48px));
+    margin: 40px auto;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #c9a227;
+    font-weight: 700;
+}
+
+.profile-header h2 {
+    margin: 0;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    margin: 8px 0 0;
+    color: #aaa;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.profile-card {
+    background: #171717;
+    border: 1px solid #292929;
+    border-radius: 20px;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffd43b;
+}
+
+.card-icon mat-icon {
+    font-size: 22px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.field-group label {
+    font-size: 14px;
+}
+
+.required {
+    color: #ff5252;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    box-sizing: border-box;
+    background: #202020;
+    color: #fff;
+    border: 1px solid #303030;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font: inherit;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #d5ad22;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.account-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #202020;
+    border: 1px solid #303030;
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.account-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffd43b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.account-box strong,
+.account-box span {
+    display: block;
+}
+
+.account-box span {
+    color: #999;
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+.profile-image-container {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.profile-image {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #303030;
+    background: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.initials {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffd43b;
+}
+
+.image-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.btn-image {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 7px;
+    width: fit-content;
+    padding: 9px 13px;
+    border: 1px solid #383838;
+    border-radius: 9px;
+    cursor: pointer;
+    background: #222;
+}
+
+.btn-image:hover {
+    border-color: #d5ad22;
+}
+
+.image-actions span {
+    color: #777;
+    font-size: 12px;
+}
+
+.availability {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+}
+
+.availability strong {
+    display: block;
+    font-size: 14px;
+}
+
+.availability p {
+    margin: 5px 0 0;
+    color: #888;
+    font-size: 12px;
+}
+
+.toggle-wrap {
+    position: relative;
+}
+
+.toggle-wrap input {
+    display: none;
+}
+
+.toggle {
+    display: block;
+    width: 44px;
+    height: 24px;
+    border-radius: 20px;
+    background: #444;
+    cursor: pointer;
+    position: relative;
+}
+
+.toggle::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    top: 3px;
+    left: 3px;
+    transition: .2s;
+}
+
+.toggle-wrap input:checked+.toggle {
+    background: #ffd43b;
+}
+
+.toggle-wrap input:checked+.toggle::after {
+    transform: translateX(20px);
+}
+
+.specialties-card {
+    margin-top: 20px;
+}
+
+.specialties-description {
+    margin: -8px 0 20px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.specialties {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.specialty-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 22px;
+    border: 1px solid #303030;
+    background: #222;
+    color: #bbb;
+    cursor: pointer;
+    font-size: 14px;
+    transition: .15s;
+}
+
+.specialty-chip mat-icon {
+    font-size: 19px;
+    width: 19px;
+    height: 19px;
+}
+
+.specialty-chip:hover {
+    border-color: #777;
+}
+
+.specialty-chip.selected {
+    border-color: #ffd43b;
+    background: rgba(255, 193, 7, 0.08);
+    color: #ffd43b;
+}
+
+.empty-specialties {
+    color: #777;
+    margin: 0;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 20px;
+    background: #ffd43b;
+    color: #111;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-primary:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.field-error {
+    color: #ff6b6b;
+    font-size: 12px;
+}
+
+.alert-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 82, 82, .1);
+    border: 1px solid rgba(255, 82, 82, .3);
+    color: #ff7777;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.loading {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #aaa;
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 800px) {
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .profile-shell {
+        width: calc(100% - 24px);
+        margin: 20px auto;
+    }
+
+    .profile-card {
+        padding: 18px;
+    }
+
+    .profile-image-container {
+        align-items: flex-start;
+    }
+
+}

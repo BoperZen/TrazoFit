@@ -17,7 +17,21 @@ export class UsuarioService {
     return this.http.get<ApiResponse<Usuario>>(`${this.apiUrl}/${id}`);
   }
 
+  actualizar(id: number, data: {
+    nombre: string;
+    apellidos: string;
+    email: string;
+    telefono?: string;
+  }) {
+    return this.http.patch<ApiResponse<Usuario>>(
+      `${this.apiUrl}/${id}`,
+      data
+    );
+  }
   toggleEstado(id: number) {
-    return this.http.patch<ApiResponse<Usuario>>(`${this.apiUrl}/${id}/toggle-estado`, {});
+    return this.http.patch<ApiResponse<Usuario>>(
+      `${this.apiUrl}/${id}/toggle-estado`,
+      {}
+    );
   }
 }

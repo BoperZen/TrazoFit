@@ -45,6 +45,19 @@ export class Header {
     );
   }
 
+  profilePath(user: User): string | null {
+    switch (user.role) {
+      case 'CLIENTE':
+        return '/perfil';
+
+      case 'PROFESIONAL':
+        return '/profesional/perfil';
+
+      default:
+        return null;
+    }
+  }
+
   publicMenu = input.required<MenuItem[]>();
   adminMaintenanceMenu = input.required<MenuItem[]>();
   adminManagementMenu = input.required<MenuItem[]>();

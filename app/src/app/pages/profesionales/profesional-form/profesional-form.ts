@@ -40,16 +40,16 @@ export class ProfesionalForm implements OnInit {
   private imagenFile: File | null = null;
 
   readonly form = this.fb.group({
-    usuarioId:       [null as number | null, Validators.required],
-    titulo:          ['', [Validators.required, Validators.minLength(3)]],
-    descripcion:     ['', [Validators.required, Validators.minLength(10)]],
-    experiencia:     [0, [Validators.required, Validators.min(0)]],
-    modalidad:       ['PRESENCIAL', Validators.required],
-    provincia:       ['', Validators.required],
-    canton:          ['', Validators.required],
-    distrito:        ['', Validators.required],
-    tarifaBase:      [0, [Validators.required, Validators.min(1)]],
-    disponible:      [true],
+    usuarioId: [null as number | null, Validators.required],
+    titulo: ['', [Validators.required, Validators.minLength(3)]],
+    descripcion: ['', [Validators.required, Validators.minLength(10)]],
+    experiencia: [0, [Validators.required, Validators.min(0)]],
+    modalidad: ['PRESENCIAL', Validators.required],
+    provincia: ['', Validators.required],
+    canton: ['', Validators.required],
+    distrito: ['', Validators.required],
+    tarifaBase: [0, [Validators.required, Validators.min(1)]],
+    disponible: [true],
     especialidadIds: [[] as number[]],
   });
 
@@ -74,61 +74,66 @@ export class ProfesionalForm implements OnInit {
   }
 
   cargarUsuarios() {
-  Promise.all([
-    this.usuarioService.listar().toPromise(),
-    this.profesionalService.listar().toPromise(),
-  ]).then(([usuariosRes, profesionalesRes]) => {
-    const idsYaAsignados = new Set(
-      profesionalesRes!.data.map((p: any) => p.usuarioId)
-    );
-    const disponibles = usuariosRes!.data.filter(
-      (u: Usuario) => u.role === 'PROFESIONAL' && !idsYaAsignados.has(u.id)
-    );
-    this.usuarios.set(disponibles);
-  });
-}
+    Promise.all([
+      this.usuarioService.listar().toPromise(),
+      this.profesionalService.listar().toPromise(),
+    ]).then(([usuariosRes, profesionalesRes]) => {
+      const idsYaAsignados = new Set(
+        profesionalesRes!.data.map((p: any) => p.usuarioId)
+      );
+      const disponibles = usuariosRes!.data.filter(
+        (u: Usuario) => u.role === 'PROFESIONAL' && !idsYaAsignados.has(u.id)
+      );
+      this.usuarios.set(disponibles);
+    });
+  }
 
   cargarEspecialidades() {
-  this.especialidadService.listar().subscribe({
-    next: (res) => this.especialidades.set(res.data.filter((e: any) => e.estado)),
-    error: (err) => console.error(err),
-  });
-}
+    this.especialidadService.listar().subscribe({
+      next: (res) => this.especialidades.set(res.data.filter((e: any) => e.estado)),
+      error: (err) => console.error(err),
+    });
+  }
 
   cargarProfesional(id: number) {
-  this.profesionalService.obtenerPorId(id).subscribe({
-    next: (res) => {
-      const p = res.data;
-      this.form.patchValue({
-        usuarioId:       p.usuarioId,
-        titulo:          p.titulo,
-        descripcion:     p.descripcion,
-        experiencia:     p.experiencia,
-        modalidad:       p.modalidad,
-        provincia:       p.provincia,
-        canton:          p.canton,
-        distrito:        p.distrito,
-        tarifaBase:      Number(p.tarifaBase),
-        disponible:      p.disponible,
-        especialidadIds: p.especialidades?.map((e) => e.especialidad.id) ?? [],
-      });
+    this.profesionalService.obtenerPorId(id).subscribe({
+      next: (res) => {
+        const p = res.data;
+        this.form.patchValue({
+          usuarioId: p.usuarioId,
+          titulo: p.titulo,
+          descripcion: p.descripcion,
+          experiencia: p.experiencia,
+          modalidad: p.modalidad,
+          provincia: p.provincia,
+          canton: p.canton,
+          distrito: p.distrito,
+          tarifaBase: Number(p.tarifaBase),
+          disponible: p.disponible,
+          especialidadIds: p.especialidades?.map((e) => e.especialidad.id) ?? [],
+        });
 
-      if (p.usuario) {
-        this.usuarioSeleccionado.set(p.usuario as Usuario);
-      } else if (p.usuarioId) {
-        const usuarioEncontrado = this.usuarios().find(u => u.id === p.usuarioId);
-        if (usuarioEncontrado) {
-          this.usuarioSeleccionado.set(usuarioEncontrado);
+        if (p.usuario) {
+          this.usuarioSeleccionado.set(p.usuario as Usuario);
+        } else if (p.usuarioId) {
+          const usuarioEncontrado = this.usuarios().find(u => u.id === p.usuarioId);
+          if (usuarioEncontrado) {
+            this.usuarioSeleccionado.set(usuarioEncontrado);
+          }
         }
-      }
 
-      if (p.imagen) {
-        this.imagenPreview.set(this.profesionalService.getImageUrl(p.imagen));
-      }
-    },
-    error: (err) => console.error(err),
-  });
-}
+        if (p.imagen) {
+          const url = this.profesionalService.getImageUrl(p.imagen);
+
+          console.log('IMAGEN BD:', p.imagen);
+          console.log('URL IMAGEN:', url);
+
+          this.imagenPreview.set(url);
+        }
+      },
+      error: (err) => console.error(err),
+    });
+  }
 
 
   seleccionarUsuario(usuario: Usuario) {
@@ -160,79 +165,79 @@ export class ProfesionalForm implements OnInit {
   }
 
   guardar() {
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
-  }
-  this.loading.set(true);
-  this.error.set(null);
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.loading.set(true);
+    this.error.set(null);
 
-  if (this.imagenFile) {
-    const formData = new FormData();
-    formData.append('image', this.imagenFile);
-    this.profesionalService.subirImagen(formData).subscribe({
-      next: (res) => this.enviarProfesional(res.fileName),
+    if (this.imagenFile) {
+      const formData = new FormData();
+      formData.append('image', this.imagenFile);
+      this.profesionalService.subirImagen(formData).subscribe({
+        next: (res) => this.enviarProfesional(res.fileName),
+        error: (err) => {
+          this.error.set('Error al subir la imagen.');
+          this.loading.set(false);
+          console.error(err);
+        },
+      });
+    } else {
+      this.enviarProfesional(null);
+    }
+  }
+
+  private enviarProfesional(imagen: string | null) {
+    const values = this.form.value;
+    const data: any = {
+      usuarioId: values.usuarioId,
+      titulo: values.titulo,
+      descripcion: values.descripcion,
+      experiencia: Number(values.experiencia),
+      modalidad: values.modalidad,
+      provincia: values.provincia,
+      canton: values.canton,
+      distrito: values.distrito,
+      tarifaBase: Number(values.tarifaBase),
+      disponible: values.disponible ?? true,
+      especialidadIds: values.especialidadIds ?? [],
+    };
+    if (imagen) data.imagen = imagen;
+
+    const esEditar = this.modo() === 'editar';
+
+    const request$ = esEditar
+      ? this.profesionalService.actualizar(this.profesionalId!, data)
+      : this.profesionalService.crear(data);
+
+    request$.subscribe({
+      next: () => {
+        this.dialog.open(SuccessDialogComponent, {
+          width: '380px',
+          data: {
+            titulo: esEditar ? '¡Actualizado!' : '¡Creado!',
+            mensaje: esEditar
+              ? 'El profesional fue actualizado correctamente.'
+              : 'El profesional fue registrado correctamente.',
+          }
+        }).afterClosed().subscribe(() => {
+          this.router.navigate(['/admin/profesionales']);
+        });
+      },
       error: (err) => {
-        this.error.set('Error al subir la imagen.');
+        this.dialog.open(SuccessDialogComponent, {
+          width: '380px',
+          data: {
+            titulo: 'Error',
+            mensaje: 'Ocurrió un error al guardar. Revisá los datos.',
+          }
+        });
         this.loading.set(false);
         console.error(err);
       },
     });
-  } else {
-    this.enviarProfesional(null);
   }
-}
-
-private enviarProfesional(imagen: string | null) {
-  const values = this.form.value;
-  const data: any = {
-    usuarioId:       values.usuarioId,
-    titulo:          values.titulo,
-    descripcion:     values.descripcion,
-    experiencia:     Number(values.experiencia),
-    modalidad:       values.modalidad,
-    provincia:       values.provincia,
-    canton:          values.canton,
-    distrito:        values.distrito,
-    tarifaBase:      Number(values.tarifaBase),
-    disponible:      values.disponible ?? true,
-    especialidadIds: values.especialidadIds ?? [],
-  };
-  if (imagen) data.imagen = imagen;
-
-  const esEditar = this.modo() === 'editar';
-
-  const request$ = esEditar
-    ? this.profesionalService.actualizar(this.profesionalId!, data)
-    : this.profesionalService.crear(data);
-
-  request$.subscribe({
-    next: () => {
-      this.dialog.open(SuccessDialogComponent, {
-        width: '380px',
-        data: {
-          titulo: esEditar ? '¡Actualizado!' : '¡Creado!',
-          mensaje: esEditar
-            ? 'El profesional fue actualizado correctamente.'
-            : 'El profesional fue registrado correctamente.',
-        }
-      }).afterClosed().subscribe(() => {
-        this.router.navigate(['/admin/profesionales']);
-      });
-    },
-    error: (err) => {
-      this.dialog.open(SuccessDialogComponent, {
-        width: '380px',
-        data: {
-          titulo: 'Error',
-          mensaje: 'Ocurrió un error al guardar. Revisá los datos.',
-        }
-      });
-      this.loading.set(false);
-      console.error(err);
-    },
-  });
-}
 
   irAEditar(id: number) {
     this.router.navigate(['/admin/profesionales', id, 'editar']);

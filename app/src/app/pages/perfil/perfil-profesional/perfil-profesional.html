@@ -1,0 +1,327 @@
+<section class="profile-shell">
+  <div class="profile-header">
+    <div>
+      <p class="eyebrow">MI PERFIL</p>
+
+      <h2>Perfil profesional</h2>
+
+      <p class="subtitle">Administrá la información que verán tus clientes.</p>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ error() }}
+    </div>
+  }
+
+  @if (!loadingPerfil()) {
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+      <div class="profile-grid">
+        <!-- INFORMACIÓN PROFESIONAL -->
+
+        <div class="profile-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <mat-icon>person</mat-icon>
+            </div>
+
+            <h3>Información profesional</h3>
+          </div>
+
+          <!-- Imagen -->
+
+          <div class="field-group">
+            <label>Imagen de perfil</label>
+
+            <div class="profile-image-container">
+              <div class="profile-image">
+                @if (imagenPreview()) {
+                  <img [src]="imagenPreview()" alt="Imagen de perfil" />
+                } @else {
+                  <span class="initials">
+                    {{ iniciales }}
+                  </span>
+                }
+              </div>
+
+              @if (editando()) {
+                <div class="image-actions">
+                  <label for="imagen" class="btn-image">
+                    <mat-icon>photo_camera</mat-icon>
+                    Cambiar imagen
+                  </label>
+
+                  <input
+                    id="imagen"
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    (change)="onImagenChange($event)"
+                  />
+
+                  <span>JPG, PNG o WEBP</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Cuenta -->
+
+          <div class="field-group">
+            <label>Cuenta profesional</label>
+
+            <div class="account-box">
+              <div class="account-avatar">
+                {{ iniciales }}
+              </div>
+
+              <div>
+                <strong>{{ nombreCompleto }}</strong>
+                <span>{{ correo }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Título -->
+
+          <div class="field-group">
+            <label>
+              Título profesional
+
+              @if (editando()) {
+                <span class="required">*</span>
+              }
+            </label>
+
+            <input
+              type="text"
+              formControlName="titulo"
+              placeholder="Ej. Entrenador Personal Certificado"
+            />
+
+            @if (editando() && form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+              <span class="field-error"> Mínimo 3 caracteres. </span>
+            }
+          </div>
+
+          <!-- Descripción -->
+
+          <div class="field-group">
+            <label>
+              Descripción
+
+              @if (editando()) {
+                <span class="required">*</span>
+              }
+            </label>
+
+            <textarea
+              rows="5"
+              formControlName="descripcion"
+              placeholder="Contá brevemente sobre tu experiencia y especialización."
+            ></textarea>
+
+            @if (
+              editando() && form.get('descripcion')?.invalid && form.get('descripcion')?.touched
+            ) {
+              <span class="field-error"> Mínimo 10 caracteres. </span>
+            }
+          </div>
+        </div>
+
+        <!-- UBICACIÓN Y MODALIDAD -->
+
+        <div class="profile-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <mat-icon>location_on</mat-icon>
+            </div>
+
+            <h3>Ubicación y modalidad</h3>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>
+                Experiencia (años)
+
+                @if (editando()) {
+                  <span class="required">*</span>
+                }
+              </label>
+
+              <input type="number" formControlName="experiencia" min="0" />
+            </div>
+
+            <div class="field-group">
+              <label>
+                Tarifa base (₡)
+
+                @if (editando()) {
+                  <span class="required">*</span>
+                }
+              </label>
+
+              <input type="number" formControlName="tarifaBase" min="1" />
+            </div>
+          </div>
+
+          <!-- Modalidad -->
+
+          <div class="field-group">
+            <label>
+              Modalidad
+
+              @if (editando()) {
+                <span class="required">*</span>
+              }
+            </label>
+
+            <select formControlName="modalidad">
+              <option value="PRESENCIAL">Presencial</option>
+
+              <option value="VIRTUAL">Virtual</option>
+
+              <option value="MIXTA">Mixta</option>
+            </select>
+          </div>
+
+          <!-- Provincia / Cantón -->
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>
+                Provincia
+
+                @if (editando()) {
+                  <span class="required">*</span>
+                }
+              </label>
+
+              <input type="text" formControlName="provincia" />
+            </div>
+
+            <div class="field-group">
+              <label>
+                Cantón
+
+                @if (editando()) {
+                  <span class="required">*</span>
+                }
+              </label>
+
+              <input type="text" formControlName="canton" />
+            </div>
+          </div>
+
+          <!-- Distrito -->
+
+          <div class="field-group">
+            <label>
+              Distrito
+
+              @if (editando()) {
+                <span class="required">*</span>
+              }
+            </label>
+
+            <input type="text" formControlName="distrito" />
+          </div>
+
+          <!-- Disponibilidad -->
+
+          <div class="availability">
+            <div>
+              <strong> Disponible para citas </strong>
+
+              <p>Si está desactivado, no recibirás nuevas citas.</p>
+            </div>
+
+            <div class="toggle-wrap">
+              <input id="disponible" type="checkbox" formControlName="disponible" />
+
+              <label for="disponible" class="toggle"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESPECIALIDADES -->
+
+      <div class="profile-card specialties-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>star</mat-icon>
+          </div>
+
+          <h3>Especialidades</h3>
+        </div>
+
+        <p class="specialties-description">
+          Seleccioná las especialidades que aplican a tu perfil profesional.
+        </p>
+
+        <div class="specialties">
+          @for (especialidad of especialidades(); track especialidad.id) {
+            <button
+              type="button"
+              class="specialty-chip"
+              [class.selected]="isEspecialidadSelected(especialidad.id)"
+              [disabled]="!editando()"
+              (click)="toggleEspecialidad(especialidad.id)"
+            >
+              <mat-icon>
+                {{ isEspecialidadSelected(especialidad.id) ? 'check' : 'add' }}
+              </mat-icon>
+
+              {{ especialidad.nombre }}
+            </button>
+          } @empty {
+            <p class="empty-specialties">No hay especialidades disponibles.</p>
+          }
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+
+      <div class="form-footer">
+        @if (!editando()) {
+          <button type="button" class="btn-primary" (click)="editarPerfil()">
+            <mat-icon> edit </mat-icon>
+
+            Editar perfil
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="btn-ghost"
+            [disabled]="loading()"
+            (click)="cancelarEdicion()"
+          >
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn-primary" [disabled]="loading()">
+            @if (loading()) {
+              <mat-icon class="spinning"> sync </mat-icon>
+
+              Guardando...
+            } @else {
+              <mat-icon> save </mat-icon>
+
+              Guardar cambios
+            }
+          </button>
+        }
+      </div>
+    </form>
+  } @else {
+    <div class="loading">
+      <mat-icon class="spinning"> sync </mat-icon>
+
+      Cargando perfil...
+    </div>
+  }
+</section>

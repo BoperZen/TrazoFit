@@ -1,99 +1,115 @@
 <header class="site-header">
-    <mat-toolbar class="toolbar">
+  <mat-toolbar class="toolbar">
+    <a class="brand" routerLink="/">
+      <span class="brand-icon">
+        <mat-icon svgIcon="arm-bicep"></mat-icon>
+      </span>
 
-        <a class="brand" routerLink="/">
-            <span class="brand-icon">
-                <mat-icon svgIcon="arm-bicep"></mat-icon>
-            </span>
+      <span class="brand-text">
+        <strong>TrazoFit</strong>
+        <small>Marketplace de fitness</small>
+      </span>
+    </a>
 
-            <span class="brand-text">
-                <strong>TrazoFit</strong>
-                <small>Marketplace de fitness</small>
-            </span>
+    <nav class="desktop-nav">
+      @if (!isAdmin()) {
+        @for (item of publicMenu(); track item.path) {
+          <a
+            class="nav-link"
+            mat-button
+            [routerLink]="item.path"
+            routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+          >
+            <mat-icon>{{ item.icon }}</mat-icon>
+            {{ item.label }}
+          </a>
+        }
+      } @else {
+        <a
+          class="nav-link"
+          mat-button
+          routerLink="/"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <mat-icon>home</mat-icon>
+          Inicio
         </a>
 
-        <nav class="desktop-nav">
-            @if (!isAdmin()) {
-                @for (item of publicMenu(); track item.path) {
-                    <a class="nav-link" mat-button
-                       [routerLink]="item.path"
-                       routerLinkActive="active-link"
-                       [routerLinkActiveOptions]="{ exact: item.path === '/' }">
-                        <mat-icon>{{ item.icon }}</mat-icon>
-                        {{ item.label }}
-                    </a>
-                }
-            } @else {
-                <a class="nav-link" mat-button routerLink="/" routerLinkActive="active-link"
-                   [routerLinkActiveOptions]="{ exact: true }">
-                    <mat-icon>home</mat-icon>
-                    Inicio
-                </a>
-
-                <button class="nav-link" mat-button [matMenuTriggerFor]="maintenanceMenu">
-                    <mat-icon>settings</mat-icon>
-                    Mantenimientos
-                </button>
-
-                <button class="nav-link" mat-button [matMenuTriggerFor]="managementMenu">
-                    <mat-icon>admin_panel_settings</mat-icon>
-                    Gestión
-                </button>
-            }
-        </nav>
-
-        <span class="spacer"></span>
-
-        @if (currentUser(); as user) {
-            <div class="user-chip">
-                <mat-icon>person</mat-icon>
-                <span>{{ user.nombre }}</span>
-                <strong>{{ user.role }}</strong>
-            </div>
-        }
-
-        <button class="icon-button mobile-menu-button"
-                mat-icon-button
-                [matMenuTriggerFor]="mobileMenu">
-            <mat-icon>menu</mat-icon>
+        <button class="nav-link" mat-button [matMenuTriggerFor]="maintenanceMenu">
+          <mat-icon>settings</mat-icon>
+          Mantenimientos
         </button>
 
-    </mat-toolbar>
+        <button class="nav-link" mat-button [matMenuTriggerFor]="managementMenu">
+          <mat-icon>admin_panel_settings</mat-icon>
+          Gestión
+        </button>
+      }
+    </nav>
+
+    <span class="spacer"></span>
+
+    @if (currentUser(); as user) {
+      <div class="user-chip">
+        <mat-icon>person</mat-icon>
+        <span>{{ user.nombre }}</span>
+        <strong>{{ user.role }}</strong>
+      </div>
+
+      @if (profilePath(user); as profilePath) {
+        <a
+          class="profile-button"
+          mat-icon-button
+          [routerLink]="profilePath"
+          routerLinkActive="active-profile"
+          aria-label="Mi perfil"
+        >
+          <mat-icon>account_circle</mat-icon>
+        </a>
+      }
+    }
+
+    <button class="icon-button mobile-menu-button" mat-icon-button [matMenuTriggerFor]="mobileMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </mat-toolbar>
 </header>
 
 <mat-menu #maintenanceMenu="matMenu">
-    @for (item of adminMaintenanceMenu(); track item.path) {
+  @for (item of adminMaintenanceMenu(); track item.path) {
     <a mat-menu-item [routerLink]="item.path">
-        <mat-icon>{{ item.icon }}</mat-icon>
-        <span>{{ item.label }}</span>
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span>{{ item.label }}</span>
     </a>
-    }
+  }
 </mat-menu>
 <mat-menu #managementMenu="matMenu">
-    @for (item of adminManagementMenu(); track item.path) {
+  @for (item of adminManagementMenu(); track item.path) {
     <a mat-menu-item [routerLink]="item.path">
-        <mat-icon>{{ item.icon }}</mat-icon>
-        <span>{{ item.label }}</span>
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span>{{ item.label }}</span>
     </a>
-    }
+  }
 </mat-menu>
 <mat-menu #mobileMenu="matMenu">
-    @for (item of publicMenu(); track item.path) {
+  @for (item of publicMenu(); track item.path) {
     @if (canShowItem()(item)) {
-    <a mat-menu-item [routerLink]="item.path">
+      <a mat-menu-item [routerLink]="item.path">
         <mat-icon>{{ item.icon }}</mat-icon>
         <span>{{ item.label }}</span>
-    </a>
+      </a>
     }
-    }
-    @if (isAdmin()) {
+  }
+  @if (isAdmin()) {
     <button mat-menu-item [matMenuTriggerFor]="maintenanceMenu">
-        <mat-icon>settings</mat-icon>
-        <span>Mantenimientos</span>
+      <mat-icon>settings</mat-icon>
+      <span>Mantenimientos</span>
     </button>
     <button mat-menu-item [matMenuTriggerFor]="managementMenu">
-        <mat-icon>admin_panel_settings</mat-icon>
-        <span>Gestión</span>
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Gestión</span>
     </button>
-    }
+  }
 </mat-menu>

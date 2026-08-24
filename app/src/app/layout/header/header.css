@@ -4,16 +4,15 @@
     z-index: 50;
     display: block;
 }
+
 .site-header {
     position: sticky;
     top: 0;
     z-index: 50;
     backdrop-filter: blur(18px);
-    background: linear-gradient(
-        180deg,
-        color-mix(in srgb, #101010 94%, transparent),
-        color-mix(in srgb, var(--color-bg) 90%, transparent)
-    );
+    background: linear-gradient(180deg,
+            color-mix(in srgb, #101010 94%, transparent),
+            color-mix(in srgb, var(--color-bg) 90%, transparent));
     border-bottom: 1px solid color-mix(in srgb, var(--color-border) 90%, transparent);
 }
 
@@ -128,6 +127,22 @@
         color: var(--color-secondary-fg);
         background: var(--color-secondary);
     }
+}
+
+.profile-button {
+    margin-left: 4px;
+    color: inherit;
+    opacity: 0.85;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.profile-button:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.active-profile {
+    opacity: 1;
 }
 
 .icon-button {

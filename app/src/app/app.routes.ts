@@ -21,6 +21,8 @@ import { CitasUsuarioForm } from './pages/citas/citas-usuario-form/citas-usuario
 import { ProfesionalesAgenda } from './pages/profesionales/profesionales-agenda/profesionales-agenda';
 import { CitasUsuarioDetalle } from './pages/citas/citas-usuario-detalle/citas-usuario-detalle';
 import { CitasProfesionalDetalle } from './pages/citas/citas-profesional-detalle/citas-profesional-detalle';
+import { PerfilProfesional } from './pages/perfil/perfil-profesional/perfil-profesional';
+import { PerfilCliente } from './pages/perfil/perfil-cliente/perfil-cliente';
 
 export const routes: Routes = [
   {
@@ -31,22 +33,26 @@ export const routes: Routes = [
       // ── Pública ──────────────────────────────────────────
       { path: '', component: Home, title: 'Inicio' },
 
+      // ── Perfil ─────────────────────────────────────────────
+      { path: 'perfil/profesional', component: PerfilProfesional, title: 'Mi perfil', canActivate: [profesionalGuard] },
+      { path: 'perfil', component: PerfilCliente, title: 'Mi perfil', canActivate: [clienteGuard] },
+
       // ── Admin ────────────────────────────────────────────
-      { path: 'admin/usuarios',             component: UsuariosList,    title: 'Usuarios',           canActivate: [adminGuard] },
-      { path: 'admin/categorias',           component: CategoriasList,  title: 'Categorías',         canActivate: [adminGuard] },
-      { path: 'admin/especialidades',       component: EspecialidadesList, title: 'Especialidades',  canActivate: [adminGuard] },
-      { path: 'admin/profesionales',        component: ProfesionalesList,  title: 'Profesionales',   canActivate: [adminGuard] },
-      { path: 'admin/profesionales/nuevo',  component: ProfesionalForm,    title: 'Nuevo profesional', canActivate: [adminGuard] },
+      { path: 'admin/usuarios', component: UsuariosList, title: 'Usuarios', canActivate: [adminGuard] },
+      { path: 'admin/categorias', component: CategoriasList, title: 'Categorías', canActivate: [adminGuard] },
+      { path: 'admin/especialidades', component: EspecialidadesList, title: 'Especialidades', canActivate: [adminGuard] },
+      { path: 'admin/profesionales', component: ProfesionalesList, title: 'Profesionales', canActivate: [adminGuard] },
+      { path: 'admin/profesionales/nuevo', component: ProfesionalForm, title: 'Nuevo profesional', canActivate: [adminGuard] },
       { path: 'admin/profesionales/:id/editar', component: ProfesionalForm, title: 'Editar profesional', canActivate: [adminGuard] },
-      { path: 'admin/profesionales/:id',    component: ProfesionalForm,    title: 'Detalle profesional', canActivate: [adminGuard] },
-      { path: 'admin/servicios',            component: ServiciosList,   title: 'Servicios',          canActivate: [adminGuard] },
-      { path: 'admin/servicios/nuevo',      component: ServicioForm,    title: 'Nuevo servicio',     canActivate: [adminGuard] },
-      { path: 'admin/servicios/:id/editar', component: ServicioForm,    title: 'Editar servicio',    canActivate: [adminGuard] },
-      { path: 'admin/servicios/:id',        component: ServicioForm,    title: 'Detalle servicio',   canActivate: [adminGuard] },
-      { path: 'admin/citas',                component: CitasList,       title: 'Citas',              canActivate: [adminGuard] },
-      { path: 'admin/citas/nuevo',          component: CitaForm,        title: 'Nueva cita',         canActivate: [adminGuard] },
-      { path: 'admin/citas/:id',            component: CitaForm,        title: 'Detalle cita',       canActivate: [adminGuard] },
-      { path: 'admin/reportes',             component: ReportsComponent, title: 'Reportes',          canActivate: [adminGuard] },
+      { path: 'admin/profesionales/:id', component: ProfesionalForm, title: 'Detalle profesional', canActivate: [adminGuard] },
+      { path: 'admin/servicios', component: ServiciosList, title: 'Servicios', canActivate: [adminGuard] },
+      { path: 'admin/servicios/nuevo', component: ServicioForm, title: 'Nuevo servicio', canActivate: [adminGuard] },
+      { path: 'admin/servicios/:id/editar', component: ServicioForm, title: 'Editar servicio', canActivate: [adminGuard] },
+      { path: 'admin/servicios/:id', component: ServicioForm, title: 'Detalle servicio', canActivate: [adminGuard] },
+      { path: 'admin/citas', component: CitasList, title: 'Citas', canActivate: [adminGuard] },
+      { path: 'admin/citas/nuevo', component: CitaForm, title: 'Nueva cita', canActivate: [adminGuard] },
+      { path: 'admin/citas/:id', component: CitaForm, title: 'Detalle cita', canActivate: [adminGuard] },
+      { path: 'admin/reportes', component: ReportsComponent, title: 'Reportes', canActivate: [adminGuard] },
 
       // ── Profesional ──────────────────────────────────────
       // TODO: agregar componentes cuando estén listos
@@ -54,15 +60,19 @@ export const routes: Routes = [
       // { path: 'profesional/servicios', component: ProfesionalServiciosList, canActivate: [profesionalGuard] },
       { path: 'profesional/agenda', component: ProfesionalesAgenda, title: 'Mi agenda', canActivate: [profesionalGuard] },
       { path: 'profesional/citas/:id', component: CitasProfesionalDetalle, canActivate: [profesionalGuard] },
+      { path: 'profesional/servicios', component: ServiciosList, title: 'Mis servicios', canActivate: [profesionalGuard] },
+      { path: 'profesional/servicios/nuevo', component: ServicioForm, title: 'Nuevo servicio', canActivate: [profesionalGuard] },
+      { path: 'profesional/servicios/:id/editar', component: ServicioForm, title: 'Editar servicio', canActivate: [profesionalGuard] },
+      { path: 'profesional/servicios/:id', component: ServicioForm, title: 'Detalle servicio', canActivate: [profesionalGuard] },
 
       // ── Cliente ──────────────────────────────────────────
       // TODO: agregar componentes cuando estén listos
       // { path: 'profesionales',        component: ProfesionalesPublicList, canActivate: [clienteGuard] },
       { path: 'cliente/citas/nueva', component: CitasUsuarioForm, canActivate: [clienteGuard] },
-      { path: 'cliente/citas',        component: CitasListUsuario, canActivate: [clienteGuard] },
+      { path: 'cliente/citas', component: CitasListUsuario, canActivate: [clienteGuard] },
       { path: 'profesionales', component: ProfesionalesCliente, canActivate: [clienteGuard] },
       { path: 'cliente/citas/:id', component: CitasUsuarioDetalle, canActivate: [clienteGuard] },
-      
+
 
     ]
   },

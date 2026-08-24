@@ -1,0 +1,187 @@
+<section class="profile-shell">
+  <div class="profile-header">
+    <div>
+      <p class="eyebrow">MI PERFIL</p>
+
+      <h2>Perfil de cliente</h2>
+
+      <p class="subtitle">Administrá la información de tu cuenta.</p>
+    </div>
+
+    @if (!loadingPerfil()) {
+      <div class="header-actions">
+        @if (!editando()) {
+          <button type="button" class="btn-primary" (click)="activarEdicion()">
+            <mat-icon>edit</mat-icon>
+            Editar perfil
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  @if (error()) {
+    <div class="alert-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ error() }}
+    </div>
+  }
+
+  @if (!loadingPerfil()) {
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+      <div class="profile-grid">
+        <!-- INFORMACIÓN PERSONAL -->
+
+        <div class="profile-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <mat-icon>person</mat-icon>
+            </div>
+
+            <h3>Información personal</h3>
+          </div>
+
+          <!-- AVATAR -->
+
+          <div class="profile-person">
+            <div class="profile-avatar">
+              {{ iniciales }}
+            </div>
+
+            <div>
+              <strong>{{ nombreCompleto }}</strong>
+              <span>Cliente de TrazoFit</span>
+            </div>
+          </div>
+
+          <!-- NOMBRE -->
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>
+                Nombre
+                <span class="required">*</span>
+              </label>
+
+              <input type="text" formControlName="nombre" placeholder="Nombre" />
+
+              @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+                <span class="field-error"> El nombre es obligatorio. </span>
+              }
+            </div>
+
+            <!-- APELLIDOS -->
+
+            <div class="field-group">
+              <label>
+                Apellidos
+                <span class="required">*</span>
+              </label>
+
+              <input type="text" formControlName="apellidos" placeholder="Apellidos" />
+
+              @if (form.get('apellidos')?.invalid && form.get('apellidos')?.touched) {
+                <span class="field-error"> Los apellidos son obligatorios. </span>
+              }
+            </div>
+          </div>
+
+          <!-- CORREO -->
+
+          <div class="field-group">
+            <label>
+              Correo electrónico
+              <span class="required">*</span>
+            </label>
+
+            <input type="email" formControlName="email" placeholder="correo@ejemplo.com" />
+
+            @if (form.get('email')?.invalid && form.get('email')?.touched) {
+              <span class="field-error"> Ingresá un correo válido. </span>
+            }
+          </div>
+
+          <!-- TELEFONO -->
+
+          <div class="field-group">
+            <label> Teléfono </label>
+
+            <input type="tel" formControlName="telefono" placeholder="8888-8888" />
+          </div>
+        </div>
+
+        <!-- INFORMACIÓN DE CUENTA -->
+
+        <div class="profile-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <mat-icon>account_circle</mat-icon>
+            </div>
+
+            <h3>Información de cuenta</h3>
+          </div>
+
+          <div class="account-info">
+            <div class="info-item">
+              <mat-icon>person</mat-icon>
+
+              <div>
+                <span>Nombre completo</span>
+                <strong>{{ nombreCompleto }}</strong>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>email</mat-icon>
+
+              <div>
+                <span>Correo electrónico</span>
+                <strong>{{ form.get('email')?.value }}</strong>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon>badge</mat-icon>
+
+              <div>
+                <span>Tipo de cuenta</span>
+                <strong>Cliente</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+
+      @if (editando()) {
+        <div class="form-footer">
+          <button
+            type="button"
+            class="btn-secondary"
+            [disabled]="loading()"
+            (click)="cancelarEdicion()"
+          >
+            <mat-icon>close</mat-icon>
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn-primary" [disabled]="loading()">
+            @if (loading()) {
+              <mat-icon class="spinning">sync</mat-icon>
+              Guardando...
+            } @else {
+              <mat-icon>save</mat-icon>
+              Guardar cambios
+            }
+          </button>
+        </div>
+      }
+    </form>
+  } @else {
+    <div class="loading">
+      <mat-icon class="spinning">sync</mat-icon>
+      Cargando perfil...
+    </div>
+  }
+</section>

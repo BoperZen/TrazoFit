@@ -10,6 +10,7 @@ import { Servicio } from '../../../core/models/servicio.model';
 import { Categoria } from '../../../core/models/categoria.model';
 import { EstadoConfirmDialogComponent } from '../../../shared/components/estado-confirm-dialog.component';
 import { SuccessDialogComponent } from '../../../shared/components/success-dialog.component';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-servicios-list',
@@ -24,6 +25,7 @@ export class ServiciosList implements OnInit {
   private readonly categoriaService = inject(CategoriaService);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   readonly servicios = signal<Servicio[]>([]);
   readonly categorias = signal<Categoria[]>([]);
@@ -39,6 +41,8 @@ export class ServiciosList implements OnInit {
     { label: 'Presencial', value: 'PRESENCIAL' as const },
     { label: 'Mixta', value: 'MIXTA' as const },
   ];
+
+  readonly esProfesional = computed(() => this.authService.isProfesional());
 
   readonly categoriaLabel = computed(() => {
     if (this.selectedCategoria() === 'TODOS') return 'Todos';
@@ -72,7 +76,13 @@ export class ServiciosList implements OnInit {
 
   cargarServicios() {
     this.servicioService.listar().subscribe({
-      next: (res) => this.servicios.set(res.data),
+      next: (res) => {
+        const servicios = this.esProfesional()
+          ? res.data.filter(s => s.profesionalId === this.authService.profesionalId())
+          : res.data;
+
+        this.servicios.set(servicios);
+      },
       error: (err) => console.error(err),
     });
   }
@@ -90,9 +100,32 @@ export class ServiciosList implements OnInit {
   onPrecioMin(value: string) { this.precioMin.set(value ? Number(value) : null); }
   onPrecioMax(value: string) { this.precioMax.set(value ? Number(value) : null); }
 
-  irACrear() { this.router.navigate(['/admin/servicios/nuevo']); }
-  irADetalle(id: number) { this.router.navigate(['/admin/servicios', id]); }
-  irAEditar(id: number) { this.router.navigate(['/admin/servicios', id, 'editar']); }
+  irACrear() {
+    this.router.navigate([
+      this.esProfesional()
+        ? '/profesional/servicios/nuevo'
+        : '/admin/servicios/nuevo'
+    ]);
+  }
+
+  irADetalle(id: number) {
+    this.router.navigate([
+      this.esProfesional()
+        ? '/profesional/servicios'
+        : '/admin/servicios',
+      id
+    ]);
+  }
+
+  irAEditar(id: number) {
+    this.router.navigate([
+      this.esProfesional()
+        ? '/profesional/servicios'
+        : '/admin/servicios',
+      id,
+      'editar'
+    ]);
+  }
 
   confirmarCambioEstado(servicio: Servicio): void {
     const anterior = servicio.estado;

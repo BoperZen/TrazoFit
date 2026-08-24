@@ -26,6 +26,29 @@ export class UsuarioController {
         return response.status(StatusCodes.OK).json({ success: true, data: usuario });
     };
 
+    actualizar = async (request: Request, response: Response, next: NextFunction) => {
+    const rawId = Array.isArray(request.params.id)
+        ? request.params.id[0]
+        : request.params.id;
+
+    const id = parseInt(rawId ?? '', 10);
+
+    if (isNaN(id)) {
+        return response.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: "ID inválido"
+        });
+    }
+
+    const usuario = await usuarioService.actualizar(id, request.body);
+
+    return response.status(StatusCodes.OK).json({
+        success: true,
+        message: "Usuario actualizado correctamente",
+        data: usuario,
+    });
+};
+
     toggleEstado = async (request: Request, response: Response, next: NextFunction) => {
         const rawId = Array.isArray(request.params.id) ? request.params.id[0] : request.params.id;
         const id = parseInt(rawId ?? '', 10);

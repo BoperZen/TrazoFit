@@ -130,21 +130,41 @@
           </select>
         </div>
 
-        <div class="field-group">
-          <label>Profesional <span class="required">*</span></label>
+        @if (!esProfesional()) {
+          <div class="field-group">
+            <label>Profesional <span class="required">*</span></label>
 
-          <select formControlName="profesionalId">
-            <option [ngValue]="null">Seleccione un profesional</option>
+            <select formControlName="profesionalId">
+              <option [ngValue]="null">Seleccione un profesional</option>
 
-            @for (profesional of profesionales(); track profesional.id) {
-              <option [ngValue]="profesional.id">
-                {{ profesional.usuario?.nombre }}
-                {{ profesional.usuario?.apellidos }}
-                - {{ profesional.titulo }}
-              </option>
-            }
-          </select>
-        </div>
+              @for (profesional of profesionales(); track profesional.id) {
+                <option [ngValue]="profesional.id">
+                  {{ profesional.usuario?.nombre }}
+                  {{ profesional.usuario?.apellidos }}
+                  - {{ profesional.titulo }}
+                </option>
+              }
+            </select>
+          </div>
+        } @else {
+          <div class="field-group">
+            <label>Profesional</label>
+
+            <input
+              type="text"
+              [value]="
+                authService.currentProfesional()?.usuario?.nombre +
+                ' ' +
+                authService.currentProfesional()?.usuario?.apellidos
+              "
+              disabled
+            />
+
+            <p class="field-hint">
+              El servicio se asociará automáticamente a tu perfil profesional.
+            </p>
+          </div>
+        }
 
         <div class="field-group">
           <label class="toggle-label">
