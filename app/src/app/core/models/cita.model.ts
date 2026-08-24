@@ -24,6 +24,7 @@ export interface Cita {
     createdAt: string;
     updatedAt: string;
     resena?: Resena;
+    historial?: HistorialCita[];
 }
 
 export interface CitaCreateDto {
@@ -57,4 +58,13 @@ export interface ResenaCreateDto {
     clienteId: number;
     puntuacion: number;
     comentario?: string;
+}
+
+export interface HistorialCita {
+    id: number;
+    citaId: number;
+    estadoAnterior: EstadoCita;
+    estadoNuevo: EstadoCita;
+    comentario?: string;
+    createdAt: string;
 }

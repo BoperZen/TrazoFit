@@ -1,0 +1,14 @@
+-- CreateTable
+CREATE TABLE `historial_cita` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `citaId` INTEGER NOT NULL,
+    `estadoAnterior` ENUM('PENDIENTE', 'ACEPTADA', 'RECHAZADA', 'CANCELADA', 'COMPLETADA') NOT NULL,
+    `estadoNuevo` ENUM('PENDIENTE', 'ACEPTADA', 'RECHAZADA', 'CANCELADA', 'COMPLETADA') NOT NULL,
+    `comentario` VARCHAR(500) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `historial_cita` ADD CONSTRAINT `historial_cita_citaId_fkey` FOREIGN KEY (`citaId`) REFERENCES `cita`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -11,6 +11,7 @@ const citaInclude = {
     },
     servicio: { select: { id: true, nombre: true, precio: true, duracion: true, modalidad: true } },
     resena: true,
+    historial: { orderBy: { createdAt: 'asc' as const } },
 };
 
 const TRANSICIONES: Record<string, string[]> = {
@@ -61,7 +62,7 @@ export const citaService = {
             where: { id: data.servicioId }
         });
 
-        return await prisma.cita.create({
+        const cita = await prisma.cita.create({
             data: {
                 clienteId: data.clienteId,
                 profesionalId: data.profesionalId,
@@ -76,6 +77,17 @@ export const citaService = {
             },
             include: citaInclude,
         });
+
+        await prisma.historialCita.create({
+            data: {
+                citaId: cita.id,
+                estadoAnterior: 'PENDIENTE',
+                estadoNuevo: 'PENDIENTE',
+                comentario: 'Cita creada',
+            }
+        });
+
+        return cita;
     },
 
     async cambiarEstado(id: number, data: CambiarEstadoCitaDto) {
@@ -86,14 +98,37 @@ export const citaService = {
             throw AppError.badRequest(`No se puede cambiar de ${cita.estado} a ${data.estado}`);
         }
 
-        return await prisma.cita.update({
-            where: { id },
-            data: {
-                estado: data.estado,
-                comentarioProfesional: data.comentario,
-            },
-            include: citaInclude,
-        });
+        // Validar que para COMPLETADA la fecha ya pasó
+        if (data.estado === 'COMPLETADA') {
+            const ahora = new Date();
+            const fechaHoraFin = new Date(cita.fechaCita);
+            const [horas, minutos] = cita.horaFin.split(':').map(Number);
+            fechaHoraFin.setHours(horas, minutos, 0, 0);
+            if (ahora < fechaHoraFin) {
+                throw AppError.badRequest('No se puede completar una cita antes de su hora de fin');
+            }
+        }
+
+        const [citaActualizada] = await prisma.$transaction([
+            prisma.cita.update({
+                where: { id },
+                data: {
+                    estado: data.estado,
+                    comentarioProfesional: data.comentario,
+                },
+                include: citaInclude,
+            }),
+            prisma.historialCita.create({
+                data: {
+                    citaId: id,
+                    estadoAnterior: cita.estado,
+                    estadoNuevo: data.estado,
+                    comentario: data.comentario ?? null,
+                },
+            }),
+        ]);
+
+        return citaActualizada;
     },
 
     async validateCliente(clienteId: number) {

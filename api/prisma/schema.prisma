@@ -171,6 +171,7 @@ model Cita {
   comentarioCliente     String?       @db.VarChar(500)
   comentarioProfesional String?       @db.VarChar(500)
   montoEstimado         Decimal       @default(0.00) @db.Decimal(10, 2)
+  historial HistorialCita[]
 
   clienteId     Int
   cliente       Usuario     @relation("ClienteCitas", fields: [clienteId], references: [id])
@@ -187,6 +188,18 @@ model Cita {
   updatedAt DateTime @updatedAt
 
   @@map("cita")
+}
+
+model HistorialCita {
+  id             Int        @id @default(autoincrement())
+  citaId         Int
+  cita           Cita       @relation(fields: [citaId], references: [id])
+  estadoAnterior EstadoCita
+  estadoNuevo    EstadoCita
+  comentario     String?    @db.VarChar(500)
+  createdAt      DateTime   @default(now())
+
+  @@map("historial_cita")
 }
 
 model Resena {

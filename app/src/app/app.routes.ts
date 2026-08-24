@@ -19,6 +19,7 @@ import { CitasListUsuario } from './pages/citas/citas-usuario/citas-list-usuario
 import { ProfesionalesCliente } from './pages/profesionales/profesionales-cliente/profesionales-cliente';
 import { CitasUsuarioForm } from './pages/citas/citas-usuario-form/citas-usuario-form';
 import { ProfesionalesAgenda } from './pages/profesionales/profesionales-agenda/profesionales-agenda';
+import { CitasUsuarioDetalle } from './pages/citas/citas-usuario-detalle/citas-usuario-detalle';
 
 export const routes: Routes = [
   {
@@ -58,6 +59,7 @@ export const routes: Routes = [
       { path: 'cliente/citas/nueva', component: CitasUsuarioForm, canActivate: [clienteGuard] },
       { path: 'cliente/citas',        component: CitasListUsuario, canActivate: [clienteGuard] },
       { path: 'profesionales', component: ProfesionalesCliente, canActivate: [clienteGuard] },
+      { path: 'cliente/citas/:id', component: CitasUsuarioDetalle, canActivate: [clienteGuard] },
       
 
     ]

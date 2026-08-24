@@ -508,6 +508,33 @@ async function main() {
         ],
     });
 
+    // 7.5 Historial de estados
+    const todasLasCitas = await prisma.cita.findMany();
+
+    for (const cita of todasLasCitas) {
+        // Siempre hay un estado inicial PENDIENTE
+        await prisma.historialCita.create({
+            data: {
+                citaId: cita.id,
+                estadoAnterior: EstadoCita.PENDIENTE,
+                estadoNuevo: EstadoCita.PENDIENTE,
+                comentario: 'Cita creada',
+            }
+        });
+
+        // Si el estado actual no es PENDIENTE, agregamos la transición
+        if (cita.estado !== EstadoCita.PENDIENTE) {
+            await prisma.historialCita.create({
+                data: {
+                    citaId: cita.id,
+                    estadoAnterior: EstadoCita.PENDIENTE,
+                    estadoNuevo: cita.estado,
+                    comentario: cita.comentarioProfesional ?? null,
+                }
+            });
+        }
+    }
+
     // 8. Creación de Reseñas (solo citas COMPLETADA)
     const citasCompletadas = await prisma.cita.findMany({
         where: { estado: EstadoCita.COMPLETADA },
