@@ -15,7 +15,10 @@ import { adminGuard } from './core/guards/admin.guard';
 import { profesionalGuard } from './core/guards/profesional.guard';
 import { clienteGuard } from './core/guards/cliente.guard';
 import { authGuard } from './core/guards/auth.guard';
-import { CitasListCliente } from './pages/citas/citas-cliente/citas-list-cliente';
+import { CitasListUsuario } from './pages/citas/citas-usuario/citas-list-usuario';
+import { ProfesionalesCliente } from './pages/profesionales/profesionales-cliente/profesionales-cliente';
+import { CitasUsuarioForm } from './pages/citas/citas-usuario-form/citas-usuario-form';
+import { ProfesionalesAgenda } from './pages/profesionales/profesionales-agenda/profesionales-agenda';
 
 export const routes: Routes = [
   {
@@ -45,14 +48,17 @@ export const routes: Routes = [
 
       // ── Profesional ──────────────────────────────────────
       // TODO: agregar componentes cuando estén listos
-      // { path: 'profesional/citas',    component: ProfesionalCitasList, canActivate: [profesionalGuard] },
+      //{ path: 'profesional/citas',    component: CitasListUsuario, canActivate: [profesionalGuard] },
       // { path: 'profesional/servicios', component: ProfesionalServiciosList, canActivate: [profesionalGuard] },
-      // { path: 'profesional/agenda',   component: AgendaComponent, canActivate: [profesionalGuard] },
+      { path: 'profesional/agenda', component: ProfesionalesAgenda, title: 'Mi agenda', canActivate: [profesionalGuard] },
 
       // ── Cliente ──────────────────────────────────────────
       // TODO: agregar componentes cuando estén listos
       // { path: 'profesionales',        component: ProfesionalesPublicList, canActivate: [clienteGuard] },
-      { path: 'cliente/citas',        component: CitasListCliente, canActivate: [clienteGuard] },
+      { path: 'cliente/citas/nueva', component: CitasUsuarioForm, canActivate: [clienteGuard] },
+      { path: 'cliente/citas',        component: CitasListUsuario, canActivate: [clienteGuard] },
+      { path: 'profesionales', component: ProfesionalesCliente, canActivate: [clienteGuard] },
+      
 
     ]
   },

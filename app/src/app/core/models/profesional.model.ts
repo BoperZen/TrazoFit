@@ -1,5 +1,6 @@
 import { Usuario } from './usuario.model';
 import { Especialidad } from './especialidad.model';
+import { Servicio } from './servicio.model';
 
 export type Modalidad = 'VIRTUAL' | 'PRESENCIAL' | 'MIXTA';
 
@@ -20,6 +21,7 @@ export interface Profesional {
     especialidades?: { especialidad: Especialidad }[];
     createdAt: string;
     updatedAt: string;
+    servicios?: Servicio[];
 }
 
 export interface ProfesionalCreateDto {

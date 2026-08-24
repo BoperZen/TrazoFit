@@ -16,6 +16,9 @@ export const profesionalService = {
                 },
                 especialidades: {
                     include: { especialidad: true }
+                },
+                servicios: {
+                    include: { categoria: true }
                 }
             }
         });
@@ -41,6 +44,18 @@ export const profesionalService = {
         });
 
         if (!profesional) throw AppError.notFound("Profesional no encontrado");
+        return profesional;
+    },
+
+    async obtenerPorUsuarioId(usuarioId: number) {
+        const profesional = await prisma.profesional.findUnique({
+            where: { usuarioId },
+            include: {
+                usuario: { select: { nombre: true, apellidos: true, email: true, telefono: true } },
+                especialidades: { include: { especialidad: true } }
+            }
+        });
+        if (!profesional) throw AppError.notFound("Perfil profesional no encontrado");
         return profesional;
     },
 

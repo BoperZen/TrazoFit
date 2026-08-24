@@ -1,0 +1,104 @@
+<section class="form-shell">
+    <div class="form-header">
+        <div>
+            <p class="eyebrow">Nueva cita</p>
+            <h2>Solicitar cita</h2>
+            <p class="subtitle">Completá los datos para solicitar tu cita.</p>
+        </div>
+        <button class="btn-ghost" type="button" (click)="volver()">
+            <mat-icon>arrow_back</mat-icon>
+            Volver
+        </button>
+    </div>
+
+    @if (profesional(); as prof) {
+        <div class="resumen-card">
+            <div class="resumen-card__prof">
+                <div class="card-icon"><mat-icon>person</mat-icon></div>
+                <div>
+                    <strong>{{ prof.usuario?.nombre }} {{ prof.usuario?.apellidos }}</strong>
+                    <span>{{ prof.titulo }}</span>
+                </div>
+            </div>
+            @if (servicio(); as s) {
+                <div class="resumen-card__servicio">
+                    <div class="info-row"><mat-icon>fitness_center</mat-icon><span>{{ s.nombre }}</span></div>
+                    <div class="info-row"><mat-icon>schedule</mat-icon><span>{{ s.duracion }} min</span></div>
+                    <div class="info-row"><mat-icon>place</mat-icon><span>{{ s.modalidad }}</span></div>
+                    <div class="precio-destacado">₡{{ s.precio }}</div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (error()) {
+        <div class="alert-error">
+            <mat-icon>error_outline</mat-icon>
+            {{ error() }}
+        </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+        <div class="form-grid">
+            <div class="form-card">
+                <div class="card-header">
+                    <div class="card-icon"><mat-icon>event</mat-icon></div>
+                    <h3>Fecha y hora</h3>
+                </div>
+                <div class="field-group">
+                    <label>Fecha <span class="required">*</span></label>
+                    <input type="date" formControlName="fechaCita" />
+                    @if (form.get('fechaCita')?.invalid && form.get('fechaCita')?.touched) {
+                        <span class="field-error">Requerido</span>
+                    }
+                </div>
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>Hora inicio <span class="required">*</span></label>
+                        <input type="time" formControlName="horaInicio"
+                            (change)="onHoraInicioChange($any($event.target).value)" />
+                        @if (form.get('horaInicio')?.invalid && form.get('horaInicio')?.touched) {
+                            <span class="field-error">Requerido</span>
+                        }
+                    </div>
+                    <div class="field-group">
+                        <label>Hora fin</label>
+                        <input type="time" formControlName="horaFin" readonly />
+                    </div>
+                </div>
+                @if (esMixta()) {
+                    <div class="field-group">
+                        <label>Modalidad <span class="required">*</span></label>
+                        <select formControlName="modalidadElegida">
+                            <option value="PRESENCIAL">Presencial</option>
+                            <option value="VIRTUAL">Virtual</option>
+                        </select>
+                    </div>
+                }
+            </div>
+
+            <div class="form-card">
+                <div class="card-header">
+                    <div class="card-icon"><mat-icon>comment</mat-icon></div>
+                    <h3>Comentario</h3>
+                </div>
+                <div class="field-group">
+                    <label>Descripción o necesidad</label>
+                    <textarea formControlName="comentarioCliente" rows="5"
+                        placeholder="Describí tu necesidad o comentario inicial..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="button" class="btn-ghost" (click)="volver()">Cancelar</button>
+            <button type="submit" class="btn-primary" [disabled]="loading()">
+                @if (loading()) {
+                    <mat-icon class="spinning">sync</mat-icon> Enviando...
+                } @else {
+                    <mat-icon>event_available</mat-icon> Solicitar cita
+                }
+            </button>
+        </div>
+    </form>
+</section>

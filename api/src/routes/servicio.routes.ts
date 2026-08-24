@@ -10,6 +10,7 @@ export class ServicioRoutes {
         const controller = new ServicioController()
 
         router.get('/', asyncHandler(controller.listar))
+        router.get('/profesional/:profesionalId', asyncHandler(controller.listarPorProfesional))
         router.get('/:id', asyncHandler(controller.obtenerPorId))
         router.post('/', validateRequest(createServicioSchema), asyncHandler(controller.crear))
         router.put('/:id', validateRequest(updateServicioSchema), asyncHandler(controller.actualizar))

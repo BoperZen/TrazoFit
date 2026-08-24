@@ -1,0 +1,118 @@
+<section class="profesionales-cliente">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Marketplace</p>
+      <h2>Profesionales</h2>
+      <p class="subtitle">Encontrá al profesional ideal y agendá tu cita.</p>
+    </div>
+  </div>
+
+  <div class="filtros-bar">
+    <select class="filter-select" (change)="setModalidad($any($event.target).value)">
+      @for (o of modalidadOptions; track o.value) {
+        <option [value]="o.value">{{ o.label }}</option>
+      }
+    </select>
+
+    <select class="filter-select" (change)="setEspecialidad(+$any($event.target).value || 'TODOS')">
+      <option value="TODOS">Especialidad: Todas</option>
+      @for (e of especialidades(); track e.id) {
+        <option [value]="e.id">{{ e.nombre }}</option>
+      }
+    </select>
+
+    <select class="filter-select" (change)="setCategoria(+$any($event.target).value || 'TODOS')">
+      <option value="TODOS">Categoría: Todas</option>
+      @for (c of categorias(); track c.id) {
+        <option [value]="c.id">{{ c.nombre }}</option>
+      }
+    </select>
+
+    <input
+      type="number"
+      class="filter-select"
+      placeholder="Precio máx ₡"
+      (input)="onPrecioMax($any($event.target).value)"
+    />
+
+    <button class="chip" [class.chip--active]="soloDisponibles()" (click)="toggleDisponibles()">
+      <mat-icon>event_available</mat-icon>
+      Solo disponibles
+    </button>
+  </div>
+
+  @if (loading()) {
+    <p class="empty">Cargando profesionales...</p>
+  } @else if (profesionalesFiltrados().length === 0) {
+    <p class="empty">No se encontraron profesionales con esos filtros.</p>
+  } @else {
+    <div class="prof-grid">
+      @for (p of profesionalesFiltrados(); track p.id) {
+        <div class="prof-card">
+          <div class="prof-card__header">
+            <!-- <img class="prof-avatar" [src]="getImageUrl(p.imagen)" [alt]="p.usuario?.nombre"
+              onerror="this.src='icons/profile-not-found.jpg'" /> -->
+            <div class="prof-info">
+              <h3>{{ p.usuario?.nombre }} {{ p.usuario?.apellidos }}</h3>
+              <p class="prof-titulo">{{ p.titulo }}</p>
+              <div class="prof-tags">
+                <span class="tag">{{ p.modalidad }}</span>
+                <span class="tag">{{ p.experiencia }} años exp.</span>
+                @if (p.disponible) {
+                  <span class="tag tag--success">Disponible</span>
+                } @else {
+                  <span class="tag tag--danger">No disponible</span>
+                }
+              </div>
+            </div>
+          </div>
+
+          @if (p.especialidades?.length) {
+            <p class="especialidades_title">Especialidades</p>
+            <div class="especialidades">
+              @for (e of p.especialidades; track e.especialidad.id) {
+                <span class="esp-chip">{{ e.especialidad.nombre }}</span>
+              }
+            </div>
+          }
+
+          <div class="servicios">
+            <button class="servicios__toggle" (click)="toggleServicios(p.id)">
+              <span>Servicios ({{ p.servicios?.length ?? 0 }})</span>
+              <mat-icon>{{ isServiciosAbierto(p.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+
+            @if (isServiciosAbierto(p.id)) {
+              @if (!p.servicios?.length) {
+                <p class="empty-sm">Sin servicios registrados.</p>
+              } @else {
+                @for (s of p.servicios; track s.id) {
+                  @if (precioMax() === null || +s.precio <= precioMax()!) {
+                    <div class="servicio-row">
+                      <div class="servicio-info">
+                        <strong>
+                          {{ s.nombre }}
+                          @if (!s.estado) {
+                            <span class="tag tag--danger">No disponible</span>
+                          }
+                        </strong>
+                        <span>{{ s.duracion }} min · ₡{{ s.precio }}</span>
+                      </div>
+                      <button
+                        class="btn btn-primary btn-sm"
+                        [disabled]="!canAgendar(p.disponible, s.estado)"
+                        (click)="solicitarCita(p.id, s.id, p.disponible, s.estado)"
+                      >
+                        <mat-icon>event_available</mat-icon> Agendar
+                      </button>
+                    </div>
+                  }
+                }
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>

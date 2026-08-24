@@ -1,0 +1,84 @@
+<section class="agenda-shell">
+  <div class="agenda-header">
+    <div>
+      <p class="eyebrow">Profesional</p>
+      <h2>Mi agenda semanal</h2>
+      <p class="subtitle">Vista por dia de tus citas, con navegacion por semana.</p>
+    </div>
+
+    <div class="week-controls">
+      <button class="btn btn-ghost btn-sm" (click)="semanaAnterior()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="week-label">{{ weekLabel() }}</span>
+      <button class="btn btn-ghost btn-sm" (click)="semanaSiguiente()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button class="btn btn-primary btn-sm" (click)="irSemanaActual()">Esta semana</button>
+    </div>
+  </div>
+
+  <div class="estado-filtros">
+    @for (op of estadoOptions; track op.value) {
+      <button class="chip" [class.chip--active]="selectedEstado() === op.value" (click)="setEstado(op.value)">
+        {{ op.label }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <p class="empty">Cargando agenda...</p>
+  } @else if (error()) {
+    <p class="empty">{{ error() }}</p>
+  } @else {
+    <div class="agenda-table">
+      @for (dia of diasSemana(); track dia.key) {
+        <div class="day-row">
+          <div class="day-cell">
+            <strong>{{ dia.dayName }}</strong>
+            <span>{{ dia.fullDate }}</span>
+          </div>
+
+          <div class="events-cell">
+            @if (!dia.citas.length) {
+              <p class="empty-sm">Sin citas para este dia.</p>
+            } @else {
+              @for (cita of dia.citas; track cita.id) {
+                <article class="event-item">
+                  <div class="event-time">{{ cita.horaInicio }} - {{ cita.horaFin }}</div>
+
+                  <div class="event-main">
+                    <strong>{{ cita.servicio?.nombre ?? 'Servicio' }}</strong>
+                    <span>{{ cita.cliente?.nombre }} {{ cita.cliente?.apellidos }}</span>
+                  </div>
+
+                  <div class="event-meta">
+                    <span class="estado" [class]="getEstadoClass(cita.estado)">{{ cita.estado }}</span>
+                    @if (tieneConflicto(cita.id)) {
+                      <span class="conflicto">Conflicto horario</span>
+                    }
+                  </div>
+
+                  <div class="event-actions">
+                    @if (cita.estado === 'PENDIENTE') {
+                      <button class="btn btn-primary btn-sm" [disabled]="gestionandoCita() === cita.id" (click)="cambiarEstado(cita.id, 'ACEPTADA')">Aceptar</button>
+                      <button class="btn btn-ghost btn-sm" [disabled]="gestionandoCita() === cita.id" (click)="cambiarEstado(cita.id, 'RECHAZADA')">Rechazar</button>
+                    }
+                    @if (cita.estado === 'ACEPTADA') {
+                      <button class="btn btn-primary btn-sm" [disabled]="gestionandoCita() === cita.id" (click)="cambiarEstado(cita.id, 'COMPLETADA')">Completar</button>
+                      <button class="btn btn-ghost btn-sm" [disabled]="gestionandoCita() === cita.id" (click)="cambiarEstado(cita.id, 'CANCELADA')">Cancelar</button>
+                    }
+                  </div>
+                </article>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      @if (!citasSemana().length) {
+        <p class="empty">No hay citas para esta semana con el filtro seleccionado.</p>
+      }
+    </div>
+  }
+</section>

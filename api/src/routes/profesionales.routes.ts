@@ -10,6 +10,7 @@ export class ProfesionalRoutes {
         const controller = new ProfesionalController()
 
         router.get('/', asyncHandler(controller.listar))
+        router.get('/usuario/:usuarioId', asyncHandler(controller.obtenerPorUsuarioId))
         router.get('/:id', asyncHandler(controller.obtenerPorId))
         router.post('/', validateRequest(createProfesionalSchema), asyncHandler(controller.crear))
         router.put('/:id', validateRequest(updateProfesionalSchema), asyncHandler(controller.actualizar))

@@ -1,0 +1,87 @@
+:host { display: block; padding: 3rem 5.5rem; }
+
+.resumen-card {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resumen-card__prof {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.resumen-card__prof strong { display: block; font-size: .95rem; }
+.resumen-card__prof span { font-size: .8rem; color: var(--color-text-muted); }
+
+.resumen-card__servicio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 1.5rem;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .85rem;
+  color: var(--color-text-muted);
+}
+
+.info-row mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
+
+.form-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+.eyebrow { margin: 0 0 .25rem; text-transform: uppercase; letter-spacing: .08em; font-size: .75rem; opacity: .7; }
+h2 { margin: 0; }
+.subtitle { margin: .35rem 0 0; opacity: .75; font-size: .9rem; }
+
+.alert-error {
+  display: flex; align-items: center; gap: .5rem;
+  padding: 1rem 1.25rem; border-radius: 12px;
+  background: color-mix(in srgb, var(--color-destructive) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-destructive) 40%, transparent);
+  color: var(--color-destructive); font-size: .9rem; margin-bottom: 1rem;
+}
+
+.precio-destacado {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-top: .25rem;
+}
+
+.field-hint {
+  font-size: .78rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.form-card { padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 20px; background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); display: grid; gap: 1.25rem; align-content: start; }
+.card-header { display: flex; align-items: center; gap: .75rem; }
+.card-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: color-mix(in srgb, var(--color-primary) 16%, transparent); color: var(--color-primary); }
+.card-header h3 { margin: 0; font-size: 1rem; }
+.field-group { display: grid; gap: .4rem; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+label { font-size: .82rem; color: var(--color-text-muted); font-weight: 500; }
+.required { color: var(--color-destructive); }
+input, select, textarea { width: 100%; padding: .7rem 1rem; border: 1px solid var(--color-border); border-radius: 10px; background: rgba(255,255,255,0.04); color: var(--color-text); font-family: var(--font-base); font-size: .9rem; transition: border-color .2s; box-sizing: border-box; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--color-primary); }
+select option { background: #1a1a1a; }
+textarea { resize: vertical; }
+.field-error { font-size: .78rem; color: var(--color-destructive); }
+.form-footer { display: flex; justify-content: flex-end; gap: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border); margin-top: 1rem; }
+.btn-primary { display: inline-flex; align-items: center; gap: .5rem; padding: .75rem 1.75rem; background: var(--color-primary); color: var(--color-primary-fg); border: none; border-radius: 10px; font-weight: 700; font-size: .9rem; cursor: pointer; transition: opacity .2s; }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary:hover:not(:disabled) { opacity: .85; }
+.btn-ghost { display: inline-flex; align-items: center; gap: .5rem; padding: .75rem 1.25rem; background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border); border-radius: 10px; font-size: .9rem; cursor: pointer; transition: all .2s; }
+.btn-ghost:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+.spinning { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@media (max-width: 860px) { :host { padding: 2rem 1.25rem; } .form-grid { grid-template-columns: 1fr; } .field-row { grid-template-columns: 1fr; } }

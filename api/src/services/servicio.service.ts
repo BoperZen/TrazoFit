@@ -25,6 +25,17 @@ export const servicioService = {
         });
     },
 
+    async listarPorProfesional(profesionalId: number) {
+        return await prisma.servicio.findMany({
+            where: { profesionalId },
+            orderBy: { nombre: 'asc' },
+            include: {
+                categoria: true,
+                profesional: { include: { usuario: { select: { nombre: true, apellidos: true } } } },
+            }
+        });
+    },
+
     async obtenerPorId(id: number) {
         const servicio = await prisma.servicio.findUnique({
             where: { id },

@@ -13,6 +13,12 @@ export class ServicioController {
         });
     };
 
+    listarPorProfesional = async (request: Request, response: Response, next: NextFunction) => {
+        const id = parseId(request.params['profesionalId']);
+        const resultado = await servicioService.listarPorProfesional(id);
+        return sendSuccess(response, resultado);
+    };
+
     obtenerPorId = async (request: Request, response: Response, next: NextFunction) => {
         const rawId = Array.isArray(request.params.id) ? request.params.id[0] : request.params.id;
         const id = parseInt(rawId ?? '', 10);

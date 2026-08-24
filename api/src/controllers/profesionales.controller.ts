@@ -28,6 +28,14 @@ export class ProfesionalController {
         return response.status(StatusCodes.OK).json({ success: true, data: profesional });
     };
 
+    obtenerPorUsuarioId = async (request: Request, response: Response, next: NextFunction) => {
+        const rawId = Array.isArray(request.params['usuarioId']) ? request.params['usuarioId'][0] : request.params['usuarioId'];
+        const usuarioId = parseInt(rawId ?? '', 10);
+        if (isNaN(usuarioId)) return response.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "ID inválido" });
+        const profesional = await profesionalService.obtenerPorUsuarioId(usuarioId);
+        return sendSuccess(response, profesional);
+    };
+
     crear = async (request: Request, response: Response, next: NextFunction) => {
         console.log('BODY:', request.body);
         console.log('FILES:', request.files);
@@ -64,5 +72,5 @@ export class ProfesionalController {
             data: profesional,
         });
     };
-    
+
 }

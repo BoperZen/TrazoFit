@@ -20,11 +20,46 @@
 h2 { margin: 0; }
 .subtitle { margin: .35rem 0 0; opacity: .75; font-size: .9rem; }
 
+.filtros-label {
+  display: block;
+  flex-basis: 100%;
+  margin-top: .85rem;
+  margin-bottom: .35rem;
+  font-size: .78rem;
+  color: var(--color-text-muted);
+  letter-spacing: .02em;
+}
+
 .filtros {
   display: flex;
-  padding-top: 10px;
+  padding-top: 0;
   gap: .5rem;
   flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filtros-fecha {
+  display: flex;
+  align-items: flex-end;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+
+.fecha-field {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  font-size: .75rem;
+  color: var(--color-text-muted);
+}
+
+.fecha-field input {
+  padding: .45rem .65rem;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.04);
+  color: var(--color-text);
+  font-family: var(--font-base);
 }
 
 .chip {
@@ -198,4 +233,5 @@ h2 { margin: 0; }
 @media (max-width: 720px) {
   :host { padding: 2rem 1.25rem; }
   .page-header { flex-direction: column; }
+  .filtros-fecha { align-items: stretch; }
 }
