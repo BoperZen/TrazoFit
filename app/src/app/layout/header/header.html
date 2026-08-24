@@ -51,6 +51,7 @@
 
     <span class="spacer"></span>
 
+    <!-- USUARIO LOGUEADO -->
     @if (currentUser(); as user) {
       <div class="user-chip">
         <mat-icon>person</mat-icon>
@@ -69,14 +70,22 @@
           <mat-icon>account_circle</mat-icon>
         </a>
       }
+    } @else {
+      <!-- USUARIO NO LOGUEADO -->
+      <a class="profile-button login-button" mat-button routerLink="/login">
+        <mat-icon>login</mat-icon>
+        Iniciar sesión
+      </a>
     }
 
+    <!-- MENÚ MÓVIL -->
     <button class="icon-button mobile-menu-button" mat-icon-button [matMenuTriggerFor]="mobileMenu">
       <mat-icon>menu</mat-icon>
     </button>
   </mat-toolbar>
 </header>
 
+<!-- MENÚ MANTENIMIENTOS -->
 <mat-menu #maintenanceMenu="matMenu">
   @for (item of adminMaintenanceMenu(); track item.path) {
     <a mat-menu-item [routerLink]="item.path">
@@ -85,6 +94,8 @@
     </a>
   }
 </mat-menu>
+
+<!-- MENÚ GESTIÓN -->
 <mat-menu #managementMenu="matMenu">
   @for (item of adminManagementMenu(); track item.path) {
     <a mat-menu-item [routerLink]="item.path">
@@ -93,6 +104,8 @@
     </a>
   }
 </mat-menu>
+
+<!-- MENÚ MÓVIL -->
 <mat-menu #mobileMenu="matMenu">
   @for (item of publicMenu(); track item.path) {
     @if (canShowItem()(item)) {
@@ -102,14 +115,23 @@
       </a>
     }
   }
+
   @if (isAdmin()) {
     <button mat-menu-item [matMenuTriggerFor]="maintenanceMenu">
       <mat-icon>settings</mat-icon>
       <span>Mantenimientos</span>
     </button>
+
     <button mat-menu-item [matMenuTriggerFor]="managementMenu">
       <mat-icon>admin_panel_settings</mat-icon>
       <span>Gestión</span>
     </button>
+  }
+
+  @if (!currentUser()) {
+    <a mat-menu-item routerLink="/login">
+      <mat-icon>login</mat-icon>
+      <span>Iniciar sesión</span>
+    </a>
   }
 </mat-menu>

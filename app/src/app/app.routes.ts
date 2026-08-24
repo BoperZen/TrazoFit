@@ -23,6 +23,8 @@ import { CitasUsuarioDetalle } from './pages/citas/citas-usuario-detalle/citas-u
 import { CitasProfesionalDetalle } from './pages/citas/citas-profesional-detalle/citas-profesional-detalle';
 import { PerfilProfesional } from './pages/perfil/perfil-profesional/perfil-profesional';
 import { PerfilCliente } from './pages/perfil/perfil-cliente/perfil-cliente';
+import { Login } from './pages/auth/login/login';
+import { Registro } from './pages/auth/registro/registro';
 
 export const routes: Routes = [
   {
@@ -32,6 +34,8 @@ export const routes: Routes = [
 
       // ── Pública ──────────────────────────────────────────
       { path: '', component: Home, title: 'Inicio' },
+      { path: 'login', component: Login, title: 'Iniciar sesión' },
+      { path: 'registro', component: Registro, title: 'Crear cuenta' },
 
       // ── Perfil ─────────────────────────────────────────────
       { path: 'perfil/profesional', component: PerfilProfesional, title: 'Mi perfil', canActivate: [profesionalGuard] },
@@ -53,6 +57,7 @@ export const routes: Routes = [
       { path: 'admin/citas/nuevo', component: CitaForm, title: 'Nueva cita', canActivate: [adminGuard] },
       { path: 'admin/citas/:id', component: CitaForm, title: 'Detalle cita', canActivate: [adminGuard] },
       { path: 'admin/reportes', component: ReportsComponent, title: 'Reportes', canActivate: [adminGuard] },
+      
 
       // ── Profesional ──────────────────────────────────────
       // TODO: agregar componentes cuando estén listos

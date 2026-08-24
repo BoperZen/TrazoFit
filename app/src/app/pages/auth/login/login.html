@@ -1,0 +1,51 @@
+<section class="auth-shell">
+  <div class="auth-card">
+    <div class="auth-header">
+      <mat-icon>fitness_center</mat-icon>
+      <h1>Iniciar sesión</h1>
+      <p>Ingresá a tu cuenta de TrazoFit.</p>
+    </div>
+
+    @if (error) {
+      <div class="error-message">
+        <mat-icon>error_outline</mat-icon>
+        {{ error }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="iniciarSesion()">
+      <div class="field">
+        <label>Correo electrónico</label>
+
+        <input type="email" formControlName="email" placeholder="correo@ejemplo.com" />
+
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <span>Ingresá un correo válido.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label>Contraseña</label>
+
+        <input type="password" formControlName="password" placeholder="••••••••" />
+
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <span>La contraseña es requerida.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        @if (loading) {
+          Ingresando...
+        } @else {
+          Iniciar sesión
+        }
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      ¿No tenés una cuenta?
+      <a routerLink="/registro">Registrate</a>
+    </div>
+  </div>
+</section>

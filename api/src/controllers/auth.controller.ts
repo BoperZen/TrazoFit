@@ -1,20 +1,45 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { usuarioService } from '../services/usuario.service';
+import { authService } from '../services/auth.service';
 
 export class AuthController {
-    us = async (request: Request, response: Response) => {
-        const id = parseInt(process.env.MOCK_USER_ID ?? '', 10);
 
-        if (isNaN(id)) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    registrar = async (request: Request, response: Response) => {
+        const usuario = await authService.registrar(request.body);
+
+        return response.status(StatusCodes.CREATED).json({
+            success: true,
+            message: 'Usuario registrado correctamente',
+            data: usuario
+        });
+    };
+
+    login = async (request: Request, response: Response) => {
+        const resultado = await authService.login(request.body);
+
+        return response.status(StatusCodes.OK).json({
+            success: true,
+            message: 'Inicio de sesión exitoso',
+            data: resultado
+        });
+    };
+
+    us = async (request: Request, response: Response) => {
+        const id = (request as any).user?.id;
+
+        if (!id) {
+            return response.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,
-                message: 'MOCK_USER_ID no configurado en .env',
+                message: 'Usuario no autenticado'
             });
         }
 
-        const usuario = await usuarioService.obtenerPorId(id);
-        return response.status(StatusCodes.OK).json({ success: true, data: usuario });
+        const usuario = await authService.obtenerUsuarioActivo(id);
+
+        return response.status(StatusCodes.OK).json({
+            success: true,
+            data: usuario
+        });
     };
 }
 

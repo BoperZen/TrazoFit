@@ -1,3 +1,20 @@
 {"error":{"cause":{"code":45028,"kind":"mysql","message":"pool timeout: failed to retrieve a connection from pool after 10015ms\n    (pool connections: active=5 idle=0 limit=5)","originalCode":"45028","originalMessage":"pool timeout: failed to retrieve a connection from pool after 10015ms\n    (pool connections: active=5 idle=0 limit=5)","state":"HY000"},"clientVersion":"7.8.0","name":"DriverAdapterError"},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 14:00:17.191"}
 {"error":{"cause":{"code":45028,"kind":"mysql","message":"pool timeout: failed to retrieve a connection from pool after 10007ms\n    (pool connections: active=5 idle=0 limit=5)","originalCode":"45028","originalMessage":"pool timeout: failed to retrieve a connection from pool after 10007ms\n    (pool connections: active=5 idle=0 limit=5)","state":"HY000"},"clientVersion":"7.8.0","name":"DriverAdapterError"},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 14:00:42.315"}
 {"error":{"cause":{"code":45028,"kind":"mysql","message":"pool timeout: failed to retrieve a connection from pool after 10004ms\n    (pool connections: active=5 idle=0 limit=5)","originalCode":"45028","originalMessage":"pool timeout: failed to retrieve a connection from pool after 10004ms\n    (pool connections: active=5 idle=0 limit=5)","state":"HY000"},"clientVersion":"7.8.0","name":"DriverAdapterError"},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 14:01:38.791"}
+{"error":{},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 14:57:07.198"}
+{"error":{},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 14:57:09.142"}
+{"level":"warn","message":"No autorizado","method":"GET","name":"UnauthorizedError","path":"/auth/us","statusCode":401,"timestamp":"2026-08-24 15:00:55.648"}
+{"level":"warn","message":"No autorizado","method":"GET","name":"UnauthorizedError","path":"/auth/us","statusCode":401,"timestamp":"2026-08-24 15:00:57.705"}
+{"level":"warn","message":"No autorizado","method":"GET","name":"UnauthorizedError","path":"/auth/us","statusCode":401,"timestamp":"2026-08-24 15:01:18.945"}
+{"level":"warn","message":"No autorizado","method":"GET","name":"UnauthorizedError","path":"/auth/us","statusCode":401,"timestamp":"2026-08-24 15:02:43.209"}
+{"level":"warn","message":"No autorizado","method":"GET","name":"UnauthorizedError","path":"/auth/us","statusCode":401,"timestamp":"2026-08-24 15:03:08.553"}
+{"level":"warn","message":"No autorizado","method":"GET","name":"UnauthorizedError","path":"/auth/us","statusCode":401,"timestamp":"2026-08-24 15:04:23.165"}
+{"level":"warn","message":"No autorizado","method":"GET","name":"UnauthorizedError","path":"/auth/us","statusCode":401,"timestamp":"2026-08-24 15:04:38.185"}
+{"error":{},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 15:09:38.008"}
+{"error":{},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 15:09:56.725"}
+{"error":{},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 15:10:04.594"}
+{"error":{},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 15:10:16.081"}
+{"error":{},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 15:10:20.523"}
+{"error":{},"level":"error","message":"Error no controlado","method":"GET","path":"/auth/us","timestamp":"2026-08-24 15:11:22.030"}
+{"level":"warn","message":"Ya existe un usuario con ese correo","method":"POST","name":"ConflictError","path":"/auth/registrar","statusCode":409,"timestamp":"2026-08-24 15:38:42.170"}
+{"level":"warn","message":"Correo o contraseña incorrectos","method":"POST","name":"UnauthorizedError","path":"/auth/login","statusCode":401,"timestamp":"2026-08-24 15:39:36.877"}

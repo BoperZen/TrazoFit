@@ -1,10 +1,14 @@
+import bcrypt from "bcryptjs";
 import { Role, Modalidad, ModalidadCita, EstadoCita } from "../generated/prisma";
 import { prisma } from "../src/config/prisma";
 
 async function main() {
     console.log("Iniciando seed...");
 
-    // 1. Limpieza de datos
+    // =========================================================
+    // 1. LIMPIEZA DE DATOS
+    // =========================================================
+
     const models = [
         prisma.resena,
         prisma.cita,
@@ -21,59 +25,202 @@ async function main() {
         await (model as any).deleteMany();
     }
 
-    // 2. Creación de datos maestros
+    // =========================================================
+    // 2. HASH DE CONTRASEÑA
+    // Todos los usuarios tendrán: 123456
+    // =========================================================
+
+    const passwordHash = await bcrypt.hash("123456", 10);
+
+    // =========================================================
+    // 3. CREACIÓN DE DATOS MAESTROS
+    // =========================================================
+
     await prisma.categoria.createMany({
         data: [
-            { nombre: "Fuerza", descripcion: "Entrenamiento con pesas y resistencia." },
-            { nombre: "Cardio", descripcion: "Ejercicios cardiovasculares y resistencia aeróbica." },
-            { nombre: "Nutrición", descripcion: "Planes alimenticios y asesoría nutricional." },
-            { nombre: "Rehabilitación", descripcion: "Recuperación de lesiones y fisioterapia." },
-            { nombre: "Bienestar", descripcion: "Yoga, meditación y salud mental." },
+            {
+                nombre: "Fuerza",
+                descripcion: "Entrenamiento con pesas y resistencia."
+            },
+            {
+                nombre: "Cardio",
+                descripcion: "Ejercicios cardiovasculares y resistencia aeróbica."
+            },
+            {
+                nombre: "Nutrición",
+                descripcion: "Planes alimenticios y asesoría nutricional."
+            },
+            {
+                nombre: "Rehabilitación",
+                descripcion: "Recuperación de lesiones y fisioterapia."
+            },
+            {
+                nombre: "Bienestar",
+                descripcion: "Yoga, meditación y salud mental."
+            },
         ],
     });
 
     await prisma.especialidad.createMany({
         data: [
-            { nombre: "Hipertrofia", descripcion: "Aumento de masa muscular." },
-            { nombre: "Crossfit", descripcion: "Entrenamiento funcional de alta intensidad." },
-            { nombre: "Pérdida de peso", descripcion: "Programas de reducción de grasa corporal." },
-            { nombre: "Dieta cetogénica", descripcion: "Alimentación baja en carbohidratos." },
-            { nombre: "Yoga", descripcion: "Disciplina de flexibilidad y meditación." },
-            { nombre: "Pilates", descripcion: "Fortalecimiento del core y postura." },
-            { nombre: "Running", descripcion: "Entrenamiento para corredores." },
-            { nombre: "Movilidad", descripcion: "Mejora del rango de movimiento articular." },
+            {
+                nombre: "Hipertrofia",
+                descripcion: "Aumento de masa muscular."
+            },
+            {
+                nombre: "Crossfit",
+                descripcion: "Entrenamiento funcional de alta intensidad."
+            },
+            {
+                nombre: "Pérdida de peso",
+                descripcion: "Programas de reducción de grasa corporal."
+            },
+            {
+                nombre: "Dieta cetogénica",
+                descripcion: "Alimentación baja en carbohidratos."
+            },
+            {
+                nombre: "Yoga",
+                descripcion: "Disciplina de flexibilidad y meditación."
+            },
+            {
+                nombre: "Pilates",
+                descripcion: "Fortalecimiento del core y postura."
+            },
+            {
+                nombre: "Running",
+                descripcion: "Entrenamiento para corredores."
+            },
+            {
+                nombre: "Movilidad",
+                descripcion: "Mejora del rango de movimiento articular."
+            },
         ],
     });
+
+    // =========================================================
+    // 4. USUARIOS
+    // Contraseña de TODOS: 123456
+    // =========================================================
 
     await prisma.usuario.createMany({
         data: [
-            { nombre: "Admin", apellidos: "TrazoFit", email: "admin@trazofit.com", password: "hash_password", role: Role.ADMIN },
-            { nombre: "Carlos", apellidos: "Méndez", email: "carlos@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
-            { nombre: "Sofía", apellidos: "Vargas", email: "sofia@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
-            { nombre: "Diego", apellidos: "Rojas", email: "diego@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
-            { nombre: "Laura", apellidos: "Jiménez", email: "laura@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
-            { nombre: "Andrés", apellidos: "Solís", email: "andres@trazofit.com", password: "hash_password", role: Role.PROFESIONAL },
-            { nombre: "María", apellidos: "Castro", email: "maria@trazofit.com", password: "hash_password", role: Role.CLIENTE },
-            { nombre: "Pedro", apellidos: "Mora", email: "pedro@trazofit.com", password: "hash_password", role: Role.CLIENTE },
-            { nombre: "Valeria", apellidos: "Núñez", email: "valeria@trazofit.com", password: "hash_password", role: Role.CLIENTE },
-            { nombre: "Juan", apellidos: "Pérez", email: "juan@trazofit.com", password: "hash_password", role: Role.PROFESIONAL, telefono: "8888-1111" },
-            { nombre: "Ana", apellidos: "López", email: "ana@trazofit.com", password: "hash_password", role: Role.PROFESIONAL, telefono: "8888-2222" },
-            { nombre: "Mario", apellidos: "Vega", email: "mario@trazofit.com", password: "hash_password", role: Role.PROFESIONAL, telefono: "8888-3333" },
+            {
+                nombre: "Admin",
+                apellidos: "TrazoFit",
+                email: "admin@trazofit.com",
+                password: passwordHash,
+                role: Role.ADMIN
+            },
+            {
+                nombre: "Carlos",
+                apellidos: "Méndez",
+                email: "carlos@trazofit.com",
+                password: passwordHash,
+                role: Role.PROFESIONAL
+            },
+            {
+                nombre: "Sofía",
+                apellidos: "Vargas",
+                email: "sofia@trazofit.com",
+                password: passwordHash,
+                role: Role.PROFESIONAL
+            },
+            {
+                nombre: "Diego",
+                apellidos: "Rojas",
+                email: "diego@trazofit.com",
+                password: passwordHash,
+                role: Role.PROFESIONAL
+            },
+            {
+                nombre: "Laura",
+                apellidos: "Jiménez",
+                email: "laura@trazofit.com",
+                password: passwordHash,
+                role: Role.PROFESIONAL
+            },
+            {
+                nombre: "Andrés",
+                apellidos: "Solís",
+                email: "andres@trazofit.com",
+                password: passwordHash,
+                role: Role.PROFESIONAL
+            },
+            {
+                nombre: "María",
+                apellidos: "Castro",
+                email: "maria@trazofit.com",
+                password: passwordHash,
+                role: Role.CLIENTE
+            },
+            {
+                nombre: "Pedro",
+                apellidos: "Mora",
+                email: "pedro@trazofit.com",
+                password: passwordHash,
+                role: Role.CLIENTE
+            },
+            {
+                nombre: "Valeria",
+                apellidos: "Núñez",
+                email: "valeria@trazofit.com",
+                password: passwordHash,
+                role: Role.CLIENTE
+            },
+            {
+                nombre: "Juan",
+                apellidos: "Pérez",
+                email: "juan@trazofit.com",
+                password: passwordHash,
+                role: Role.PROFESIONAL,
+                telefono: "8888-1111"
+            },
+            {
+                nombre: "Ana",
+                apellidos: "López",
+                email: "ana@trazofit.com",
+                password: passwordHash,
+                role: Role.PROFESIONAL,
+                telefono: "8888-2222"
+            },
+            {
+                nombre: "Mario",
+                apellidos: "Vega",
+                email: "mario@trazofit.com",
+                password: passwordHash,
+                role: Role.PROFESIONAL,
+                telefono: "8888-3333"
+            },
         ],
     });
 
-    // 3. Recuperar datos para mapeo
+    // =========================================================
+    // 5. RECUPERAR DATOS PARA MAPEO
+    // =========================================================
+
     const [cats, specs, users] = await Promise.all([
         prisma.categoria.findMany(),
         prisma.especialidad.findMany(),
         prisma.usuario.findMany(),
     ]);
 
-    const catMap = Object.fromEntries(cats.map((c) => [c.nombre, c.id]));
-    const specMap = Object.fromEntries(specs.map((s) => [s.nombre, s.id]));
-    const userMap = Object.fromEntries(users.map((u) => [u.email, u.id]));
+    const catMap = Object.fromEntries(
+        cats.map((c) => [c.nombre, c.id])
+    );
 
-    // 4. Creación de Profesionales
+    const specMap = Object.fromEntries(
+        specs.map((s) => [s.nombre, s.id])
+    );
+
+    const userMap = Object.fromEntries(
+        users.map((u) => [u.email, u.id])
+    );
+
+    // =========================================================
+    // 6. PROFESIONALES
+    // =========================================================
+
     const profCarlos = await prisma.profesional.create({
         data: {
             usuarioId: userMap["carlos@trazofit.com"],
@@ -154,7 +301,10 @@ async function main() {
         },
     });
 
-    // 5. Creación de Servicios
+    // =========================================================
+    // 7. SERVICIOS
+    // =========================================================
+
     const servFuerza = await prisma.servicio.create({
         data: {
             nombre: "Sesión de Hipertrofia",
@@ -167,8 +317,20 @@ async function main() {
             categoriaId: catMap["Fuerza"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Hipertrofia"] } } },
-                    { especialidad: { connect: { id: specMap["Crossfit"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Hipertrofia"]
+                            }
+                        }
+                    },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Crossfit"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -186,8 +348,20 @@ async function main() {
             categoriaId: catMap["Nutrición"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Dieta cetogénica"] } } },
-                    { especialidad: { connect: { id: specMap["Pérdida de peso"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Dieta cetogénica"]
+                            }
+                        }
+                    },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Pérdida de peso"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -205,8 +379,20 @@ async function main() {
             categoriaId: catMap["Bienestar"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Yoga"] } } },
-                    { especialidad: { connect: { id: specMap["Movilidad"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Yoga"]
+                            }
+                        }
+                    },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Movilidad"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -224,8 +410,20 @@ async function main() {
             categoriaId: catMap["Rehabilitación"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Movilidad"] } } },
-                    { especialidad: { connect: { id: specMap["Pilates"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Movilidad"]
+                            }
+                        }
+                    },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Pilates"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -243,7 +441,13 @@ async function main() {
             categoriaId: catMap["Cardio"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Running"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Running"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -261,8 +465,20 @@ async function main() {
             categoriaId: catMap["Cardio"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Pérdida de peso"] } } },
-                    { especialidad: { connect: { id: specMap["Crossfit"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Pérdida de peso"]
+                            }
+                        }
+                    },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Crossfit"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -280,7 +496,13 @@ async function main() {
             categoriaId: catMap["Fuerza"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Crossfit"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Crossfit"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -298,7 +520,13 @@ async function main() {
             categoriaId: catMap["Nutrición"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Pérdida de peso"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Pérdida de peso"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -316,7 +544,13 @@ async function main() {
             categoriaId: catMap["Bienestar"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Pilates"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Pilates"]
+                            }
+                        }
+                    },
                 ],
             },
         },
@@ -334,28 +568,67 @@ async function main() {
             categoriaId: catMap["Cardio"],
             especialidades: {
                 create: [
-                    { especialidad: { connect: { id: specMap["Running"] } } },
+                    {
+                        especialidad: {
+                            connect: {
+                                id: specMap["Running"]
+                            }
+                        }
+                    },
                 ],
             },
         },
     });
 
-    // 6. Asociar especialidades a profesionales
+    // =========================================================
+    // 8. ESPECIALIDADES DE PROFESIONALES
+    // =========================================================
+
     await prisma.especialidadProfesional.createMany({
         data: [
-            { profesionalId: profCarlos.id, especialidadId: specMap["Hipertrofia"] },
-            { profesionalId: profCarlos.id, especialidadId: specMap["Crossfit"] },
-            { profesionalId: profSofia.id, especialidadId: specMap["Dieta cetogénica"] },
-            { profesionalId: profSofia.id, especialidadId: specMap["Pérdida de peso"] },
-            { profesionalId: profDiego.id, especialidadId: specMap["Yoga"] },
-            { profesionalId: profDiego.id, especialidadId: specMap["Movilidad"] },
-            { profesionalId: profLaura.id, especialidadId: specMap["Pilates"] },
-            { profesionalId: profLaura.id, especialidadId: specMap["Movilidad"] },
-            { profesionalId: profAndres.id, especialidadId: specMap["Running"] },
+            {
+                profesionalId: profCarlos.id,
+                especialidadId: specMap["Hipertrofia"]
+            },
+            {
+                profesionalId: profCarlos.id,
+                especialidadId: specMap["Crossfit"]
+            },
+            {
+                profesionalId: profSofia.id,
+                especialidadId: specMap["Dieta cetogénica"]
+            },
+            {
+                profesionalId: profSofia.id,
+                especialidadId: specMap["Pérdida de peso"]
+            },
+            {
+                profesionalId: profDiego.id,
+                especialidadId: specMap["Yoga"]
+            },
+            {
+                profesionalId: profDiego.id,
+                especialidadId: specMap["Movilidad"]
+            },
+            {
+                profesionalId: profLaura.id,
+                especialidadId: specMap["Pilates"]
+            },
+            {
+                profesionalId: profLaura.id,
+                especialidadId: specMap["Movilidad"]
+            },
+            {
+                profesionalId: profAndres.id,
+                especialidadId: specMap["Running"]
+            },
         ],
     });
 
-    // 7. Creación de Citas
+    // =========================================================
+    // 9. CITAS
+    // =========================================================
+
     await prisma.cita.createMany({
         data: [
             {
@@ -508,21 +781,22 @@ async function main() {
         ],
     });
 
-    // 7.5 Historial de estados
+    // =========================================================
+    // 10. HISTORIAL DE CITAS
+    // =========================================================
+
     const todasLasCitas = await prisma.cita.findMany();
 
     for (const cita of todasLasCitas) {
-        // Siempre hay un estado inicial PENDIENTE
         await prisma.historialCita.create({
             data: {
                 citaId: cita.id,
                 estadoAnterior: EstadoCita.PENDIENTE,
                 estadoNuevo: EstadoCita.PENDIENTE,
-                comentario: 'Cita creada',
+                comentario: "Cita creada",
             }
         });
 
-        // Si el estado actual no es PENDIENTE, agregamos la transición
         if (cita.estado !== EstadoCita.PENDIENTE) {
             await prisma.historialCita.create({
                 data: {
@@ -535,10 +809,17 @@ async function main() {
         }
     }
 
-    // 8. Creación de Reseñas (solo citas COMPLETADA)
+    // =========================================================
+    // 11. RESEÑAS
+    // =========================================================
+
     const citasCompletadas = await prisma.cita.findMany({
-        where: { estado: EstadoCita.COMPLETADA },
-        include: { cliente: true },
+        where: {
+            estado: EstadoCita.COMPLETADA
+        },
+        include: {
+            cliente: true
+        },
     });
 
     for (const cita of citasCompletadas) {
@@ -547,14 +828,16 @@ async function main() {
                 citaId: cita.id,
                 clienteId: cita.clienteId,
                 puntuacion: cita.profesionalId === profSofia.id ? 5 : 4,
-                comentario: cita.profesionalId === profSofia.id
-                    ? "Excelente nutricionista, muy profesional y detallada."
-                    : "Buena clase de yoga, me ayudó mucho con la movilidad.",
+                comentario:
+                    cita.profesionalId === profSofia.id
+                        ? "Excelente nutricionista, muy profesional y detallada."
+                        : "Buena clase de yoga, me ayudó mucho con la movilidad.",
             },
         });
     }
 
     console.log("Seed completado con éxito.");
+    console.log("Contraseña de todos los usuarios: 123456");
 }
 
 main()
