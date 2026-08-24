@@ -1,0 +1,242 @@
+<section class="detalle-shell">
+  @if (loading()) {
+    <p class="empty">Cargando...</p>
+  } @else if (!cita()) {
+    <p class="empty">Cita no encontrada.</p>
+  } @else {
+    <div class="detalle-header">
+      <div>
+        <p class="eyebrow">Detalle de cita #{{ cita()!.id }}</p>
+        <h2>{{ cita()!.servicio?.nombre }}</h2>
+        <span class="badge" [class]="getBadgeClass(cita()!.estado)">{{ cita()!.estado }}</span>
+      </div>
+      <button class="btn-ghost" (click)="volver()"><mat-icon>arrow_back</mat-icon> Volver</button>
+    </div>
+
+    <div class="detalle-grid">
+      <!-- Info cliente -->
+      <div class="detalle-card">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>person</mat-icon></div>
+          <h2 class="card-title">Cliente</h2>
+        </div>
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-label"><strong>Nombre</strong></span>
+            <span>{{ cita()!.cliente?.nombre }} {{ cita()!.cliente?.apellidos }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><strong>Email</strong></span>
+            <span>{{ cita()!.cliente?.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><strong>Teléfono</strong></span>
+            <span>{{ cita()!.cliente?.telefono ?? '—' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info servicio -->
+      <div class="detalle-card">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>fitness_center</mat-icon></div>
+          <h2 class="card-title">Servicio</h2>
+        </div>
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-label"><strong>Nombre</strong></span>
+            <span>{{ cita()!.servicio?.nombre }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><strong>Duración</strong></span>
+            <span>{{ cita()!.servicio?.duracion }} min</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><strong>Modalidad</strong></span>
+            <span>{{ cita()!.modalidad }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><strong>Monto</strong></span>
+            <span>₡{{ cita()!.montoEstimado }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info fecha -->
+      <div class="detalle-card">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>event</mat-icon></div>
+          <h2 class="card-title">Fecha y hora</h2>
+        </div>
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-label"><strong>Fecha</strong></span>
+            <span>{{ cita()!.fechaCita | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><strong>Inicio</strong></span>
+            <span>{{ cita()!.horaInicio }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><strong>Fin</strong></span>
+            <span>{{ cita()!.horaFin }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comentarios -->
+      <div class="detalle-card">
+        <div class="card-header">
+          <div class="card-icon"><mat-icon>comment</mat-icon></div>
+          <h2 class="card-title">Comentarios</h2>
+        </div>
+        <div class="info-list">
+          @if (cita()!.comentarioCliente) {
+            <div class="comentario-block">
+              <span class="info-label"><strong>Cliente</strong></span>
+              <p>{{ cita()!.comentarioCliente }}</p>
+            </div>
+          }
+          @if (cita()!.comentarioProfesional) {
+            <div class="comentario-block">
+              <span class="info-label"><strong>Profesional</strong></span>
+              <p>{{ cita()!.comentarioProfesional }}</p>
+            </div>
+          }
+          @if (!cita()!.comentarioCliente && !cita()!.comentarioProfesional) {
+            <p class="empty-sm">Sin comentarios.</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Reseña del cliente si existe -->
+    @if (cita()!.resena) {
+      <div class="resena-display">
+        <p class="resena-display__title">Reseña del cliente</p>
+        <div class="estrellas">
+          @for (e of estrellas; track e) {
+            <mat-icon
+              class="estrella-display"
+              [class.estrella--on]="e <= cita()!.resena!.puntuacion"
+            >
+              {{ e <= cita()!.resena!.puntuacion ? 'star' : 'star_border' }}
+            </mat-icon>
+          }
+        </div>
+        @if (cita()!.resena!.comentario) {
+          <p class="resena-display__comentario">{{ cita()!.resena!.comentario }}</p>
+        }
+      </div>
+    }
+
+    <!-- Acciones -->
+    <div class="acciones">
+      @if (puedeAceptar()) {
+        <button class="btn btn-success" (click)="abrirAccion('aceptar')">
+          <mat-icon>check_circle</mat-icon> Aceptar
+        </button>
+      }
+      @if (puedeRechazar()) {
+        <button class="btn btn-danger" (click)="abrirAccion('rechazar')">
+          <mat-icon>cancel</mat-icon> Rechazar
+        </button>
+      }
+      @if (puedeCompletar()) {
+        <button class="btn btn-primary" (click)="completar()">
+          <mat-icon>task_alt</mat-icon> Completar
+        </button>
+      }
+      @if (puedeCancelar()) {
+        @if (cita()!.estado === 'ACEPTADA') {
+          <!-- Cancelar desde ACEPTADA — motivo obligatorio -->
+          <button class="btn btn-ghost" (click)="abrirAccion('cancelar')">
+            <mat-icon>block</mat-icon> Cancelar
+          </button>
+        }
+      }
+    </div>
+
+    <!-- Form con comentario para aceptar / rechazar / cancelar desde ACEPTADA -->
+    @if (accionAbierta()) {
+      <div class="resena-form">
+        <p class="resena-form__title">
+          @if (accionAbierta() === 'aceptar') {
+            Aceptar cita
+          } @else if (accionAbierta() === 'rechazar') {
+            Rechazar cita
+          }
+        </p>
+
+        <textarea
+          class="resena-textarea"
+          rows="3"
+          [placeholder]="
+            accionAbierta() === 'aceptar' ? 'Comentario opcional...' : 'Motivo (obligatorio)...'
+          "
+          [formControl]="comentario"
+        ></textarea>
+
+        @if (comentario.errors?.['required']) {
+          <span class="field-error">El motivo es obligatorio.</span>
+        }
+
+        <div class="resena-form__actions">
+          <button class="btn btn-ghost" (click)="cerrarAccion()">Cancelar</button>
+
+          <button
+            class="btn"
+            [class]="accionAbierta() === 'aceptar' ? 'btn-success' : 'btn-danger'"
+            (click)="confirmarAccion()"
+          >
+            @if (accionAbierta() === 'aceptar') {
+              Confirmar aceptación
+            } @else {
+              Confirmar rechazo
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Historial -->
+    <div class="historial">
+      <button class="historial__toggle" (click)="historialAbierto.update((v) => !v)">
+        <span>Historial de estados</span>
+        <mat-icon>{{ historialAbierto() ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+
+      @if (historialAbierto() && cita()!.historial?.length) {
+        <div class="timeline">
+          @for (h of cita()!.historial; track h.id; let first = $first; let last = $last) {
+            <div class="timeline-item" [class.timeline-item--last]="last">
+              <div class="timeline-content">
+                <div class="timeline-estados">
+                  @if (first) {
+                    <span class="badge badge-sm" [class]="getBadgeClass(h.estadoNuevo)">{{
+                      h.estadoNuevo
+                    }}</span>
+                  } @else {
+                    <span class="badge badge-sm" [class]="getBadgeClass(h.estadoAnterior)">{{
+                      h.estadoAnterior
+                    }}</span>
+                    <mat-icon class="timeline-arrow">arrow_forward</mat-icon>
+                    <span class="badge badge-sm" [class]="getBadgeClass(h.estadoNuevo)">{{
+                      h.estadoNuevo
+                    }}</span>
+                  }
+                </div>
+                <span class="timeline-fecha">{{ h.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                @if (h.comentario && h.comentario !== 'Cita creada') {
+                  <p class="timeline-comentario">{{ h.comentario }}</p>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (historialAbierto()) {
+        <p class="empty-sm">Sin historial registrado.</p>
+      }
+    </div>
+  }
+</section>

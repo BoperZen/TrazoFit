@@ -20,6 +20,7 @@ import { ProfesionalesCliente } from './pages/profesionales/profesionales-client
 import { CitasUsuarioForm } from './pages/citas/citas-usuario-form/citas-usuario-form';
 import { ProfesionalesAgenda } from './pages/profesionales/profesionales-agenda/profesionales-agenda';
 import { CitasUsuarioDetalle } from './pages/citas/citas-usuario-detalle/citas-usuario-detalle';
+import { CitasProfesionalDetalle } from './pages/citas/citas-profesional-detalle/citas-profesional-detalle';
 
 export const routes: Routes = [
   {
@@ -52,6 +53,7 @@ export const routes: Routes = [
       //{ path: 'profesional/citas',    component: CitasListUsuario, canActivate: [profesionalGuard] },
       // { path: 'profesional/servicios', component: ProfesionalServiciosList, canActivate: [profesionalGuard] },
       { path: 'profesional/agenda', component: ProfesionalesAgenda, title: 'Mi agenda', canActivate: [profesionalGuard] },
+      { path: 'profesional/citas/:id', component: CitasProfesionalDetalle, canActivate: [profesionalGuard] },
 
       // ── Cliente ──────────────────────────────────────────
       // TODO: agregar componentes cuando estén listos

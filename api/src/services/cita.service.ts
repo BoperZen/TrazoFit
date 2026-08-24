@@ -98,7 +98,17 @@ export const citaService = {
             throw AppError.badRequest(`No se puede cambiar de ${cita.estado} a ${data.estado}`);
         }
 
-        // Validar que para COMPLETADA la fecha ya pasó
+        // Motivo obligatorio al rechazar
+        if (data.estado === 'RECHAZADA' && !data.comentario?.trim()) {
+            throw AppError.badRequest('El motivo es obligatorio al rechazar una cita');
+        }
+
+        // Motivo obligatorio al cancelar desde ACEPTADA
+        if (data.estado === 'CANCELADA' && cita.estado === 'ACEPTADA' && !data.comentario?.trim()) {
+            throw AppError.badRequest('El motivo es obligatorio al cancelar una cita aceptada');
+        }
+
+        // Completar solo después de la fecha y hora
         if (data.estado === 'COMPLETADA') {
             const ahora = new Date();
             const fechaHoraFin = new Date(cita.fechaCita);
@@ -112,10 +122,7 @@ export const citaService = {
         const [citaActualizada] = await prisma.$transaction([
             prisma.cita.update({
                 where: { id },
-                data: {
-                    estado: data.estado,
-                    comentarioProfesional: data.comentario,
-                },
+                data: { estado: data.estado, comentarioProfesional: data.comentario },
                 include: citaInclude,
             }),
             prisma.historialCita.create({

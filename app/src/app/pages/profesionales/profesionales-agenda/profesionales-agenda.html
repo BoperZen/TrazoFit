@@ -20,7 +20,11 @@
 
   <div class="estado-filtros">
     @for (op of estadoOptions; track op.value) {
-      <button class="chip" [class.chip--active]="selectedEstado() === op.value" (click)="setEstado(op.value)">
+      <button
+        class="chip"
+        [class.chip--active]="selectedEstado() === op.value"
+        (click)="setEstado(op.value)"
+      >
         {{ op.label }}
       </button>
     }
@@ -53,21 +57,18 @@
                   </div>
 
                   <div class="event-meta">
-                    <span class="estado" [class]="getEstadoClass(cita.estado)">{{ cita.estado }}</span>
+                    <span class="estado" [class]="getEstadoClass(cita.estado)">{{
+                      cita.estado
+                    }}</span>
                     @if (tieneConflicto(cita.id)) {
                       <span class="conflicto">Conflicto horario</span>
                     }
                   </div>
 
                   <div class="event-actions">
-                    @if (cita.estado === 'PENDIENTE') {
-                      <button class="btn btn-primary btn-sm" [disabled]="gestionandoCita() === cita.id" (click)="cambiarEstado(cita.id, 'ACEPTADA')">Aceptar</button>
-                      <button class="btn btn-ghost btn-sm" [disabled]="gestionandoCita() === cita.id" (click)="cambiarEstado(cita.id, 'RECHAZADA')">Rechazar</button>
-                    }
-                    @if (cita.estado === 'ACEPTADA') {
-                      <button class="btn btn-primary btn-sm" [disabled]="gestionandoCita() === cita.id" (click)="cambiarEstado(cita.id, 'COMPLETADA')">Completar</button>
-                      <button class="btn btn-ghost btn-sm" [disabled]="gestionandoCita() === cita.id" (click)="cambiarEstado(cita.id, 'CANCELADA')">Cancelar</button>
-                    }
+                    <button class="btn btn-primary btn-sm" (click)="irADetalle(cita.id)">
+                      <mat-icon>visibility</mat-icon> Ver detalle
+                    </button>
                   </div>
                 </article>
               }
